@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#252736"/>
+      <stop offset="100%" stop-color="#151722"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#C2410C"/>
+    </linearGradient>
+    <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+  </defs>
+  <!-- Background with smooth rounded corners -->
+  <rect width="512" height="512" rx="110" fill="url(#bgGrad)"/>
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="none" stroke="#EA580C" stroke-width="6" stroke-opacity="0.25"/>
+
+  <!-- Water drop / Car Wash emblem -->
+  <path d="M256 90 C256 90 140 240 140 330 C140 395 192 440 256 440 C320 440 372 395 372 330 C372 240 256 90 256 90 Z" fill="url(#waterGrad)" opacity="0.95"/>
+  
+  <!-- Car silhouette inside water drop -->
+  <path d="M190 340 L210 295 C215 285 225 280 238 280 L274 280 C287 280 297 285 302 295 L322 340 C332 342 338 348 338 358 L338 375 C338 382 332 388 325 388 L320 388 C315 388 310 384 310 378 L310 370 L202 370 L202 378 C202 384 197 388 192 388 L187 388 C180 388 174 382 174 375 L174 358 C174 348 180 342 190 340 Z" fill="#FFFFFF"/>
+  <!-- Car windows -->
+  <path d="M220 298 L206 332 L250 332 L250 298 Z" fill="#252736" opacity="0.85"/>
+  <path d="M262 298 L262 332 L306 332 L292 298 Z" fill="#252736" opacity="0.85"/>
+  <!-- Wheels/Lights -->
+  <circle cx="206" cy="355" r="9" fill="#EA580C"/>
+  <circle cx="306" cy="355" r="9" fill="#EA580C"/>
+
+  <!-- WashQ Sparkle -->
+  <circle cx="340" cy="180" r="14" fill="#FBBF24"/>
+  <path d="M340 150 L340 210 M310 180 L370 180" stroke="#FBBF24" stroke-width="4" stroke-linecap="round"/>
+</svg>

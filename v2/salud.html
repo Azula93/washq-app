@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>KodiQuett Salud — Gestión Odontológica</title>
+  <meta name="description" content="KodiQuett Salud: Plataforma en la nube para consultorios odontológicos y centros médicos en Colombia. Agenda en tiempo real, confirmación WhatsApp y odontograma interactivo.">
+
+  <!-- Google Fonts: Plus Jakarta Sans (Headings) + Inter (Body/UI) + JetBrains Mono (Data) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <!-- CABECERA -->
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="brand-logo" aria-label="KodiQuett Inicio">
+        <img src="img/logoKodiQuettSinFondo.png" alt="KodiQuett Logo" class="brand-logo-img">
+        <!-- <span class="logo-text">KodiQuett</span> -->
+      </a>
+
+      <nav class="nav-links">
+        <div class="dropdown-wrapper">
+          <button class="nav-item-btn" id="systemsDropdownToggle" aria-expanded="false">
+            <span>Productos</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.65rem;"></i>
+          </button>
+          <div class="dropdown-menu" id="systemsDropdownMenu">
+            <div class="dropdown-box">
+              <a href="salud.html" class="dropdown-item" style="background-color: var(--bg-subtle);">
+                <div class="dropdown-title">
+                  <span>KodiQuett Salud </span>
+                  <i class="fa-solid fa-check" style="font-size: 0.75rem; color: var(--lime-dark);"></i>
+                </div>
+                <!-- <div class="dropdown-desc">Gestión médica, citas WhatsApp y odontograma digital.</div> -->
+              </a>
+              <div style="height: 1px; background-color: var(--border-subtle); margin: 0.35rem 0;"></div>
+              <a href="wash.html" class="dropdown-item">
+                <div class="dropdown-title">
+                  <span>WashQ </span>
+                  <i class="fa-solid fa-arrow-right" style="font-size: 0.75rem;"></i>
+                </div>
+                <!-- <div class="dropdown-desc">Control de patio, comisiones y tickets POS 100% offline.</div> -->
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- <a href="index.html#soluciones">Soluciones</a> -->
+        <a href="#funcionalidades">Funcionalidades</a>
+        <a href="#odontograma">Demo</a>
+        <a href="#precios">Precios</a>
+        <a href="custom.html">Sistemas Personalizados</a>
+        <a href="nosotros.html">Nosotros</a>
+
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#" data-wa="salud" class="btn btn-lime nav-cta-header">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span class="cta-text-full">Hablar con Asesor</span>
+          <span class="cta-text-short">Asesoría</span>
+        </a>
+        <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mobileNavDrawer">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MENÚ MÓVIL EN DRAWER -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true" aria-label="Menú de navegación móvil" aria-hidden="true">
+    <div class="mobile-drawer-header">
+      <a href="index.html" class="brand-logo" aria-label="KodiQuett Inicio">
+        <img src="img/logoKodiQuettSinFondo.png" alt="KodiQuett Logo" class="brand-logo-img">
+        <span class="logo-text">KodiQuett</span>
+      </a>
+      <button class="mobile-toggle" id="mobileMenuClose" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="mobile-drawer-body">
+      <div class="mobile-nav-group">
+        <span class="mobile-nav-label">Productos</span>
+        <div class="mobile-system-cards">
+          <a href="salud.html" class="mobile-system-card is-active" aria-current="page">
+            <span class="mobile-system-icon"><i class="fa-solid fa-tooth"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">
+                DentalQ
+                <span class="mobile-system-badge">Actual</span>
+              </span>
+              <span class="mobile-system-desc">Agenda médica, WhatsApp y odontograma digital</span>
+            </span>
+            <i class="fa-solid fa-check mobile-system-arrow"></i>
+          </a>
+
+          <a href="wash.html" class="mobile-system-card">
+            <span class="mobile-system-icon"><i class="fa-solid fa-car-side"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">
+                WashQ
+                <span class="mobile-system-badge">Offline</span>
+              </span>
+              <span class="mobile-system-desc">Control de patio por placa, comisiones y POS</span>
+            </span>
+            <i class="fa-solid fa-arrow-right mobile-system-arrow"></i>
+          </a>
+
+          <a href="custom.html" class="mobile-system-card">
+            <span class="mobile-system-icon"><i class="fa-solid fa-code"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">Sistemas Personalizados</span>
+              <span class="mobile-system-desc">Software empresarial adaptado a tu operación</span>
+            </span>
+            <i class="fa-solid fa-arrow-right mobile-system-arrow"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="mobile-nav-group">
+        <span class="mobile-nav-label">En esta página y empresa</span>
+        <nav class="mobile-drawer-links" aria-label="Enlaces principales">
+          <a href="index.html">
+            <span>Inicio</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="#odontograma">
+            <span>Odontograma en Vivo</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="#precios">
+            <span>Planes</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="nosotros.html">
+            <span>Nosotros</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="mobile-drawer-footer">
+      <a href="#" data-wa="salud" class="btn btn-lime">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>Solicitar Demo</span>
+      </a>
+      <div class="mobile-drawer-meta">
+        <span class="mobile-status-dot" aria-hidden="true"></span>
+        <span>Cali, Colombia</span>
+        <span>&bull;</span>
+        <span data-contact-email></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- HERO SALUD (ESTILO EDITORIAL ANTIMETAL) -->
+  <section id="hero" id="faq">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <span class="section-tag">DentalQ // SOFTWARE CLÍNICO</span>
+
+          <h1 class="hero-title">
+            <span class="text-lime">DentalQ</span> el software que tu <span class="text-lime">consultorio </span>necesita
+          </h1>
+
+          <p class="hero-subtitle">
+            Agiliza la reserva de citas, evita horarios cruzados y consulta el historial y tratamiento de cada paciente al instante.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#" data-wa="salud" class="btn btn-lime" style="padding: 0.85rem 1.85rem; font-size: 0.95rem;">
+              <i class="fa-brands fa-whatsapp"></i> Solicitar Demostración
+            </a>
+            <a href="#odontograma" class="btn btn-outline" style="padding: 0.85rem 1.85rem; font-size: 0.95rem;">
+              Probar Odontograma en Vivo &darr;
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <!-- Columna Derecha: Panel de Análisis Isométrico KodiQuett -->
+        <div class="hero-visual-col">
+          <div class="hero-isometric-wrap">
+            <div class="hero-ambient-glow" aria-hidden="true"></div>
+            <div class="hero-isometric-stage">
+              <img src="img/Ilustración dental vectorial en verde lima.png"
+                alt="Panel de análisis isométrico KodiQuett"
+                class="hero-isometric-img"
+                loading="eager">
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- FUNCIONALIDADES -->
+  <section class="section-wrap" id="funcionalidades">
+    <div class="container">
+      <div class="section-head">
+        <!-- <span class="section-tag">Funcionalidades Principales</span> -->
+        <h2 class="section-title">Funcionalidades Principales</h2>
+        <p class="section-desc">Reemplaza los cuadernos, las carpetas físicas y las cuentas manuales por herramientas pensadas para el trabajo diario con tus pacientes.</p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-card">
+          <span class="bento-tag">01 // AGENDAMIENTO</span>
+          <h3 class="bento-title">Reserva de Citas</h3>
+          <p class="bento-p">
+            Agenda a tus pacientes en segundos y envíales recordatorios por WhatsApp con un clic para asegurar su asistencia.
+          </p>
+        </div>
+
+        <div class="bento-card">
+          <span class="bento-tag">02 // HISTORIA CLÍNICA</span>
+          <h3 class="bento-title">Expedientes y Odontograma digital</h3>
+          <p class="bento-p">
+            Consulta los antecedentes, evoluciones y el odontograma de cada paciente sin buscar entre carpetas de papel. Toda la información clínica queda guardada y disponible al instante.
+          </p>
+        </div>
+
+        <div class="bento-card">
+          <span class="bento-tag">03 // FACTURACIÓN Y CAJA</span>
+          <h3 class="bento-title">Facturación e ingresos del día</h3>
+          <p class="bento-p">
+            Emite facturas de forma sencilla y ten claridad total al cierre del día: revisa cuánto se ha recibido y a dónde entró cada pago
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ODONTOGRAMA EN VIVO -->
+  <section class="section-wrap" id="odontograma" style="background: #FAFAFA; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Demostración</span>
+        <h2 class="section-title">Odontograma interactivo digital</h2>
+        <p class="section-desc">
+          Haz clic en cualquier pieza dental para visualizar cómo funciona el odontograma digital
+        </p>
+      </div>
+
+      <div class="odontogram-container" style="max-width: 1080px; margin: 0 auto;">
+        <!-- Cabecera del Expediente -->
+        <div class="odo-header-bar">
+          <div>
+            <span class="font-mono" style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--slate-gray);">Historia Clínica #HC-0842 &bull; Odontograma</span>
+            <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--text-primary); margin-top: 0.15rem;">Paciente: Camila Valenzuela</h3>
+          </div>
+          <div class="font-mono" style="font-size: 0.72rem; color: var(--lime-dark); font-weight: 700; background: var(--lime-wash); border: 1px solid rgba(136, 154, 22, 0.3); padding: 0.35rem 0.75rem; border-radius: var(--radius-xs);">
+            <i class="fa-solid fa-circle-check"></i> <span id="odoActiveToolLabel">Herramienta activa: Resina</span>
+          </div>
+        </div>
+
+        <!-- Barra de Hallazgos (Idéntica al sistema real con estética Antimetal) -->
+        <div class="odo-toolbar">
+          <div class="odo-toolbar-top">
+            <span class="odo-toolbar-label">Hallazgos:</span>
+            <span class="odo-toolbar-hint">Selecciona un hallazgo y haz clic en cualquier pieza dental para asignarlo</span>
+          </div>
+
+          <div class="odo-hallazgos-list" id="odoHallazgosToolbar">
+            <button type="button" class="odo-hallazgo-btn" data-finding="amalgama" data-label="Amalgama" data-action="Control de restauración en amalgama">
+              <span>Amalgama</span>
+              <span class="odo-sym odo-sym-amalgama"></span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn is-active" data-finding="resina" data-label="Resina" data-action="Restauración estética en resina fotocurada">
+              <span>Resina</span>
+              <span class="odo-sym odo-sym-resina"></span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn" data-finding="ausente" data-label="Diente Ausente" data-action="Evaluación de rehabilitación protésica / implante">
+              <span>Diente Ausente</span>
+              <span class="odo-sym odo-sym-ausente">|</span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn" data-finding="endodoncia" data-label="Endodoncia" data-action="Control radiográfico de tratamiento de conducto">
+              <span>Endodoncia</span>
+              <span class="odo-sym odo-sym-endodoncia">&#9650;</span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn" data-finding="corona" data-label="Corona" data-action="Control de adaptación de corona protésica">
+              <span>Corona</span>
+              <span class="odo-sym odo-sym-corona"></span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn" data-finding="exodoncia" data-label="Exodoncia" data-action="Extracción dental programada">
+              <span>Exodoncia</span>
+              <span class="odo-sym odo-sym-exodoncia">&#10006;</span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn" data-finding="caries" data-label="Caries" data-action="Remoción de tejido cariado + Resina">
+              <span>Caries</span>
+              <span class="odo-sym odo-sym-caries"></span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn" data-finding="nec-endo" data-label="Necesidad de Endodoncia" data-action="Realizar tratamiento de conducto (Endodoncia)">
+              <span>Necesidad de Endodoncia</span>
+              <span class="odo-sym odo-sym-nec-endo">&#9650;</span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn" data-finding="no-erup" data-label="No Erupcionado" data-action="Seguimiento de erupción dental">
+              <span>No Erupcionado</span>
+              <span class="odo-sym odo-sym-no-erup"></span>
+            </button>
+            <button type="button" class="odo-hallazgo-btn" data-finding="sano" data-label="Sano / Limpiar" data-action="Sin intervención requerida">
+              <span>Limpiar</span>
+              <span class="odo-sym odo-sym-sano"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Cruceta Anatómica de 4 Cuadrantes (Adulta + Pediátrica) -->
+        <div class="odo-cross-grid" id="odoCrossGrid">
+          <!-- CUADRANTE 1: SUPERIOR DERECHO -->
+          <div class="odo-quadrant q-top-left">
+            <div class="odo-quadrant-label">Superior Derecho</div>
+            <!-- Fila Adultos: 18 al 11 -->
+            <div class="odo-row" data-row-teeth="18,17,16,15,14,13,12,11"></div>
+            <!-- Fila Temporales: 55 al 51 -->
+            <div class="odo-row" data-row-teeth="55,54,53,52,51"></div>
+          </div>
+
+          <!-- CUADRANTE 2: SUPERIOR IZQUIERDO -->
+          <div class="odo-quadrant q-top-right">
+            <div class="odo-quadrant-label">Superior Izquierdo</div>
+            <!-- Fila Adultos: 21 al 28 -->
+            <div class="odo-row" data-row-teeth="21,22,23,24,25,26,27,28"></div>
+            <!-- Fila Temporales: 61 al 65 -->
+            <div class="odo-row" data-row-teeth="61,62,63,64,65"></div>
+          </div>
+
+          <!-- CUADRANTE 3: INFERIOR DERECHO -->
+          <div class="odo-quadrant q-bottom-left">
+            <div class="odo-quadrant-label">Inferior Derecho</div>
+            <!-- Fila Temporales: 85 al 81 -->
+            <div class="odo-row" data-row-teeth="85,84,83,82,81"></div>
+            <!-- Fila Adultos: 48 al 41 -->
+            <div class="odo-row" data-row-teeth="48,47,46,45,44,43,42,41"></div>
+          </div>
+
+          <!-- CUADRANTE 4: INFERIOR IZQUIERDO -->
+          <div class="odo-quadrant q-bottom-right">
+            <div class="odo-quadrant-label">Inferior Izquierdo</div>
+            <!-- Fila Temporales: 71 al 75 -->
+            <div class="odo-row" data-row-teeth="71,72,73,74,75"></div>
+            <!-- Fila Adultos: 31 al 38 -->
+            <div class="odo-row" data-row-teeth="31,32,33,34,35,36,37,38"></div>
+          </div>
+        </div>
+
+        <!-- Barra de Detalle de la Pieza Seleccionada -->
+        <div class="odontogram-active-card">
+          <div>
+            <div class="font-mono" style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--slate-gray);">Pieza Seleccionada</div>
+            <div id="odontogramSelectedTooth" style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: var(--text-primary);">Pieza #14</div>
+          </div>
+          <div>
+            <div class="font-mono" style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--slate-gray);">Hallazgo Registrado</div>
+            <div id="odontogramSelectedStatus" style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.45rem;">Resina</div>
+          </div>
+          <div>
+            <div class="font-mono" style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--slate-gray);">Conducta / Plan</div>
+            <div id="odontogramSelectedAction" style="font-size: 0.9rem; color: var(--slate-gray);">Restauración estética en resina fotocurada</div>
+          </div>
+          <div>
+            <a href="#" data-wa="salud" class="btn btn-lime">Solicitar Demo Completa</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRECIOS SALUD -->
+  <section class="section-wrap" id="precios" style="background: #FAFAFA; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="container">
+      <div class="section-head text-center" style="max-width: 720px; margin: 0 auto 2.5rem auto;">
+        <!-- <span class="section-tag">Tarifas Transparentes</span> -->
+        <h2 class="section-title">Planes</h2>
+        <p class="section-desc">Sin costos ocultos ni contratos forzosos.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto;">
+
+        <!-- Plan 1: Esencial -->
+        <div class="antimetal-pricing-card">
+          <div>
+            <span class="bento-tag">CONSULTORIO INDEPENDIENTE</span>
+            <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">Plan Esencial</h3>
+            <div style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+              $ 89.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP / mes</span>
+            </div>
+            <div style="font-size: 0.75rem; color: #047857; font-weight: 700; margin-bottom: 0.75rem;">
+              $ 74.000 COP/mes en pago anual
+            </div>
+            <p style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+              Para médicos u odontólogos independientes con consulta propia en digitalización.
+            </p>
+            <ul class="bento-features">
+              <li><i class="fa-solid fa-check"></i> 1 Doctor / Especialista</li>
+              <li><i class="fa-solid fa-check"></i> 1 Secretaria o Asistente</li>
+              <li><i class="fa-solid fa-check"></i> 1 Consultorio / Sillón</li>
+              <li><i class="fa-solid fa-check"></i> Hasta 1.000 pacientes</li>
+              <!-- <li><i class="fa-solid fa-check"></i> 5 GB almacenamiento clínico</li> -->
+              <li><i class="fa-solid fa-check"></i> Agenda en tiempo real y horarios</li>
+              <li><i class="fa-solid fa-check"></i> Historia clínica y controles</li>
+              <!-- <li><i class="fa-solid fa-check"></i> Presupuestos y facturas en PDF</li> -->
+              <!-- <li><i class="fa-solid fa-check"></i> Seguridad 2FA básica</li> -->
+              <li><i class="fa-solid fa-check"></i> Soporte WhatsApp hábil</li>
+            </ul>
+          </div>
+          <div style="margin-top: 1.5rem;">
+            <a href="#" data-wa="salud" class="btn btn-outline" style="width: 100%; justify-content: center;">Elegir Esencial</a>
+          </div>
+        </div>
+
+        <!-- Plan 2: Clínica Pro (Recomendado) -->
+        <div class="antimetal-pricing-card featured">
+          <div class="antimetal-badge-featured">MÁS POPULAR ⭐</div>
+          <div>
+            <span class="bento-tag">ODONTOLOGÍA & CLÍNICAS</span>
+            <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">Clínica Pro</h3>
+            <div style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+              $ 179.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP / mes</span>
+            </div>
+            <div style="font-size: 0.75rem; color: #047857; font-weight: 700; margin-bottom: 0.75rem;">
+              $ 149.000 COP/mes en pago anual
+            </div>
+            <p style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+              Para clínicas que requieren odontograma interactivo, ortodoncia y reservas online.
+            </p>
+            <ul class="bento-features">
+              <li><i class="fa-solid fa-check"></i> <strong>Hasta 4 Doctores / Especialistas</strong></li>
+              <li><i class="fa-solid fa-check"></i> <strong>Secretarias ilimitadas</strong></li>
+              <li><i class="fa-solid fa-check"></i> Hasta 2 Consultorios / Sillones</li>
+              <li><i class="fa-solid fa-check"></i> <strong>Pacientes ilimitados</strong></li>
+              <li><i class="fa-solid fa-check"></i> 25 GB almacenamiento clínico</li>
+              <li><i class="fa-solid fa-check"></i> <strong>Odontograma interactivo evolutivo</strong></li>
+              <!-- <li><i class="fa-solid fa-check"></i> Presupuesto ortodoncia & abonos</li> -->
+              <!-- <li><i class="fa-solid fa-check"></i> Módulos Endo y Periodontal</li> -->
+              <!-- <li><i class="fa-solid fa-check"></i> <strong>Web de agendamiento online</strong></li> -->
+              <li><i class="fa-solid fa-check"></i> Métricas HUD y 2FA completa</li>
+              <li><i class="fa-solid fa-check"></i> Soporte WhatsApp prioritario</li>
+            </ul>
+          </div>
+          <div style="margin-top: 1.5rem;">
+            <a href="#" data-wa="salud" class="btn btn-lime" style="width: 100%; justify-content: center;">
+              <i class="fa-brands fa-whatsapp"></i> Elegir Clínica Pro
+            </a>
+          </div>
+        </div>
+
+        <!-- Plan 3: Élite (Multi-Sede) -->
+        <div class="antimetal-pricing-card">
+          <div>
+            <span class="bento-tag">CORPORATIVO & MULTI-SEDE</span>
+            <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">Plan Élite</h3>
+            <div style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+              $ 329.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP / mes</span>
+            </div>
+            <div style="font-size: 0.75rem; color: #047857; font-weight: 700; margin-bottom: 0.75rem;">
+              $ 274.000 COP/mes en pago anual
+            </div>
+            <p style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+              Para redes de clínicas con múltiples sedes, auditoría forense y soporte dedicado.
+            </p>
+            <ul class="bento-features">
+              <li><i class="fa-solid fa-check"></i> <strong>Hasta 10 Doctores</strong> (+ extra)</li>
+              <li><i class="fa-solid fa-check"></i> <strong>Multi-sede</strong></li>
+              <li><i class="fa-solid fa-check"></i> Auxiliares y pacientes ilimitados</li>
+              <li><i class="fa-solid fa-check"></i> <strong>Almacenamiento Ilimitado</strong></li>
+              <li><i class="fa-solid fa-check"></i> Odontograma, ortodoncia, endo y periodontal</li>
+              <!-- <li><i class="fa-solid fa-check"></i> <strong>AuditLog forense (Exportación CSV)</strong></li> -->
+              <li><i class="fa-solid fa-check"></i> <strong>Migración asistida incluida</strong></li>
+              <!-- <li><i class="fa-solid fa-check"></i> Gestor dedicado + SLA &lt; 1h</li> -->
+                <li><i class="fa-solid fa-check"></i> Capacitación virtual personalizada</li>
+
+            </ul>
+          </div>
+          <div style="margin-top: 1.5rem;">
+            <a href="#" data-wa="salud" class="btn btn-outline" style="width: 100%; justify-content: center;">Elegir Plan Élite</a>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div
+      style="max-width: 1100px; margin: 2.0rem auto 0; background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.85rem 2.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; box-shadow: var(--shadow-card);">
+      <div>
+        <span class="bento-tag">¿TU NEGOCIO PERTENECE A OTRO SECTOR?</span>
+        <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin: 0.2rem 0;">Podemos
+          desarrollar el software que tu empresa necesita</h4>
+        <p style="font-size: 0.875rem; color: var(--slate-gray);"> Construimos plataformas web y aplicaciones móviles a
+          la medida <br> para todo tipo de operaciones.</p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <a href="custom.html" class="btn btn-outline">Como Funciona &rarr;</a>
+        <a href="#" data-wa="custom" class="btn btn-lime">
+          <i class="fa-brands fa-whatsapp"></i> Cotizar sistema personalizado
+        </a>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- FAQS -->
+  <section class="section-wrap" id="faq_salud">
+    <div class="container container-narrow">
+      <div class="section-head">
+        <!-- <span class="section-tag">Dudas Habituales</span> -->
+        <h2 class="section-title">Preguntas sobre DentalQ</h2>
+      </div>
+
+      <div class="faq-wrap">
+        <div class="faq-item is-open">
+          <button class="faq-question">
+            <span>¿Puedo usarlo desde una tablet o dispositivo movil?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </button>
+          <div class="faq-answer">
+            Sí. Funciona en computadores, portátiles, tablets (iPad o Android) y celulares sin necesidad de instalar programas; solo requieres un navegador web.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>¿Es complicado pasar mi consultorio del papel al sistema?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </button>
+          <div class="faq-answer">
+           No. El sistema es intuitivo y tu equipo aprende a usarlo el mismo día. No necesitas transcribir miles de carpetas antiguas de golpe: puedes ir registrando a cada paciente a medida que asiste a su cita.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>¿Cómo se garantiza la confidencialidad de los datos médicos?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </button>
+          <div class="faq-answer">
+            Cumplimos rigurosamente con la <strong>Ley 1581 de 2012 de Colombia</strong>. Los expedientes e imágenes diagnósticas se almacenan con cifrado y únicamente el personal autorizado de tu consultorio tiene acceso a la información.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- ========================================================
+       FOOTER ANTIMETAL
+       ======================================================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem;">
+            <img src="img/logoKodiquettSinFondo.png" alt="KodiQuett Logo"
+              class="brand-logo-img" style="height: 32px; width: 32px;">
+            <strong
+              style="color: var(--text-primary); font-size: 1.25rem; font-family: var(--font-display); letter-spacing: -0.03em;">KodiQuett</strong>
+          </div>
+          <p style="font-size: 0.875rem; color: var(--slate-gray); line-height: 1.6; max-width: 320px;">
+            Empresa de desarrollo de software y soluciones digitales en Colombia. Fundada en Cali en septiembre de 2025.
+          </p>
+          <p style="font-size: 0.8rem; color: var(--slate-gray); margin-top: 0.75rem;">
+            Cali, Valle del Cauca, Colombia &bull; <span data-contact-email></span>
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Sistemas Propios</h4>
+          <ul>
+            <li><a href="salud.html">DentalQ (Clínicas)</a></li>
+            <li><a href="wash.html">WashQ (Autolavados)</a></li>
+            <li><a href="#precios">Planes y Tarifas</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Servicios de Software</h4>
+          <ul>
+            <li><a href="custom.html">Sistemas Personalizados</a></li>
+            <!-- <li><a href="#modalidades">Cómo Trabajamos</a></li> -->
+            <!-- <li><a href="#arquitectura">Criterio Técnico</a></li> -->
+            <li><a href="#faq_salud">Preguntas Frecuentes</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Atención Comercial</h4>
+          <ul>
+            <li>
+              <a href="#" data-wa="general" style="color: var(--text-primary); font-weight: 700;">
+                <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Asesoría por WhatsApp
+              </a>
+            </li>
+            <li><span style="font-size: 0.85rem; color: var(--slate-gray);">Cobertura en toda Colombia</span></li>
+            <li><span style="font-size: 0.85rem; color: var(--slate-gray);">Lunes a Sábado: 8:00 AM - 6:00 PM</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        style="padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--slate-gray); flex-wrap: wrap; gap: 1rem;">
+        <p>&copy; 2026 KodiQuett. Todos los derechos reservados. Cali, Colombia.</p>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="legal-privacidad.html" style="color: var(--slate-gray); text-decoration: none;">Política de
+            Tratamiento de Datos (Ley 1581)</a>
+          <a href="legal-terminos.html" style="color: var(--slate-gray); text-decoration: none;">Términos del
+            Servicio</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

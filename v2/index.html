@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>KodiQuett — Desarrollo de Sistemas Personalizados</title>
+  <meta name="description"
+    content="KodiQuett: Empresa de desarrollo de software en Colombia. Creamos plataformas digitales a la medida y sistemas listos para operar como KodiQuett Salud y WashQ.">
+
+  <!-- Google Fonts: Plus Jakarta Sans (Headings) + Inter (Body/UI) + JetBrains Mono (Data) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Hojas de Estilo v2 (Sistema de Diseño Antimetal: Lime #D5F509, Charcoal #252736, Slate #747484) -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+
+  <!-- ========================================================
+       CABECERA PRINCIPAL ESTILO ANTIMETAL
+       ======================================================== -->
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="brand-logo" aria-label="KodiQuett Inicio">
+        <img src="img/logoKodiQuettSinFondo.png" alt="KodiQuett Logo" class="brand-logo-img">
+        <!-- <span class="logo-text">KodiQuett</span> -->
+      </a>
+
+      <nav class="nav-links">
+        <!-- DROPDOWN SISTEMAS -->
+        <!-- <div class="dropdown-wrapper">
+          <button class="nav-item-btn" id="systemsDropdownToggle" aria-expanded="false">
+            <span>Nuestros Sistemas</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.65rem;"></i>
+          </button>
+          <div class="dropdown-menu" id="systemsDropdownMenu">
+            <div class="dropdown-box">
+              <a href="salud.html" class="dropdown-item">
+                <div class="dropdown-title">
+                  <span>DentalQ </span>
+                  <i class="fa-solid fa-arrow-right" style="font-size: 0.75rem;"></i>
+                </div> -->
+        <!-- <div class="dropdown-desc">
+                  Gestión clínica, agenda médica, odontograma interactivo y confirmación WhatsApp.
+                </div> -->
+        <!-- </a>
+              <div style="height: 1px; background-color: var(--border-subtle); margin: 0.35rem 0;"></div>
+              <a href="wash.html" class="dropdown-item">
+                <div class="dropdown-title">
+                  <span>WashQ </span>
+                  <i class="fa-solid fa-arrow-right" style="font-size: 0.75rem;"></i>
+                </div> -->
+        <!-- <div class="dropdown-desc">
+                  Control de bahías por placa, comisiones y tickets POS 100% offline.
+                </div> -->
+        <!-- </a>
+            </div>
+          </div>
+        </div> -->
+
+        <a href="#modalidades">Modalidades</a>
+        <a href="#sistemas">Productos</a>
+        <a href="#precios">Planes</a>
+        <a href="custom.html">Sistemas Personalizados</a>
+        <a href="nosotros.html">Nosotros</a>
+
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#" data-wa="general" class="btn btn-lime nav-cta-header">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span class="cta-text-full">Hablar con Asesor</span>
+          <span class="cta-text-short">Asesoría</span>
+        </a>
+        <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Abrir menú de navegación" aria-expanded="false"
+          aria-controls="mobileNavDrawer">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MENÚ MÓVIL EN DRAWER -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true"
+    aria-label="Menú de navegación móvil" aria-hidden="true">
+    <div class="mobile-drawer-header">
+      <a href="index.html" class="brand-logo" aria-label="KodiQuett Inicio">
+        <img src="img/logoKodiQuettSinFondo.png" alt="KodiQuett Logo" class="brand-logo-img">
+        <span class="logo-text">KodiQuett</span>
+      </a>
+      <button class="mobile-toggle" id="mobileMenuClose" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="mobile-drawer-body">
+      <div class="mobile-nav-group">
+        <span class="mobile-nav-label">Nuestros Sistemas</span>
+        <div class="mobile-system-cards">
+          <a href="salud.html" class="mobile-system-card">
+            <span class="mobile-system-icon"><i class="fa-solid fa-tooth"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">
+                DentalQ
+                <!-- <span class="mobile-system-badge">Cloud</span> -->
+              </span>
+              <!-- <span class="mobile-system-desc">Agenda médica, WhatsApp y odontograma digital</span> -->
+            </span>
+            <i class="fa-solid fa-arrow-right mobile-system-arrow"></i>
+          </a>
+
+          <a href="wash.html" class="mobile-system-card">
+            <span class="mobile-system-icon"><i class="fa-solid fa-car-side"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">
+                WashQ
+                <!-- <span class="mobile-system-badge">Offline</span> -->
+              </span>
+              <!-- <span class="mobile-system-desc">Control de patio por placa, comisiones y POS</span> -->
+            </span>
+            <i class="fa-solid fa-arrow-right mobile-system-arrow"></i>
+          </a>
+
+          <a href="custom.html" class="mobile-system-card">
+            <span class="mobile-system-icon"><i class="fa-solid fa-code"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">Sistemas Personalizados</span>
+              <!-- <span class="mobile-system-desc">Software empresarial adaptado a tu operación</span> -->
+            </span>
+            <i class="fa-solid fa-arrow-right mobile-system-arrow"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="mobile-nav-group">
+        <span class="mobile-nav-label">Explorar</span>
+        <nav class="mobile-drawer-links" aria-label="Enlaces principales">
+          <a href="index.html" aria-current="page" class="is-active">
+            <span>Inicio</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="#modalidades">
+            <span>Modalidades</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="#sistemas">
+            <span>Productos</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="#precios">
+            <span>Planes</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="nosotros.html">
+            <span>Nosotros</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="mobile-drawer-footer">
+      <a href="#" data-wa="general" class="btn btn-lime">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>Hablar con Asesor</span>
+      </a>
+      <div class="mobile-drawer-meta">
+        <span class="mobile-status-dot" aria-hidden="true"></span>
+        <span>Cali, Colombia</span>
+        <span>&bull;</span>
+        <span data-contact-email></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================
+       HERO ANTIMETAL (POSICIONAMIENTO CLARO DE KodiQuett)
+       ======================================================== -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-grid">
+
+        <!-- Columna Izquierda: Mensaje Editorial Humano -->
+        <div>
+          <!-- <span class="section-tag">KodiQuett // DESARROLLO DE SOFTWARE &amp; SAAS</span> -->
+
+          <h1 class="hero-title">
+            Creamos el <span class="text-lime">software</span> que tu <span class="text-lime">empresa </span>necesita
+          </h1>
+
+          <p class="hero-subtitle">
+            Desarrollamos soluciones digitales propias para sectores específicos y construimos Sistemas Personalizados
+            para
+            empresas con procesos particulares.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#sistemas" class="btn btn-lime" style="padding: 0.85rem 1.85rem; font-size: 0.95rem;">
+              Ver Sistemas Desarrollados &rarr;
+            </a>
+            <a href="custom.html" class="btn btn-outline" style="padding: 0.85rem 1.85rem; font-size: 0.95rem;">
+              Cotizar Software a Medida
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Columna Derecha: Panel de Análisis Isométrico KodiQuett -->
+        <div class="hero-visual-col">
+          <div class="hero-isometric-wrap">
+            <div class="hero-ambient-glow" aria-hidden="true"></div>
+            <div class="hero-isometric-stage">
+              <img src="img/Dashboard moderno con diseñadora trabajando.png"
+                alt="Panel de análisis isométrico KodiQuett" class="hero-isometric-img" loading="eager">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       BLOQUE 1: CÓMO TRABAJAMOS (DOS FORMAS DE RESOLVER TU OPERACIÓN)
+       ======================================================== -->
+  <section class="section-wrap" id="modalidades"
+    style="background: #FAFAFA; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="container">
+      <div class="section-head">
+        <!-- <span class="section-tag">Modelo de Trabajo</span> -->
+        <h2 class="section-title">Dos formas de trabajar con KodiQuett</h2>
+        <p class="section-desc">
+          Dependiendo de las necesidades de tu empresa, puedes adoptar un sistema ya construido o solocitar el
+          desarrollo de una plataforma exclusiva.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 980px; margin: 0 auto;">
+
+        <!-- MODALIDAD 1 -->
+        <div
+          style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 2.25rem 2rem; box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span class="bento-tag">MODALIDAD 01 // SISTEMAS PROPIOS (SAAS)</span>
+            <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem;">
+              Sistemas listos para operar</h3>
+            <p style="font-size: 0.925rem; color: var(--slate-gray); line-height: 1.6; margin-bottom: 1.25rem;">
+              Plataformas que hemos desarrollado para industrias específicas. Vienen listas para configurar y usar desde
+              el primer día, con tarifas fijas en pesos colombianos y soporte incluido.
+            </p>
+            <ul class="bento-features">
+              <li><i class="fa-solid fa-check"></i> Implementación inmediata sin meses de espera</li>
+              <li><i class="fa-solid fa-check"></i> Funcionalidades probadas en operaciones reales</li>
+              <li><i class="fa-solid fa-check"></i> Tarifas fijas transparentes (mensuales o vitalicias)</li>
+            </ul>
+          </div>
+          <div style="margin-top: 1.5rem;">
+            <a href="#sistemas" class="btn btn-outline" style="width: 100%;">
+              Ver Sistemas Desarrollados &darr;
+            </a>
+          </div>
+        </div>
+
+        <!-- MODALIDAD 2 -->
+        <div
+          style="background: #FFFFFF; border: 2px solid var(--text-primary); border-radius: var(--radius-md); padding: 2.25rem 2rem; box-shadow: var(--shadow-float); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span class="bento-tag">MODALIDAD 02 // DESARROLLO A LA MEDIDA</span>
+            <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem;">
+              Desarrollo de Sistemas Personalizados</h3>
+            <p style="font-size: 0.925rem; color: var(--slate-gray); line-height: 1.6; margin-bottom: 1.25rem;">
+              Si tu empresa tiene flujos de trabajo particulares, inventarios especializados o reglas que ninguna
+              aplicación comercial resuelve, programamos tu plataforma web o móvil desde cero.
+            </p>
+            <ul class="bento-features">
+              <li><i class="fa-solid fa-check"></i> Diseñado exactamente para tu proceso y equipo</li>
+              <li><i class="fa-solid fa-check"></i> Integración con pasarelas (Wompi, Bold, PayU) y ERPs</li>
+              <li><i class="fa-solid fa-check"></i> Entrega completa del código fuente a tu empresa</li>
+            </ul>
+          </div>
+          <div style="margin-top: 1.5rem;">
+            <a href="custom.html" class="btn btn-lime" style="width: 100%;">
+              Conocer Desarrollo a la Medida &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       BLOQUE 2: VITRINA DE SISTEMAS DESARROLLADOS
+       (KodiQuett SALUD Y WashQ COMO CASOS ACTIVOS)
+       ======================================================== -->
+  <section class="section-wrap" id="sistemas">
+    <div class="container">
+      <div class="section-head">
+        <!-- <span class="section-tag">Casos Reales y Productos Activos</span> -->
+        <h2 class="section-title">Sistemas desarrollados por KodiQuett</h2>
+        <p class="section-desc">
+          Cada uno resuelve la operación diaria de su sector y cuenta con su propia plataforma dedicada:
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1040px; margin: 0 auto;">
+
+        <!-- CARD SISTEMA 1: KodiQuett SALUD -->
+        <div class="bento-card">
+          <div>
+            <div class="card-img-wrap">
+              <img src="img/Tecnología dental en verde lima.png"
+                alt="KodiQuett Salud - Gestión Odontológica y Expedientes Clínicos" loading="lazy">
+            </div>
+            <span class="bento-tag">SECTOR SALUD &bull; PRODUCTO PROPIO</span>
+            <h3 class="bento-title">DentalQ</h3>
+            <p class="bento-p">
+              El software clínico para consultorios odontológicos que quieren dejar atrás el papel. Organiza la reserva
+              de citas sin cruces de horario, envía recordatorios por WhatsApp, registra evoluciones en el odontograma
+              digital y controla los ingresos del día en efectivo o cuenta bancaria.
+            </p>
+            <ul class="bento-features">
+              <li><i class="fa-solid fa-check"></i> Agenda médica y confirmación de citas por WhatsApp</li>
+              <li><i class="fa-solid fa-check"></i> Odontograma digital interactivo</li>
+              <!-- <li><i class="fa-solid fa-check"></i> Historias clínicas protegidas bajo la Ley 1581</li> -->
+              <li><i class="fa-solid fa-check"></i> Facturación y control diario de ingresosF</li>
+            </ul>
+          </div>
+          <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="salud.html" class="btn btn-outline" style="flex: 1; justify-content: center;">
+              Explorar DentalQ &rarr;
+            </a>
+            <a href="#" data-wa="salud" class="btn btn-lime" style="flex: 1; justify-content: center;">
+              <i class="fa-brands fa-whatsapp"></i> Hablar con Asesor
+            </a>
+          </div>
+        </div>
+
+        <!-- CARD SISTEMA 2: WashQ -->
+        <div class="bento-card">
+          <div>
+            <div class="card-img-wrap">
+              <img src="img/Lavado de auto.png" alt="WashQ - Control Bahías de lavado" loading="lazy">
+            </div>
+            <span class="bento-tag">SECTOR AUTOMOTRIZ &bull; PRODUCTO PROPIO</span>
+            <h3 class="bento-title">WashQ</h3>
+            <p class="bento-p">
+              El software que tu autolavado necesita para tener las cuentas claras. Registra carros y motos por placa al
+              entrar a la zona de lavado, calcula automáticamente la comisión de cada operario según los servicios que
+              realizó y muestra el cuadre exacto de caja al cerrar el turno.
+            </p>
+            <ul class="bento-features">
+              <!-- <li><i class="fa-solid fa-check"></i> 100% Offline</li> -->
+              <li><i class="fa-solid fa-check"></i> Control de vehículos por placa en la zona de lavado</li>
+              <li><i class="fa-solid fa-check"></i> Liquidación automática de comisiones por operario</li>
+              <li><i class="fa-solid fa-check"></i> Cuadre de caja diario</li>
+            </ul>
+          </div>
+          <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="wash.html" class="btn btn-outline" style="flex: 1; justify-content: center;">
+              Explorar WashQ &rarr;
+            </a>
+            <a href="#" data-wa="wash" class="btn btn-lime" style="flex: 1; justify-content: center;">
+              <i class="fa-brands fa-whatsapp"></i> Hablar con Asesor
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       BLOQUE 4: PRECIOS Y ESQUEMAS COMERCIALES
+       (SEPARADOS POR PESTAÑAS: CLIC EN SALUD O CLIC EN WASH)
+       ======================================================== -->
+  <section class="section-wrap" id="precios"
+    style="background: #FAFAFA; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="container">
+      <div class="section-head">
+        <!-- <span class="section-tag">Planes y Cotizaciones</span> -->
+        <h2 class="section-title">Planes</h2>
+        <p class="section-desc">
+          Nuestros productos propios tienen tarifas fijas, mientras que los desarrollos a la medida se cotizan según el
+          alcance exacto de tu proyecto:
+        </p>
+      </div>
+
+      <!-- SELECTOR DE PESTAÑAS DE PRECIOS -->
+      <div class="tabs-industry-wrap">
+        <div class="tabs-industry" role="tablist">
+          <button class="tab-ind-btn active" id="switchPriceSalud">
+            <i class="fa-solid fa-tooth"></i> Precios: DentalQ (Odontología)
+          </button>
+          <button class="tab-ind-btn" id="switchPriceWash">
+            <i class="fa-solid fa-car-side"></i> Precios: WashQ (Autolavados)
+          </button>
+        </div>
+      </div>
+
+      <!-- VISTA DE PRECIOS 1: KodiQuett SALUD -->
+      <div id="pricingViewSalud">
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto;">
+
+          <!-- Plan 1: Esencial -->
+          <div class="antimetal-pricing-card">
+            <div>
+              <span class="bento-tag">CONSULTORIO INDEPENDIENTE</span>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">Plan
+                Esencial</h3>
+              <div
+                style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+                $ 89.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP / mes</span>
+              </div>
+              <div style="font-size: 0.75rem; color: #047857; font-weight: 700; margin-bottom: 0.75rem;">
+                $ 74.000 COP/mes en pago anual
+              </div>
+              <p
+                style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+                Para médicos u odontólogos independientes con consulta propia en etapa de digitalización.
+              </p>
+              <ul class="bento-features">
+                <li><i class="fa-solid fa-check"></i> 1 Doctor / Especialista</li>
+                <li><i class="fa-solid fa-check"></i> 1 Secretaria o Asistente</li>
+                <li><i class="fa-solid fa-check"></i> 1 Consultorio</li>
+                <li><i class="fa-solid fa-check"></i> Hasta 1.000 pacientes</li>
+                <!-- <li><i class="fa-solid fa-check"></i> 5 GB almacenamiento clínico</li> -->
+                <li><i class="fa-solid fa-check"></i> Agenda en tiempo real y horarios</li>
+                <li><i class="fa-solid fa-check"></i> Historia clínica y controles</li>
+                <!-- <li><i class="fa-solid fa-check"></i> Presupuestos y facturas en PDF</li> -->
+                <!-- <li><i class="fa-solid fa-check"></i> Seguridad 2FA básica</li> -->
+                <li><i class="fa-solid fa-check"></i> Soporte WhatsApp</li>
+              </ul>
+            </div>
+            <div style="margin-top: 1.5rem;">
+              <a href="#" data-wa="salud" class="btn btn-outline" style="width: 100%; justify-content: center;">Elegir
+                Esencial</a>
+            </div>
+          </div>
+
+          <!-- Plan 2: Clínica Pro (Recomendado) -->
+          <div class="antimetal-pricing-card featured">
+            <div class="antimetal-badge-featured">MÁS POPULAR ⭐</div>
+            <div>
+              <span class="bento-tag">ODONTOLOGÍA & CLÍNICAS</span>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">Plan Pro
+              </h3>
+              <div
+                style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+                $ 179.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP / mes</span>
+              </div>
+              <div style="font-size: 0.75rem; color: #047857; font-weight: 700; margin-bottom: 0.75rem;">
+                $ 149.000 COP/mes en pago anual
+              </div>
+              <p
+                style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+                Para clínicas que requieren odontograma interactivo, ortodoncia y reservas online.
+              </p>
+              <ul class="bento-features">
+                <li><i class="fa-solid fa-check"></i> <strong>Hasta 4 Doctores / Especialistas</strong></li>
+                <li><i class="fa-solid fa-check"></i> <strong>Auxiliares ilimitadas</strong></li>
+                <li><i class="fa-solid fa-check"></i> Hasta 2 Consultorios</li>
+                <li><i class="fa-solid fa-check"></i> <strong>Pacientes ilimitados</strong></li>
+                <li><i class="fa-solid fa-check"></i> 25 GB almacenamiento clínico</li>
+                <li><i class="fa-solid fa-check"></i> <strong>Odontograma interactivo evolutivo</strong></li>
+                <!-- <li><i class="fa-solid fa-check"></i> Presupuesto ortodoncia & abonos</li> -->
+                <!-- <li><i class="fa-solid fa-check"></i> Módulos Endo y Periodontal</li> -->
+                <!-- <li><i class="fa-solid fa-check"></i> <strong>Web de agendamiento online</strong></li> -->
+                <li><i class="fa-solid fa-check"></i> Métricas HUD y 2FA completa</li>
+                <li><i class="fa-solid fa-check"></i> Soporte WhatsApp prioritario</li>
+              </ul>
+            </div>
+            <div style="margin-top: 1.5rem;">
+              <a href="#" data-wa="salud" class="btn btn-lime" style="width: 100%; justify-content: center;">
+                <i class="fa-brands fa-whatsapp"></i> Elegir Clínica Pro
+              </a>
+            </div>
+          </div>
+
+          <!-- Plan 3: Élite (Multi-Sede) -->
+          <div class="antimetal-pricing-card">
+            <div>
+              <span class="bento-tag">CORPORATIVO & MULTI-SEDE</span>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">Plan
+                Élite</h3>
+              <div
+                style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+                $ 329.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP / mes</span>
+              </div>
+              <div style="font-size: 0.75rem; color: #047857; font-weight: 700; margin-bottom: 0.75rem;">
+                $ 274.000 COP/mes en pago anual
+              </div>
+              <p
+                style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+                Para redes de clínicas con múltiples sedes y soporte dedicado.
+              </p>
+              <ul class="bento-features">
+                <li><i class="fa-solid fa-check"></i> <strong>Hasta 10 Doctores</strong> (+ extra)</li>
+                <li><i class="fa-solid fa-check"></i> <strong>Multi-sede</strong></li>
+                <li><i class="fa-solid fa-check"></i> <strong>Odontograma interactivo evolutivo</strong></li>
+                <li><i class="fa-solid fa-check"></i> Auxiliares y pacientes ilimitados</li>
+                <li><i class="fa-solid fa-check"></i> <strong>Almacenamiento Ilimitado</strong></li>
+                <li><i class="fa-solid fa-check"></i> Odontograma, ortodoncia, endo y periodontal</li>
+                <!-- <li><i class="fa-solid fa-check"></i> <strong>AuditLog forense (Exportación CSV)</strong></li> -->
+                <li><i class="fa-solid fa-check"></i> <strong>Migración asistida incluida</strong></li>
+                <li><i class="fa-solid fa-check"></i> Capacitación virtual personalizada</li>
+              </ul>
+            </div>
+            <div style="margin-top: 1.5rem;">
+              <a href="#" data-wa="salud" class="btn btn-outline" style="width: 100%; justify-content: center;">Elegir
+                Plan Élite</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA DE PRECIOS 2: WashQ -->
+      <div id="pricingViewWash" class="is-hidden">
+
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto;">
+        </div>
+        <!-- Wash Opción 1: Solo Software -->
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto;">
+
+          <!-- Plan 1: Patio Express -->
+          <div class="antimetal-pricing-card">
+            <div>
+              <span class="bento-tag">PLAN ESENCIAL // SOLO SOFTWARE</span>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">
+                Autolavado
+                Express</h3>
+              <div
+                style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+                $ 210.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP /
+                  Único</span>
+              </div>
+              <p
+                style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+                ideal para autolavados pequeños que necesitan orden y liquidación rápida.
+              </p>
+              <ul class="bento-features">
+                <li><i class="fa-solid fa-check"></i> 1 usuario de acceso para recepción y caja</li>
+                <li><i class="fa-solid fa-check"></i> Registro de hasta 5 operarios</li>
+                <li><i class="fa-solid fa-check"></i> Ingreso de vehículos por placa en zona de lavado</li>
+                <li><i class="fa-solid fa-check"></i> Tarifas por tipo de vehículo (moto, carro, camioneta)</li>
+                <li><i class="fa-solid fa-check"></i> Cálculo automático de comisiones por operario</li>
+                <li><i class="fa-solid fa-check"></i> Cuadre de caja diario (efectivo y transferencias)</li>
+              </ul>
+            </div>
+            <div style="margin-top: 1.5rem;">
+              <a href="#" data-wa="wash" class="btn btn-outline" style="width: 100%;">Elegir Express</a>
+            </div>
+          </div>
+
+          <!-- Plan 2: Autolavado Pro (Destacado) -->
+          <div class="antimetal-pricing-card featured">
+            <div class="antimetal-badge-featured">MÁS POPULAR ⭐</div>
+            <div>
+              <span class="bento-tag">CONTROL TOTAL // RECOMENDADO</span>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">
+                Autolavado Pro</h3>
+              <div
+                style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+                $ 350.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP/Único</span>
+              </div>
+              <p
+                style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+                Para autolavados y centros de detailing que tienen encargado de caja y necesitan controlar el dinero y
+                el personal sin estar presentes todo el día.
+              </p>
+              <ul class="bento-features">
+                <li><i class="fa-solid fa-check"></i> <strong>Todo lo del Plan Express</strong></li>
+                <li><i class="fa-solid fa-check"></i> Usuarios con permisos distintos</li>
+                <li><i class="fa-solid fa-check"></i> <strong>Operarios y servicios ilimitados</strong></li>
+                <li><i class="fa-solid fa-check"></i> Historial y reportes de ingresos por semanas y meses</li>
+                <li><i class="fa-solid fa-check"></i> PPersonalización del sistema con el nombre y logo de tu autolavado
+                </li>
+                <li><i class="fa-solid fa-check"></i> Configuración asistida</li>
+                <li><i class="fa-solid fa-check"></i> 6 meses de soporte prioritario</li>
+              </ul>
+            </div>
+            <div style="margin-top: 1.5rem;">
+              <a href="#" data-wa="wash" class="btn btn-lime" style="width: 100%;">
+                <i class="fa-brands fa-whatsapp"></i> Elegir Autolavado Pro
+              </a>
+            </div>
+          </div>
+
+          <!-- Plan 3: Combo Llave en Mano -->
+          <div class="antimetal-pricing-card">
+            <div>
+              <span class="bento-tag">SOFTWARE + EQUIPO DE IMPRESIÓN</span>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0.35rem 0;">
+                Autolavado Élite</h3>
+              <div
+                style="font-size: 1.6rem; font-weight: 900; color: var(--text-primary); margin: 0.75rem 0; font-family: var(--font-display);">
+                $ 590.000 <span style="font-size: 0.8rem; font-weight: 600; color: var(--slate-gray);">COP/Único</span>
+              </div>
+              <p
+                style="font-size: 0.85rem; color: var(--slate-gray); margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-subtle);">
+                La solución completa lista para funcionar: incluye el software Pro configurado más la impresora física
+                para entregar recibos a tus clientes.
+              </p>
+              <ul class="bento-features">
+                <li><i class="fa-solid fa-check"></i> <strong>Todo lo incluido en el Plan Autolavado Pro</strong></li>
+                <li><i class="fa-solid fa-check"></i> <strong>Impresora térmica</strong></li>
+                <li><i class="fa-solid fa-check"></i> Kit inicial de 5 rollos de papel térmico</li>
+                <li><i class="fa-solid fa-check"></i> Instalación y pruebas guiadas</li>
+                <li><i class="fa-solid fa-check"></i> Capacitación paso a paso para ti y tu encargado</li>
+                <li><i class="fa-solid fa-check"></i> 12 meses de soporte prioritario</li>
+              </ul>
+            </div>
+            <div style="margin-top: 1.5rem;">
+              <a href="#" data-wa="wash" class="btn btn-outline" style="width: 100%;">Elegir Élite</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MÓDULO DE Sistemas Personalizados -->
+    <div
+      style="max-width: 1100px; margin: 2.0rem auto 0; background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.85rem 2.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; box-shadow: var(--shadow-card);">
+      <div>
+        <span class="bento-tag">¿TU NEGOCIO PERTENECE A OTRO SECTOR?</span>
+        <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin: 0.2rem 0;">Podemos
+          desarrollar el software que tu empresa necesita</h4>
+        <p style="font-size: 0.875rem; color: var(--slate-gray);"> Construimos plataformas web y aplicaciones móviles a
+          la medida <br> para todo tipo de operaciones.</p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <a href="custom.html" class="btn btn-outline">Como Funciona &rarr;</a>
+        <a href="#" data-wa="custom" class="btn btn-lime">
+          <i class="fa-brands fa-whatsapp"></i> Cotizar sistema personalizado
+        </a>
+      </div>
+    </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       PREGUNTAS FRECUENTES (RESPUESTAS HUMANAS Y DIRECTAS)
+       ======================================================== -->
+  <section class="section-wrap" id="faq">
+    <div class="container container-narrow">
+      <div class="section-head">
+        <!-- <span class="section-tag">Resolución de Dudas</span> -->
+        <h2 class="section-title">Preguntas frecuentes</h2>
+        <p class="section-desc">Claridad técnica y comercial sobre KodiQuett y sus servicios de software.</p>
+      </div>
+
+      <div class="faq-wrap">
+        <div class="faq-item is-open">
+          <button class="faq-question">
+            <span>¿Qué es KodiQuett?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </button>
+          <div class="faq-answer">
+            Somos una <strong>empresa colombiana de tecnología y desarrollo de software</strong>. Desarrollamos
+            soluciones digitales en dos modalidades: productos propios ya listos para operar (como <em>KodiQuett
+              Salud</em> y <em>WashQ</em>) y plataformas a la medida para empresas que tienen procesos
+            particulares que una aplicación genérica no resuelve.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>¿Pueden desarrollar software para una industria diferente?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </button>
+          <div class="faq-answer">
+            Sí. Salud y Wash son dos de nuestros primeros productos desarrollados, pero nuestro equipo programa
+            plataformas web y móviles para cualquier sector (logística, comercio, servicios, manufactura). Puedes
+            solicitar una asesoría sin costo para evaluar tu proyecto.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>¿Dónde opera KodiQuett y cómo se atiende el soporte?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </button>
+          <div class="faq-answer">
+            Operamos y desarrollamos desde <strong>Cali, Colombia</strong>, brindando soporte y despliegue a nivel
+            nacional. La atención la realizan directamente ingenieros de software vía WhatsApp y correo electrónico
+            (<span data-contact-email></span>), sin intermediarios.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>¿Quién es el dueño del código en los proyectos a la medida?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </button>
+          <div class="faq-answer">
+            Tu empresa es <strong>100% dueña de la solución y del código fuente</strong>. No cobramos tarifas de
+            licenciamiento perpetuo sobre el desarrollo que creamos para ti.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       FOOTER ANTIMETAL
+       ======================================================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem;">
+            <img src="img//logoKodiquettSinFondo.png" alt="KodiQuett Logo"
+              class="brand-logo-img" style="height: 32px; width: 32px;">
+            <strong
+              style="color: var(--text-primary); font-size: 1.25rem; font-family: var(--font-display); letter-spacing: -0.03em;">KodiQuett</strong>
+          </div>
+          <p style="font-size: 0.875rem; color: var(--slate-gray); line-height: 1.6; max-width: 320px;">
+            Empresa de desarrollo de software y soluciones digitales en Colombia. Fundada en Cali en septiembre de 2025.
+          </p>
+          <p style="font-size: 0.8rem; color: var(--slate-gray); margin-top: 0.75rem;">
+            Cali, Valle del Cauca, Colombia &bull; <span data-contact-email></span>
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Sistemas Propios</h4>
+          <ul>
+            <li><a href="salud.html">KodiQuett Salud (Clínicas)</a></li>
+            <li><a href="wash.html">WashQ (Autolavados)</a></li>
+            <li><a href="#precios">Planes</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Servicios de Software</h4>
+          <ul>
+            <li><a href="custom.html">Sistemas Personalizados</a></li>
+            <li><a href="nosotros.html">Sobre Nosotros</a></li>
+            <li><a href="#modalidades">Cómo Trabajamos</a></li>
+            <!-- <li><a href="#arquitectura">Criterio Técnico</a></li> -->
+            <li><a href="#faq">Preguntas Frecuentes</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Atención Comercial</h4>
+          <ul>
+            <li>
+              <a href="#" data-wa="general" style="color: var(--text-primary); font-weight: 700;">
+                <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Asesoría por WhatsApp
+              </a>
+            </li>
+            <li><span style="font-size: 0.85rem; color: var(--slate-gray);">Cobertura en toda Colombia</span></li>
+            <li><span style="font-size: 0.85rem; color: var(--slate-gray);">Lunes a Sábado: 8:00 AM - 6:00 PM</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        style="padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--slate-gray); flex-wrap: wrap; gap: 1rem;">
+        <p>&copy; 2026 KodiQuett. Todos los derechos reservados. Cali, Colombia.</p>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="legal-privacidad.html" style="color: var(--slate-gray); text-decoration: none;">Política de
+            Tratamiento de Datos (Ley 1581)</a>
+          <a href="legal-terminos.html" style="color: var(--slate-gray); text-decoration: none;">Términos del
+            Servicio</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts v2 -->
+  <script src="js/main.js"></script>
+</body>
+
+</html>

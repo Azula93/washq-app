@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>Política de Tratamiento de Datos Personales (Ley 1581) — KodiQuett</title>
+  <meta name="description" content="Política de Tratamiento y Protección de Datos Personales de KodiQuett en cumplimiento de la Ley 1581 de 2012 de la República de Colombia.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="brand-logo" aria-label="KodiQuett Inicio">
+        <img src="img/logoKodiQuettSinFondo.png" alt="KodiQuett Logo" class="brand-logo-img">
+      </a>
+
+      <nav class="nav-links">
+        <div class="dropdown-wrapper">
+          <button class="nav-item-btn" id="systemsDropdownToggle" aria-expanded="false">
+            <span>Sistemas</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.65rem;"></i>
+          </button>
+          <div class="dropdown-menu" id="systemsDropdownMenu">
+            <div class="dropdown-box">
+              <a href="salud.html" class="dropdown-item">
+                <div class="dropdown-title"><span>KodiQuett Salud</span></div>
+                <div class="dropdown-desc">Gestión médica y odontograma digital.</div>
+              </a>
+              <div style="height: 1px; background-color: var(--border); margin: 0.35rem 0;"></div>
+              <a href="wash.html" class="dropdown-item">
+                <div class="dropdown-title"><span>KodiQuett Wash</span></div>
+                <div class="dropdown-desc">Control de patio y tickets POS 100% offline.</div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a href="custom.html">Software a Medida</a>
+        <a href="index.html#precios">Precios</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="index.html" class="btn btn-outline nav-cta-header">
+          <span class="cta-text-full">&larr; Volver al Inicio</span>
+          <span class="cta-text-short">&larr; Inicio</span>
+        </a>
+        <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mobileNavDrawer">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MENÚ MÓVIL EN DRAWER -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true" aria-label="Menú de navegación móvil" aria-hidden="true">
+    <div class="mobile-drawer-header">
+      <a href="index.html" class="brand-logo" aria-label="KodiQuett Inicio">
+        <img src="img/logoKodiQuettSinFondo.png" alt="KodiQuett Logo" class="brand-logo-img">
+        <span class="logo-text">KodiQuett</span>
+      </a>
+      <button class="mobile-toggle" id="mobileMenuClose" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="mobile-drawer-body">
+      <div class="mobile-nav-group">
+        <span class="mobile-nav-label">Nuestros Sistemas</span>
+        <div class="mobile-system-cards">
+          <a href="salud.html" class="mobile-system-card">
+            <span class="mobile-system-icon"><i class="fa-solid fa-tooth"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">
+                DentalQ
+                <span class="mobile-system-badge">Cloud</span>
+              </span>
+              <span class="mobile-system-desc">Agenda médica, WhatsApp y odontograma digital</span>
+            </span>
+            <i class="fa-solid fa-arrow-right mobile-system-arrow"></i>
+          </a>
+
+          <a href="wash.html" class="mobile-system-card">
+            <span class="mobile-system-icon"><i class="fa-solid fa-car-side"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">
+                WashQ
+                <span class="mobile-system-badge">Offline</span>
+              </span>
+              <span class="mobile-system-desc">Control de patio por placa, comisiones y POS</span>
+            </span>
+            <i class="fa-solid fa-arrow-right mobile-system-arrow"></i>
+          </a>
+
+          <a href="custom.html" class="mobile-system-card">
+            <span class="mobile-system-icon"><i class="fa-solid fa-code"></i></span>
+            <span class="mobile-system-info">
+              <span class="mobile-system-title">Sistemas Personalizados</span>
+              <span class="mobile-system-desc">Software empresarial adaptado a tu operación</span>
+            </span>
+            <i class="fa-solid fa-arrow-right mobile-system-arrow"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="mobile-nav-group">
+        <span class="mobile-nav-label">Explorar y Legal</span>
+        <nav class="mobile-drawer-links" aria-label="Enlaces principales">
+          <a href="index.html">
+            <span>Inicio</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="nosotros.html">
+            <span>Nosotros</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="legal-privacidad.html" class="is-active" aria-current="page">
+            <span>Política de Privacidad (Ley 1581)</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+          <a href="legal-terminos.html">
+            <span>Términos y Condiciones</span>
+            <i class="fa-solid fa-chevron-right nav-row-chevron"></i>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="mobile-drawer-footer">
+      <a href="#" data-wa="general" class="btn btn-lime">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>Hablar con Asesor por WhatsApp</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO LEGAL -->
+  <main class="section-wrap">
+    <div class="container container-narrow">
+      <div style="margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem;">
+        <span class="editorial-label">Marco Normativo Colombiano</span>
+        <h1 style="font-size: 2.4rem; font-weight: 800; color: var(--text-primary); margin: 0.5rem 0 0.75rem;">
+          Política de Tratamiento y Protección de Datos Personales
+        </h1>
+        <p style="font-size: 0.95rem; color: var(--text-muted); font-family: var(--font-mono);">
+          En cumplimiento de la Ley Estatutaria 1581 de 2012 y el Decreto Reglamentario 1377 de 2013 &bull; Última actualización: Noviembre de 2026
+        </p>
+      </div>
+
+      <article style="font-size: 0.975rem; color: var(--text-secondary); line-height: 1.8;">
+        
+        <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 1.75rem 0 0.75rem;">1. Identificación del Responsable del Tratamiento</h3>
+        <p>
+          <strong>KodiQuett</strong>, iniciativa tecnológica con sede de operaciones en la ciudad de Cali, Departamento del Valle del Cauca, República de Colombia, es la responsable del tratamiento de los datos personales recolectados a través de su sitio web oficial, canales de mensajería (WhatsApp) y plataformas de software especializadas (<strong>KodiQuett Salud</strong> y <strong>KodiQuett Wash</strong>).
+        </p>
+        <p>
+          <strong>Correo electrónico para atención a titulares:</strong> <span data-contact-email></span>
+        </p>
+
+        <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 1.75rem 0 0.75rem;">2. Marco Legal y Principios Rectores</h3>
+        <p>
+          Esta política se rige por los principios de legalidad, finalidad, libertad, veracidad, transparencia, acceso y circulación restringida, seguridad y confidencialidad consagrados en el artículo 4 de la Ley 1581 de 2012.
+        </p>
+
+        <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 1.75rem 0 0.75rem;">3. Finalidades del Tratamiento de Datos</h3>
+        <p>Los datos personales proporcionados serán utilizados exclusivamente para:</p>
+        <ul style="margin-left: 1.5rem; margin-bottom: 1.25rem;">
+          <li>Atención a consultas comerciales, cotizaciones y agendamiento de demostraciones técnicas.</li>
+          <li>Prestación, soporte técnico y mantenimiento de las plataformas de software contratadas.</li>
+          <li>En <strong>KodiQuett Salud</strong>: Gestión y resguardo de expedientes clínicos, odontogramas y datos de pacientes conforme a las directrices de confidencialidad del sector salud en Colombia.</li>
+          <li>En <strong>KodiQuett Wash</strong>: Almacenamiento local de placas vehiculares y números de teléfono suministrados para la notificación de terminación del servicio en patio.</li>
+          <li>Emisión de facturación formal, presupuestos y control administrativo contractual.</li>
+        </ul>
+
+        <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 1.75rem 0 0.75rem;">4. Tratamiento de Datos Sensibles en Salud</h3>
+        <p>
+          En el marco de <strong>KodiQuett Salud</strong>, la plataforma actúa como Encargada del Tratamiento o proveedora de infraestructura tecnológica, siendo el profesional de la salud o consultorio odontológico el Responsable de la custodia de la historia clínica. KodiQuett implementa mecanismos de cifrado y aislamiento de datos para garantizar que únicamente el personal autorizado de la clínica tenga acceso a la información médica de los pacientes.
+        </p>
+
+        <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 1.75rem 0 0.75rem;">5. Derechos de los Titulares de la Información</h3>
+        <p>
+          De conformidad con el artículo 8 de la Ley 1581 de 2012, los titulares de datos personales tienen derecho a:
+        </p>
+        <ul style="margin-left: 1.5rem; margin-bottom: 1.25rem;">
+          <li>Conocer, actualizar y rectificar sus datos personales frente a los Responsables o Encargados del Tratamiento.</li>
+          <li>Solicitar prueba de la autorización otorgada para el tratamiento de sus datos.</li>
+          <li>Ser informados previa solicitud respecto del uso que se ha dado a sus datos personales.</li>
+          <li>Revocar la autorización o solicitar la supresión del dato cuando en el tratamiento no se respeten los principios, derechos y garantías constitucionales y legales.</li>
+          <li>Acceder en forma gratuita a sus datos personales que hayan sido objeto de tratamiento.</li>
+        </ul>
+
+        <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 1.75rem 0 0.75rem;">6. Procedimiento para el Ejercicio de Derechos (Habeas Data)</h3>
+        <p>
+          Los titulares de datos podrán ejercer sus derechos mediante comunicación escrita enviada al correo electrónico <strong><span data-contact-email></span></strong>, indicando su nombre completo, documento de identificación, descripción clara de la solicitud y datos de contacto para la respuesta.
+        </p>
+        <p>
+          Las consultas serán atendidas en un término máximo de diez (10) días hábiles y los reclamos en un término máximo de quince (15) días hábiles, de acuerdo con los plazos estipulados por la legislación colombiana.
+        </p>
+
+        <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 1.75rem 0 0.75rem;">7. Seguridad de la Información</h3>
+        <p>
+          KodiQuett adopta medidas técnicas, administrativas y humanas razonables para proteger los datos personales contra accesos no autorizados, pérdida, adulteración o divulgación indebida.
+        </p>
+      </article>
+
+      <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: gap;">
+        <a href="index.html" class="btn btn-outline">
+          &larr; Volver a la página principal
+        </a>
+        <a href="legal-terminos.html" class="btn btn-primary">
+          Ver Términos de Servicio &rarr;
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container text-center">
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        &copy; 2026 KodiQuett &bull; Cali, Colombia &bull; Contacto: <span data-contact-email></span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

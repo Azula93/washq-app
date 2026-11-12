@@ -1,0 +1,836 @@
+/**
+ * KODIQUETT v2 — COMPONENTES DE UI ESTILO ANTIMETAL
+ * Paleta: Lime #D5F509, Deep Charcoal #252736, Slate #747484, Border #A9B0BF
+ */
+
+/* ========================================================
+   PESTAÑAS SELECTORAS (ESTILO ANTIMETAL)
+   ======================================================== */
+.tabs-industry-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.tabs-industry {
+  display: inline-flex;
+  background: #F3F4F6;
+  padding: 0.3rem;
+  border-radius: var(--radius-xs);
+  gap: 0.35rem;
+  border: 1px solid var(--border-subtle);
+}
+
+.tab-ind-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.35rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--slate-gray);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+}
+
+.tab-ind-btn.active {
+  background: #FFFFFF;
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================================
+   FRAME DE SOFTWARE (ANTIMETAL DESKTOP UI)
+   ======================================================== */
+.dashboard-frame {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+  text-align: left;
+}
+
+.frame-bar {
+  background: #F9FAFB;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+.frame-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.frame-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D1D5DB;
+}
+
+.frame-address {
+  font-family: var(--font-mono);
+  color: var(--slate-gray);
+  background: #FFFFFF;
+  padding: 0.2rem 0.85rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+}
+
+.frame-body {
+  padding: 2rem;
+  min-height: 380px;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+/* ========================================================
+   CARDS DE TELEMETRÍA (ANTIMETAL KPIS)
+   ======================================================== */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 800px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 500px) {
+  .kpi-row { grid-template-columns: 1fr; }
+}
+
+.kpi-card {
+  background: #F9FAFB;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 1.25rem;
+}
+
+.kpi-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--slate-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.kpi-val {
+  font-size: 1.55rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+}
+
+.kpi-sub {
+  font-size: 0.75rem;
+  color: var(--slate-gray);
+  margin-top: 0.25rem;
+}
+
+/* TOGGLE ANTIMETAL */
+.antimetal-toggle {
+  width: 44px;
+  height: 24px;
+  background: var(--lime-primary);
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 3px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(213, 245, 9, 0.4);
+}
+
+.antimetal-toggle-circle {
+  width: 18px;
+  height: 18px;
+  background: var(--ink-black);
+  border-radius: 50%;
+  transform: translateX(20px);
+  transition: transform 0.2s ease;
+}
+
+/* ========================================================
+   TABLAS DE DATOS LIMPIAS
+   ======================================================== */
+.data-table-wrap {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.data-table th {
+  background: #F9FAFB;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.725rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.data-table td {
+  padding: 0.95rem 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.725rem;
+  font-weight: 700;
+}
+
+.status-ok {
+  background: var(--lime-wash);
+  color: var(--ink-black);
+  border: 1px solid rgba(136, 154, 22, 0.35);
+}
+
+.status-pending {
+  background: #FFFBEB;
+  color: #92400E;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.status-info {
+  background: #EFF6FF;
+  color: #1E40AF;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+/* ========================================================
+   KANBAN PATIO WASH
+   ======================================================== */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 850px) {
+  .kanban-board { grid-template-columns: 1fr; }
+}
+
+.kanban-col {
+  background: #F9FAFB;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 1rem;
+}
+
+.kanban-col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.kanban-col-title {
+  font-family: var(--font-mono);
+  font-size: 0.775rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+.kanban-col-count {
+  font-family: var(--font-mono);
+  font-size: 0.725rem;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-xs);
+  font-weight: 700;
+}
+
+.kanban-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 0.9rem;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.kanban-card:last-child {
+  margin-bottom: 0;
+}
+
+.plate-tag {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.875rem;
+  background-color: var(--lime-primary);
+  color: var(--ink-black);
+  border: 1.5px solid var(--ink-black);
+  padding: 0.15rem 0.55rem;
+  border-radius: 2px;
+  display: inline-block;
+  letter-spacing: 0.05em;
+}
+
+.plate-moto-tag {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.825rem;
+  background-color: var(--lime-primary);
+  color: var(--ink-black);
+  border: 1.5px solid var(--ink-black);
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.kanban-card-title {
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin: 0.45rem 0 0.25rem;
+  color: var(--text-primary);
+}
+
+.kanban-card-meta {
+  font-size: 0.75rem;
+  color: var(--slate-gray);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ========================================================
+   ODONTOGRAMA DIGITAL INTERACTIVO (DISEÑO ANTIMETAL)
+   ======================================================== */
+.odontogram-container {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 2rem 2.25rem;
+  box-shadow: var(--shadow-float);
+}
+
+/* Barra superior de expediente */
+.odo-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Barra de herramientas de Hallazgos */
+.odo-toolbar {
+  background: #FAFAFA;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 1.15rem 1.35rem;
+  margin-bottom: 2rem;
+}
+
+.odo-toolbar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.odo-toolbar-label {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.odo-toolbar-hint {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--slate-gray);
+}
+
+.odo-hallazgos-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.odo-hallazgo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.16s ease;
+  box-shadow: 0 1px 2px rgba(17, 19, 25, 0.03);
+}
+
+.odo-hallazgo-btn:hover {
+  border-color: var(--deep-charcoal);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.odo-hallazgo-btn.is-active {
+  background: var(--lime-wash);
+  border-color: var(--ink-black);
+  color: var(--ink-black);
+  font-weight: 700;
+  box-shadow: 0 0 0 2px var(--lime-primary);
+}
+
+/* Símbolos gráficos de Hallazgos */
+.odo-sym {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.odo-sym-amalgama {
+  width: 12px;
+  height: 12px;
+  background: #2563EB;
+  border-radius: 2px;
+}
+
+.odo-sym-resina {
+  width: 12px;
+  height: 12px;
+  background: var(--lime-dark);
+  border: 1px solid #637110;
+  border-radius: 2px;
+}
+
+.odo-sym-ausente {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--ink-black);
+}
+
+.odo-sym-endodoncia {
+  width: 14px;
+  height: 14px;
+  background: #2563EB;
+  border-radius: 2px;
+  color: #FFFFFF;
+  font-size: 0.55rem;
+  line-height: 1;
+}
+
+.odo-sym-corona {
+  width: 12px;
+  height: 12px;
+  background: #2563EB;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+
+.odo-sym-exodoncia {
+  color: #E11D48;
+  font-weight: 900;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.odo-sym-caries {
+  width: 12px;
+  height: 12px;
+  background: #E11D48;
+  border-radius: 2px;
+}
+
+.odo-sym-nec-endo {
+  color: #E11D48;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.odo-sym-no-erup {
+  width: 12px;
+  height: 3px;
+  background: #7C3AED;
+  border-radius: 2px;
+}
+
+.odo-sym-sano {
+  width: 12px;
+  height: 12px;
+  border: 1.5px dashed var(--border-slate);
+  border-radius: 50%;
+}
+
+/* Cruceta Anatómica de 4 Cuadrantes */
+.odo-cross-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  margin: 0.5rem 0 2rem;
+  background: #FFFFFF;
+}
+
+.odo-quadrant {
+  padding: 1.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Líneas divisorias de la cruceta (+) en color charcoal Antimetal */
+.odo-quadrant.q-top-left {
+  border-right: 2px solid var(--deep-charcoal);
+  border-bottom: 2px solid var(--deep-charcoal);
+}
+
+.odo-quadrant.q-top-right {
+  border-bottom: 2px solid var(--deep-charcoal);
+}
+
+.odo-quadrant.q-bottom-left {
+  border-right: 2px solid var(--deep-charcoal);
+}
+
+.odo-quadrant-label {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--deep-charcoal);
+  margin-bottom: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+/* Filas de piezas dentales (8 adultos / 5 temporales) */
+.odo-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-bottom: 0.95rem;
+  width: 100%;
+}
+
+.odo-row:last-child {
+  margin-bottom: 0;
+}
+
+/* Unidad dental individual */
+.odo-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 38px;
+  padding: 0.35rem 0.15rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.odo-unit:hover {
+  background: #F9FAFB;
+  border-color: var(--border-subtle);
+  transform: translateY(-2px);
+}
+
+.odo-unit.is-selected {
+  background: var(--lime-wash);
+  border-color: var(--lime-dark);
+}
+
+/* Silueta del diente (Molar anatómico) */
+.odo-tooth-svg {
+  width: 22px;
+  height: 24px;
+  fill: #64748B;
+  transition: fill 0.15s ease, transform 0.15s ease;
+}
+
+.odo-unit:hover .odo-tooth-svg {
+  fill: var(--deep-charcoal);
+}
+
+.odo-unit.is-selected .odo-tooth-svg {
+  fill: var(--ink-black);
+}
+
+/* Número FDI de la pieza */
+.odo-tooth-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--deep-charcoal);
+  margin-top: 0.3rem;
+  line-height: 1;
+}
+
+/* Slot inferior para mostrar el hallazgo marcado */
+.odo-finding-slot {
+  height: 18px;
+  margin-top: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.odo-finding-slot .odo-sym {
+  animation: odoPopIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes odoPopIn {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Barra inferior de estado clínico interactivo */
+.odontogram-active-card {
+  background: #FAFAFA;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+@media (max-width: 920px) {
+  .odo-cross-grid {
+    grid-template-columns: 1fr;
+  }
+  .odo-quadrant.q-top-left {
+    border-right: none;
+  }
+  .odo-quadrant.q-bottom-left {
+    border-right: none;
+    border-bottom: 2px solid var(--deep-charcoal);
+  }
+  .odontogram-container {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .odo-row {
+    gap: 0.25rem;
+  }
+  .odo-unit {
+    width: 32px;
+  }
+  .odo-tooth-svg {
+    width: 18px;
+    height: 20px;
+  }
+}
+
+/* ========================================================
+   TICKET POS
+   ======================================================== */
+.pos-ticket-card {
+  width: 280px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  padding: 1.5rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+  border-top: 4px dashed var(--slate-gray);
+  border-bottom: 4px dashed var(--slate-gray);
+}
+
+.pos-ticket-header {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--border-slate);
+}
+
+.pos-ticket-title {
+  font-weight: 900;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.pos-ticket-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.pos-ticket-total {
+  border-top: 1px dashed var(--border-slate);
+  padding-top: 0.6rem;
+  margin-top: 0.6rem;
+  font-weight: 900;
+  font-size: 0.95rem;
+}
+
+/* ========================================================
+   PRICING CARDS ANTIMETAL
+   ======================================================== */
+.antimetal-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+@media (max-width: 900px) {
+  .antimetal-pricing-grid { grid-template-columns: 1fr; }
+}
+
+.antimetal-pricing-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 2.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+
+.antimetal-pricing-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-slate);
+}
+
+.antimetal-pricing-card.featured {
+  border: 2px solid var(--text-primary);
+  box-shadow: var(--shadow-float);
+}
+
+.antimetal-badge-featured {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--lime-primary);
+  color: var(--ink-black);
+  font-family: var(--font-mono);
+  font-size: 0.675rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.25rem 0.85rem;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================================
+   FAQ ACCORDION
+   ======================================================== */
+.faq-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.35rem 0;
+  background: none;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.faq-question:hover {
+  color: var(--slate-gray);
+}
+
+.faq-icon-arrow {
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.faq-item.is-open .faq-icon-arrow {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  display: none;
+  padding-bottom: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--slate-gray);
+  line-height: 1.65;
+}
+
+.faq-item.is-open .faq-answer {
+  display: block;
+}
