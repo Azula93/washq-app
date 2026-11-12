@@ -22,7 +22,7 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
         for (var i = 0; i < registrations.length; i++) {
-          if (!registrations[i].active || !registrations[i].active.scriptURL.includes('washq-cache-v2')) {
+          if (registrations[i].active && !registrations[i].active.scriptURL.includes('washq-cache-v3')) {
             registrations[i].unregister();
           }
         }
@@ -31,7 +31,7 @@
     if ('caches' in window) {
       caches.keys().then(function(names) {
         for (var i = 0; i < names.length; i++) {
-          if (names[i] !== 'washq-cache-v2') caches.delete(names[i]);
+          if (names[i] !== 'washq-cache-v3') caches.delete(names[i]);
         }
       });
     }

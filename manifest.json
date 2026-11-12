@@ -2,27 +2,27 @@
   "name": "WashQ — Control Operativo de Autolavado",
   "short_name": "WashQ",
   "description": "Sistema de control operativo, patio en vivo, comisiones de lavadores y tickets térmicos POS 100% offline.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#252736",
   "theme_color": "#252736",
   "icons": [
     {
-      "src": "assets/icon-192.png",
+      "src": "/assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "assets/icon-512.png",
+      "src": "/assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "assets/icon.svg",
+      "src": "/assets/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"

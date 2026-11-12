@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>WashQ &mdash; Plataforma Multi-Sede de Control Operativo y Financiero para Autolavados</title>
-  <meta name="description" content="Software SaaS multi-sede para autolavados: control de patio, liquidación de comisiones, arqueo de caja e impresión POS en Colombia.">
+  <title>WashQ &mdash; Control Operativo, Arqueo de Caja y Liquidación</title>
+  <meta name="description" content="Software de control de patio, arqueo de caja, comisiones de lavadores y gestión total para autolavados en Colombia.">
 
   <!-- PWA & Mobile Web App Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -22,7 +22,7 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
         for (var i = 0; i < registrations.length; i++) {
-          if (!registrations[i].active || !registrations[i].active.scriptURL.includes('washq-cache-v2')) {
+          if (registrations[i].active && !registrations[i].active.scriptURL.includes('washq-cache-v3')) {
             registrations[i].unregister();
           }
         }
@@ -31,7 +31,7 @@
     if ('caches' in window) {
       caches.keys().then(function(names) {
         for (var i = 0; i < names.length; i++) {
-          if (names[i] !== 'washq-cache-v2') caches.delete(names[i]);
+          if (names[i] !== 'washq-cache-v3') caches.delete(names[i]);
         }
       });
     }
@@ -45,7 +45,7 @@
   <style>
     /* ==========================================================================
        VARIABLES Y SISTEMA DE DISEÑO (Apple Design + Paleta Calibrada)
-       Optimizado para Multi-Tenant SaaS (kodiquett.com/washq)
+       Optimizado para subdominio VPS (kodiquett.com/washq) y funcionamiento Local
        ========================================================================== */
     :root {
       --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -116,268 +116,11 @@
       line-height: 1.5;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       overflow-x: hidden;
       padding: 16px;
     }
 
-    /* ==========================================================================
-       PANTALLA DE AUTENTICACIÓN MULTI-SEDE (LOGIN SAAS)
-       ========================================================================== */
-    .auth-viewport {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - 32px);
-      width: 100%;
-      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #F1F4F8 100%);
-      padding: 20px;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 520px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-card);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-floating);
-      padding: 36px 32px;
-      position: relative;
-      animation: modalSlideUp 0.28s var(--ease-apple);
-    }
-
-    .auth-brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: var(--radius-pill);
-      background: var(--accent-subtle);
-      border: 1px solid var(--accent-border);
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--accent-primary);
-      margin-bottom: 14px;
-    }
-
-    .auth-title {
-      font-family: var(--font-display);
-      font-size: 1.55rem;
-      font-weight: 800;
-      color: var(--text-title);
-      letter-spacing: -0.03em;
-      margin-bottom: 4px;
-    }
-
-    .auth-subtitle {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-      line-height: 1.4;
-    }
-
-    /* Lista de Autolavados (Paso 1) */
-    .tenants-selection-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 280px;
-      overflow-y: auto;
-      margin-bottom: 20px;
-      padding-right: 4px;
-    }
-
-    .tenant-select-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border-radius: var(--radius-lg);
-      background: var(--bg-canvas);
-      border: 1px solid var(--border-subtle);
-      cursor: pointer;
-      transition: all 0.2s var(--ease-apple);
-    }
-
-    .tenant-select-card:hover {
-      border-color: var(--accent-primary);
-      background: #FFFFFF;
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-card);
-    }
-
-    .tenant-card-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .tenant-avatar-badge {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: var(--color-obsidian);
-      color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 800;
-      box-shadow: 0 4px 10px rgba(37, 39, 54, 0.15);
-    }
-
-    .tenant-info-titles {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-    }
-
-    .tenant-name-text {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--text-title);
-    }
-
-    .tenant-location-text {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .tenant-code-tag {
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 700;
-      background: var(--bg-surface-subtle);
-      padding: 3px 8px;
-      border-radius: var(--radius-pill);
-      color: var(--color-slate);
-    }
-
-    /* Paso 2: Perfiles de Usuario dentro de la Sede */
-    .active-tenant-header-strip {
-      background: var(--bg-surface-subtle);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 22px;
-    }
-
-    .active-tenant-summary {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .roles-selection-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 22px;
-    }
-
-    .role-login-card {
-      background: var(--bg-canvas);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 16px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.2s var(--ease-apple);
-    }
-
-    .role-login-card:hover {
-      border-color: var(--border-strong);
-      transform: translateY(-2px);
-    }
-
-    .role-login-card.selected {
-      border-color: var(--accent-primary);
-      background: var(--accent-subtle);
-      box-shadow: 0 0 0 2px var(--accent-primary);
-    }
-
-    .role-card-icon {
-      font-size: 1.6rem;
-    }
-
-    .role-card-title {
-      font-family: var(--font-display);
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-title);
-    }
-
-    .role-card-desc {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      line-height: 1.25;
-    }
-
-    .pin-entry-container {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .pin-input-field {
-      font-family: var(--font-mono);
-      font-size: 1.6rem;
-      font-weight: 800;
-      text-align: center;
-      letter-spacing: 0.3em;
-      padding: 12px;
-      border-radius: var(--radius-md);
-      border: 2px solid var(--border-subtle);
-      background: var(--bg-canvas);
-      color: var(--text-title);
-      outline: none;
-      transition: all 0.2s ease;
-    }
-
-    .pin-input-field:focus {
-      border-color: var(--accent-primary);
-      box-shadow: 0 0 0 3px var(--accent-glow);
-      background: #FFFFFF;
-    }
-
-    /* Teclado Numérico Táctil Rápido */
-    .numeric-keypad {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .keypad-btn {
-      background: var(--bg-surface-subtle);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 12px;
-      font-family: var(--font-mono);
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-title);
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .keypad-btn:active {
-      transform: scale(0.96);
-      background: #E2E8F0;
-    }
-
-    /* ==========================================================================
-       APP SHELL (PANEL DE OPERACIONES WASHQ)
-       ========================================================================== */
+    /* Shell Principal */
     .app-shell {
       display: flex;
       width: 100%;
@@ -592,21 +335,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 30px 14px 30px;
+      padding: 20px 32px 14px 32px;
       gap: 16px;
       border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .header-titles {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .header-top-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
     }
 
     .header-titles h1 {
@@ -617,27 +348,7 @@
       letter-spacing: -0.03em;
     }
 
-    .tenant-badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 10px;
-      border-radius: var(--radius-pill);
-      background: var(--bg-surface-subtle);
-      border: 1px solid var(--border-subtle);
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: var(--text-title);
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .tenant-badge-pill:hover {
-      border-color: var(--border-strong);
-      background: #FFFFFF;
-    }
-
-    .header-titles p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .header-titles p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
     .header-actions {
       display: flex;
@@ -703,27 +414,40 @@
       color: var(--color-slate);
     }
 
-    .btn-logout-lock {
-      display: inline-flex;
+    .role-badge-btn {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 7px 12px;
+      gap: 8px;
+      padding: 4px 12px 4px 4px;
       border-radius: var(--radius-pill);
-      background: var(--bg-surface-subtle);
       border: 1px solid var(--border-subtle);
-      font-family: var(--font-body);
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-muted);
+      background: var(--bg-surface);
       cursor: pointer;
-      transition: all 0.18s ease;
+      font-family: var(--font-body);
     }
 
-    .btn-logout-lock:hover {
-      background: var(--status-danger-bg);
-      color: var(--status-danger);
-      border-color: rgba(220, 38, 38, 0.3);
+    .role-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-obsidian);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 700;
     }
+
+    .role-text-wrap {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      text-align: left;
+    }
+
+    .role-text-name { font-size: 0.78rem; font-weight: 700; color: var(--text-title); }
+    .role-text-sub { font-size: 0.66rem; color: var(--text-muted); }
 
     /* CONTENEDORES DE VISTAS */
     .view-container {
@@ -737,19 +461,6 @@
     @keyframes viewFadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* BANNER MODO PATIO (LAVADOR) */
-    .patio-restricted-banner {
-      background: var(--color-obsidian);
-      color: #FFFFFF;
-      padding: 10px 16px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      font-size: 0.82rem;
     }
 
     /* HERO METRIC */
@@ -1685,227 +1396,100 @@
       }
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 1100px) {
-      .kanban-board-wrapper { grid-template-columns: repeat(2, 1fr); }
-      .bento-grid { grid-template-columns: 1fr; }
-      .caja-summary-grid { grid-template-columns: repeat(2, 1fr); }
-      .caja-columns-split { grid-template-columns: 1fr; }
-      .washers-cards-grid { grid-template-columns: 1fr; }
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 1100px) {
-      .kanban-board-wrapper { grid-template-columns: repeat(2, 1fr); }
-      .bento-grid { grid-template-columns: 1fr; }
-      .caja-summary-grid { grid-template-columns: repeat(2, 1fr); }
-      .caja-columns-split { grid-template-columns: 1fr; }
-      .washers-cards-grid { grid-template-columns: 1fr; }
-    }
-
-    /* BARRA DE NAVEGACIÓN MÓVIL FLOTANTE (Apple Design) */
-    .mobile-bottom-bar {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 64px;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid var(--border-card);
-      z-index: 1000;
-      padding: 0 8px;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* BOTÓN INSTALAR PWA */
+    .header-install-pwa-btn {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-around;
-      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
-    }
-
-    .mob-tab-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      height: 100%;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: var(--text-muted);
-      font-family: var(--font-body);
-      font-size: 0.68rem;
-      font-weight: 600;
-      position: relative;
-      transition: color 0.15s ease;
-      touch-action: manipulation;
-    }
-
-    .mob-tab-btn svg {
-      width: 20px;
-      height: 20px;
-      stroke: currentColor;
-      stroke-width: 2;
-      fill: none;
-      transition: transform 0.15s ease;
-    }
-
-    .mob-tab-btn.active {
+      gap: 6px;
+      background: var(--accent-subtle);
       color: var(--accent-primary);
+      border: 1px solid var(--accent-border);
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-apple);
     }
-
-    .mob-tab-btn.active svg {
-      transform: scale(1.08);
-      stroke: var(--accent-primary);
-    }
-
-    .mob-badge {
-      position: absolute;
-      top: 6px;
-      right: 22%;
+    .header-install-pwa-btn:hover {
       background: var(--accent-primary);
-      color: #fff;
-      font-size: 0.62rem;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 999px;
-      line-height: 1.2;
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    /* BARRA DE NAVEGACIÓN MÓVIL (PWA MOBILE) */
+    .mobile-bottom-nav {
+      display: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .kanban-board-wrapper { grid-template-columns: repeat(2, 1fr); }
+      .bento-grid { grid-template-columns: 1fr; }
+      .caja-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .caja-columns-split { grid-template-columns: 1fr; }
+      .washers-cards-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 860px) {
-      body { padding: 0; }
+      body { padding: 0 0 74px 0; }
       .app-shell { border-radius: 0; border: none; }
       .sidebar { display: none; }
-      .main-content { padding-bottom: 74px; }
-      .mobile-bottom-bar { display: flex; }
       .kanban-board-wrapper { grid-template-columns: 1fr; }
-      .dashboard-header { flex-direction: column; align-items: flex-start; }
+      .dashboard-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .header-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
       .view-container { padding: 16px; }
-      .roles-selection-grid { grid-template-columns: 1fr; }
+
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid var(--border-subtle);
+        z-index: 999;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 4px;
+      }
+      .mob-nav-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 0.68rem;
+        font-weight: 600;
+        cursor: pointer;
+        flex: 1;
+        height: 100%;
+        transition: color 0.15s ease;
+      }
+      .mob-nav-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        stroke-width: 2.2;
+        fill: none;
+      }
+      .mob-nav-btn.active {
+        color: var(--accent-primary);
+        font-weight: 800;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ==========================================================================
-       PANTALLA DE LOGIN MULTI-SEDE (SAAS AUTH VIEWPORT)
-       ========================================================================== -->
-  <div class="auth-viewport" id="authScreen" style="display: flex;">
-    <div class="auth-card">
-      
-      <!-- Paso 1: Seleccionar o Ingresar a la Sede / Autolavado -->
-      <div id="authStepTenant" style="display: block;">
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <div class="auth-brand-badge">💧 WashQ by KodiQuett</div>
-          <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Multi-Sede SaaS</span>
-        </div>
-        <h2 class="auth-title">Ingreso a tu Autolavado</h2>
-        <p class="auth-subtitle">Tus datos, tarifas y arqueo de caja están 100% aislados y seguros por cada sede.</p>
-
-        <div class="form-group" style="margin-bottom: 12px;">
-          <label class="form-label">Sedes Registradas en este Dispositivo</label>
-          <div class="tenants-selection-list" id="tenantsSelectionList">
-            <!-- Inserción dinámica de sedes -->
-          </div>
-        </div>
-
-        <div style="margin: 16px 0; display: flex; align-items: center; gap: 10px;">
-          <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
-          <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">O INGRESA POR CÓDIGO</span>
-          <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
-        </div>
-
-        <div class="form-group">
-          <input type="text" id="tenantCodeInput" class="form-input" placeholder="Ej: CALI-01 o MED-02" style="text-align: center; font-family: var(--font-mono); font-weight: 700; text-transform: uppercase;">
-        </div>
-
-        <div style="display: flex; gap: 8px;">
-          <button type="button" class="modal-btn-primary" onclick="submitTenantCode()">Continuar a mi Sede &rarr;</button>
-          <button type="button" class="btn-card-action" style="padding: 10px 14px;" onclick="openCreateTenantModal()">+ Nueva Sede</button>
-        </div>
-      </div>
-
-      <!-- Paso 2: Seleccionar Perfil de Usuario y PIN de Seguridad -->
-      <div id="authStepProfile" style="display: none;">
-        <div class="active-tenant-header-strip">
-          <div class="active-tenant-summary">
-            <span style="font-size: 1.1rem;">📍</span>
-            <div>
-              <strong style="font-size: 0.88rem;" id="authActiveTenantName">Autolavado Cali Express</strong>
-              <p style="font-size: 0.72rem; color: var(--text-muted);" id="authActiveTenantLocation">Cali &bull; CALI-01</p>
-            </div>
-          </div>
-          <a href="javascript:void(0)" onclick="backToTenantStep()" style="font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; text-decoration: none;">Cambiar sede</a>
-        </div>
-
-        <h3 class="auth-title" style="font-size: 1.35rem;">¿Quién está ingresando?</h3>
-        <p class="auth-subtitle">Selecciona tu perfil para acceder a las funciones correspondientes.</p>
-
-        <!-- Selector de Perfil -->
-        <div class="roles-selection-grid">
-          <div class="role-login-card selected" id="authRoleCard-admin" onclick="selectLoginRole('admin')">
-            <span class="role-card-icon">👑</span>
-            <div class="role-card-title">Dueño / Admin</div>
-            <div class="role-card-desc">Control total, caja y tarifas</div>
-          </div>
-
-          <div class="role-login-card" id="authRoleCard-cajero" onclick="selectLoginRole('cajero')">
-            <span class="role-card-icon">💼</span>
-            <div class="role-card-title">Cajero</div>
-            <div class="role-card-desc">Ingresos, cobros y arqueos</div>
-          </div>
-
-          <div class="role-login-card" id="authRoleCard-lavador" onclick="selectLoginRole('lavador')">
-            <span class="role-card-icon">🧼</span>
-            <div class="role-card-title">Lavador</div>
-            <div class="role-card-desc">Modo patio sin finanzas</div>
-          </div>
-        </div>
-
-        <!-- Entrada de PIN -->
-        <div class="pin-entry-container" id="authPinContainer">
-          <label class="form-label" style="justify-content: center; font-size: 0.8rem;">
-            <span>Ingresa el PIN de seguridad de tu perfil</span>
-          </label>
-          <input type="password" id="authPinInput" class="pin-input-field" maxlength="4" placeholder="••••" autocomplete="off">
-          <p id="authPinError" style="color: var(--status-danger); font-size: 0.78rem; text-align: center; display: none; font-weight: 600;">PIN incorrecto. Intenta nuevamente.</p>
-
-          <div class="numeric-keypad">
-            <button type="button" class="keypad-btn" onclick="pressPinKey('1')">1</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('2')">2</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('3')">3</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('4')">4</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('5')">5</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('6')">6</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('7')">7</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('8')">8</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('9')">9</button>
-            <button type="button" class="keypad-btn" onclick="clearPinKey()">C</button>
-            <button type="button" class="keypad-btn" onclick="pressPinKey('0')">0</button>
-            <button type="button" class="keypad-btn" onclick="deletePinKey()">&larr;</button>
-          </div>
-
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
-            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.76rem; color: var(--text-muted); cursor: pointer;">
-              <input type="checkbox" id="rememberSessionCheck" checked>
-              <span>Recordar sesión en este equipo</span>
-            </label>
-            <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);" id="pinHintText">PIN Demo: 1234</span>
-          </div>
-
-          <button type="button" class="modal-btn-primary" onclick="submitAuthLogin()">Ingresar al Sistema &rarr;</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       SHELL PRINCIPAL DE LA APLICACIÓN (DASHBOARD WASHQ)
-       ========================================================================== -->
-  <div class="app-shell" id="appShell" style="display: none;">
+  <!-- SHELL PRINCIPAL -->
+  <div class="app-shell">
 
     <!-- 1. SIDEBAR LATERAL -->
     <aside class="sidebar">
@@ -1917,7 +1501,7 @@
       </a>
 
       <div class="nav-section-label">Navegación</div>
-      <ul class="nav-list" id="sidebarNavList">
+      <ul class="nav-list">
         <li class="nav-item active" id="nav-overview">
           <button onclick="switchView('overview')">
             <div class="nav-left">
@@ -1972,7 +1556,7 @@
       <div class="sidebar-spacer"></div>
 
       <!-- Widget de Capacidad de Patio -->
-      <div class="patio-runway-widget" id="sidebarRunwayWidget">
+      <div class="patio-runway-widget">
         <div class="runway-header">
           <span class="runway-label">Ocupación Patio</span>
           <div class="runway-badge">
@@ -1998,23 +1582,22 @@
       <!-- Header Toolbar -->
       <header class="dashboard-header">
         <div class="header-titles">
-          <div class="header-top-row">
+          <div style="display: flex; align-items: center; gap: 10px;">
             <h1 id="viewMainHeading">Resumen General</h1>
-            <!-- Selector Rápido de Sede -->
-            <button class="tenant-badge-pill" onclick="openTenantSwitcherModal()" title="Cambiar de Autolavado / Sede">
-              <span>📍</span>
-              <span id="headerTenantName">Autolavado Cali Express</span>
-              <span style="font-size: 0.65rem; color: var(--text-muted);">&blacktriangledown;</span>
-            </button>
             <span class="admin-pill-status" id="adminControlBadge">👑 Admin Activo</span>
           </div>
           <p id="currentLiveDate">Cali, Colombia &bull; Sistema en Línea</p>
         </div>
 
         <div class="header-actions">
-          <button class="btn-quick-new" id="btnHeaderQuickNew" onclick="openNewOrderModal()">
+          <button class="header-install-pwa-btn" id="btnPwaInstall" onclick="installPWA()" style="display: none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Instalar App</span>
+          </button>
+
+          <button class="btn-quick-new" onclick="openNewOrderModal()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            <span>+ Ingreso</span>
+            <span>+ Ingreso Rápido</span>
             <span class="kbd-shortcut" style="background: rgba(255,255,255,0.25); color: #fff;">F2</span>
           </button>
 
@@ -2023,11 +1606,13 @@
             <span>Buscar placa</span>
           </button>
 
-          <!-- Bloqueo Rápido / Salir -->
-          <button class="btn-logout-lock" onclick="logoutAppSession()" title="Bloquear Pantalla / Cerrar Sesión">
-            <span>🔒</span>
-            <span>Salir</span>
-          </button>
+          <div class="role-badge-btn" onclick="openRolePinModal()">
+            <div class="role-avatar" id="headerRoleIcon">👑</div>
+            <div class="role-text-wrap">
+              <span class="role-text-name" id="headerRoleName">Super Admin</span>
+              <span class="role-text-sub">Permisos Totales</span>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -2149,14 +1734,6 @@
 
       <!-- VISTA 2: PATIO KANBAN -->
       <div class="view-container" id="view-patio">
-        <!-- Banner de Restricción para Lavador -->
-        <div class="patio-restricted-banner" id="patioRestrictedBanner" style="display: none;">
-          <div>
-            <strong>🧼 Modo Patio Operativo</strong> &bull; Visualización y avance de turnos en tiempo real
-          </div>
-          <span style="font-family: var(--font-mono); font-size: 0.76rem; opacity: 0.85;">Datos financieros protegidos</span>
-        </div>
-
         <div class="kanban-board-wrapper">
           <div class="kanban-column">
             <div class="kanban-col-header">
@@ -2226,20 +1803,24 @@
         </div>
 
         <div class="caja-columns-split">
+          <!-- Métodos de Pago -->
           <div class="caja-panel">
             <div class="card-top-bar">
               <div>
                 <h3 class="card-title">Canales de Recaudo</h3>
                 <p class="card-subtitle">Efectivo y transferencias en tiempo real</p>
               </div>
-              <div style="display: flex; gap: 8px;">
-                <button class="btn-card-action" onclick="sendCajaReportWhatsApp()" style="background:#25D366; color:#fff; border:none;">📲 Corte WhatsApp</button>
-                <button class="btn-card-action" onclick="exportCajaReportCSV()">CSV</button>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn-card-action" style="background: #25D366; color: #FFFFFF; font-weight: 700; border: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(37,211,102,0.25);" onclick="sendCajaReportWhatsApp()">
+                  <span>📲 Enviar Arqueo al Dueño</span>
+                </button>
+                <button class="btn-card-action" onclick="exportCajaReportCSV()">Exportar CSV</button>
               </div>
             </div>
             <div class="payments-breakdown-list" id="cajaPaymentMethodsBreakdown"></div>
           </div>
 
+          <!-- Gastos y Salidas -->
           <div class="caja-panel">
             <div class="card-top-bar">
               <div>
@@ -2300,7 +1881,7 @@
                 <th>Valor COP</th>
                 <th>Método</th>
                 <th>Estado</th>
-                <th style="text-align: right;">Control</th>
+                <th style="text-align: right;">Control Admin</th>
               </tr>
             </thead>
             <tbody id="historyTableBody"></tbody>
@@ -2308,12 +1889,12 @@
         </div>
       </div>
 
-      <!-- VISTA 6: CONFIGURACIÓN & ADMINISTRACIÓN MULTI-SEDE -->
+      <!-- VISTA 6: CONFIGURACIÓN & ADMINISTRACIÓN TOTAL -->
       <div class="view-container" id="view-config">
         <div class="caja-columns-split">
-          <!-- Datos del Negocio Activo -->
+          <!-- Datos del Negocio & Categorías de Gasto -->
           <div class="caja-panel">
-            <h3 class="card-title" style="margin-bottom: 4px;">Datos de esta Sede</h3>
+            <h3 class="card-title" style="margin-bottom: 4px;">Datos del Autolavado</h3>
             <p class="card-subtitle" style="margin-bottom: 16px;">Configura la información del ticket impreso</p>
 
             <div class="form-group">
@@ -2325,20 +1906,20 @@
               <input type="text" id="configBizAddress" class="form-input">
             </div>
             <div class="form-group">
-              <label class="form-label">Teléfono de Atención</label>
-              <input type="text" id="configBizPhone" class="form-input">
+              <label class="form-label">Teléfono del Negocio</label>
+              <input type="text" id="configBizPhone" class="form-input" placeholder="Ej: 317 015 4654">
             </div>
             <div class="form-group">
-              <label class="form-label">Celular Dueño (Para reportes WhatsApp)</label>
-              <input type="tel" id="configBizOwnerPhone" class="form-input" placeholder="Ej: 3151234567">
+              <label class="form-label">WhatsApp Privado del Dueño (Para recibir los cortes de caja)</label>
+              <input type="text" id="configBizOwnerPhone" class="form-input" placeholder="Ej: 315 123 4567">
             </div>
             <div class="form-group">
               <label class="form-label">Pie de Ticket POS</label>
               <input type="text" id="configBizFooter" class="form-input">
             </div>
-            <button class="modal-btn-primary" onclick="saveBusinessConfig()">Guardar Información de Sede</button>
+            <button class="modal-btn-primary" onclick="saveBusinessConfig()">Guardar Información</button>
 
-            <!-- Categorías de Gasto -->
+            <!-- Administración de Categorías de Gasto -->
             <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
               <div class="card-top-bar" style="margin-bottom: 10px;">
                 <div>
@@ -2350,37 +1931,25 @@
               <div id="configCategoriesList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;"></div>
             </div>
 
-            <!-- Respaldo de esta Sede -->
+            <!-- Copia de Seguridad -->
             <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
-              <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 8px;">Copia de Seguridad de esta Sede</h4>
+              <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 8px;">Respaldo y Seguridad Soberana (100% Local)</h4>
+              <p class="card-subtitle" style="margin-bottom: 12px;">Descarga tus datos a un archivo propio o restaura una copia en un nuevo computador.</p>
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn-card-action" onclick="exportBackupJSON()">Descargar .JSON</button>
-                <button class="btn-card-action" onclick="document.getElementById('fileBackupInput').click()">Restaurar .JSON</button>
-                <input type="file" id="fileBackupInput" accept=".json" style="display: none;" onchange="importBackupJSON(event)">
+                <button class="btn-card-action" onclick="exportBackupJSON()">💾 Descargar Backup .JSON</button>
+                <input type="file" id="importBackupFileInput" accept=".json" style="display: none;" onchange="importBackupJSON(event)">
+                <button class="btn-card-action" onclick="document.getElementById('importBackupFileInput').click()">📂 Restaurar Copia .JSON</button>
+                <button class="btn-card-action" style="color: var(--status-danger);" onclick="resetDemoData()">Restablecer Demos</button>
               </div>
             </div>
           </div>
 
-          <!-- Red de Sedes Multi-Tenant & Tarifas -->
+          <!-- Tarifas y Catálogo de Servicios -->
           <div class="caja-panel">
-            <!-- PANEL MASTER: GESTIÓN DE SEDES SAAS -->
-            <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle);">
-              <div class="card-top-bar" style="margin-bottom: 8px;">
-                <div>
-                  <h3 class="card-title">Red de Autolavados (Multi-Sede)</h3>
-                  <p class="card-subtitle">Administra todas las sedes clientes de Kodiquett</p>
-                </div>
-                <button class="btn-quick-new" style="padding: 5px 12px; font-size: 0.78rem;" onclick="openCreateTenantModal()">+ Nueva Sede</button>
-              </div>
-              <div id="multiTenantManagerList" style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
-                <!-- Lista de sedes -->
-              </div>
-            </div>
-
             <div class="card-top-bar">
               <div>
                 <h3 class="card-title">Catálogo de Servicios y Tarifas</h3>
-                <p class="card-subtitle">Precios COP y duraciones para esta sede</p>
+                <p class="card-subtitle">Edita precios COP, duraciones y comisiones</p>
               </div>
               <button class="btn-quick-new" style="padding: 5px 12px; font-size: 0.78rem;" onclick="openNewServiceModal()">+ Añadir Tarifa</button>
             </div>
@@ -2397,12 +1966,12 @@
               <tbody id="servicesConfigTableBody"></tbody>
             </table>
 
-            <!-- Métodos de Pago -->
+            <!-- Métodos de Pago Editables -->
             <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
               <div class="card-top-bar" style="margin-bottom: 10px;">
                 <div>
                   <h4 style="font-size: 0.95rem; font-weight: 700;">Métodos de Pago Habilitados</h4>
-                  <p class="card-subtitle">Canales de recaudo para esta sede</p>
+                  <p class="card-subtitle">Administra los canales de recaudo</p>
                 </div>
                 <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptNewPaymentMethod()">+ Añadir Método</button>
               </div>
@@ -2423,95 +1992,10 @@
 
     </main>
 
-    <!-- Barra de Navegación Móvil Flotante (Apple Design) -->
-    <nav class="mobile-bottom-bar" id="mobileBottomBar">
-      <button class="mob-tab-btn active" id="mob-nav-overview" onclick="switchView('overview')">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
-        <span>Inicio</span>
-      </button>
-      <button class="mob-tab-btn" id="mob-nav-patio" onclick="switchView('patio')">
-        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-        <span>Patio</span>
-        <span class="mob-badge" id="mobBadgePatio" style="display:none;">0</span>
-      </button>
-      <button class="mob-tab-btn" id="mob-nav-caja" onclick="switchView('caja')">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-        <span>Caja</span>
-      </button>
-      <button class="mob-tab-btn" id="mob-nav-comisiones" onclick="switchView('comisiones')">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-        <span>Lavadores</span>
-      </button>
-      <button class="mob-tab-btn" id="mob-nav-historial" onclick="switchView('historial')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Historial</span>
-      </button>
-      <button class="mob-tab-btn" id="mob-nav-config" onclick="switchView('config')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <span>Ajustes</span>
-      </button>
-    </nav>
-
   </div> <!-- /app-shell -->
 
   <!-- ==========================================================================
-       MODAL: CREAR NUEVA SEDE / AUTOLAVADO (SAAS ONBOARDING)
-       ========================================================================== -->
-  <div class="modal-overlay" id="modalCreateTenant">
-    <div class="modal-sheet" style="max-width: 480px;">
-      <button class="modal-close-btn" onclick="closeModal('modalCreateTenant')">&times;</button>
-      <h3 class="modal-title">Registrar Nuevo Autolavado</h3>
-      <p class="modal-subtitle">Crea una sede independiente con sus propias tarifas y caja aislada</p>
-
-      <div class="form-group">
-        <label class="form-label">Nombre Comercial del Autolavado</label>
-        <input type="text" id="newTenantName" class="form-input" placeholder="Ej: Car Wash Express Norte">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Ciudad</label>
-        <input type="text" id="newTenantCity" class="form-input" placeholder="Ej: Cali, Medellín, Bogotá, etc.">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Código Único de Sede (Slug)</label>
-        <input type="text" id="newTenantCode" class="form-input" placeholder="Ej: NORTE-01" style="font-family: var(--font-mono); font-weight: 700; text-transform: uppercase;">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Dirección</label>
-        <input type="text" id="newTenantAddress" class="form-input" placeholder="Ej: Carrera 1 # 45-12">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Teléfono de Contacto</label>
-        <input type="tel" id="newTenantPhone" class="form-input" placeholder="Ej: 317 000 0000">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">PIN Administrador por defecto</label>
-        <input type="password" id="newTenantAdminPin" class="form-input" placeholder="1234" maxlength="4" style="text-align: center; font-family: var(--font-mono);">
-      </div>
-
-      <button type="button" class="modal-btn-primary" onclick="submitCreateNewTenant()">Crear Autolavado e Iniciar Sesión</button>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       MODAL: CAMBIAR DE SEDE (TENANT SWITCHER)
-       ========================================================================== -->
-  <div class="modal-overlay" id="modalTenantSwitcher">
-    <div class="modal-sheet" style="max-width: 480px;">
-      <button class="modal-close-btn" onclick="closeModal('modalTenantSwitcher')">&times;</button>
-      <h3 class="modal-title">Cambiar de Autolavado</h3>
-      <p class="modal-subtitle">Selecciona la sede a la que deseas acceder</p>
-      <div class="tenants-selection-list" id="modalTenantsList" style="max-height: 320px;"></div>
-      <button type="button" class="btn-card-action" style="width: 100%; margin-top: 10px;" onclick="openCreateTenantModal()">+ Registrar Otra Sede</button>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       MODAL: INGRESO RÁPIDO EXPRESS (+ NUEVO VEHÍCULO - F2)
+       MODAL 1: INGRESO RÁPIDO EXPRESS (+ NUEVO VEHÍCULO - F2)
        ========================================================================== -->
   <div class="modal-overlay" id="modalNewOrder">
     <div class="modal-sheet">
@@ -2559,7 +2043,7 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: EDICIÓN COMPLETA DE ORDEN DE TRABAJO (ADMIN)
+       MODAL 2: EDICIÓN COMPLETA DE ORDEN DE TRABAJO (ADMIN)
        ========================================================================== -->
   <div class="modal-overlay" id="modalEditOrder">
     <div class="modal-sheet">
@@ -2628,7 +2112,7 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: REGISTRAR / EDITAR GASTO
+       MODAL 3: REGISTRAR / EDITAR GASTO
        ========================================================================== -->
   <div class="modal-overlay" id="modalExpense">
     <div class="modal-sheet" style="max-width: 440px;">
@@ -2663,7 +2147,7 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: GESTIONAR CATEGORÍAS DE GASTO
+       MODAL 4: GESTIONAR CATEGORÍAS DE GASTO
        ========================================================================== -->
   <div class="modal-overlay" id="modalCategories">
     <div class="modal-sheet" style="max-width: 480px;">
@@ -2691,7 +2175,7 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: COBRO & SALIDA (CHECKOUT)
+       MODAL 5: COBRO & SALIDA (CHECKOUT)
        ========================================================================== -->
   <div class="modal-overlay" id="modalCheckout">
     <div class="modal-sheet" style="max-width: 440px;">
@@ -2716,7 +2200,7 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: AÑADIR / EDITAR LAVADOR
+       MODAL 6: AÑADIR / EDITAR LAVADOR
        ========================================================================== -->
   <div class="modal-overlay" id="modalWasher">
     <div class="modal-sheet" style="max-width: 440px;">
@@ -2751,7 +2235,7 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: AÑADIR / EDITAR SERVICIO (TARIFA)
+       MODAL 7: AÑADIR / EDITAR SERVICIO (TARIFA)
        ========================================================================== -->
   <div class="modal-overlay" id="modalService">
     <div class="modal-sheet" style="max-width: 480px;">
@@ -2806,7 +2290,7 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: VISOR DE TICKET TÉRMICO POS
+       MODAL 8: VISOR DE TICKET TÉRMICO POS
        ========================================================================== -->
   <div class="modal-overlay" id="modalTicket">
     <div class="modal-sheet" style="max-width: 360px;">
@@ -2817,51 +2301,64 @@
   </div>
 
   <!-- ==========================================================================
-       LÓGICA JAVASCRIPT COMPLETA: MULTI-TENANT + RBAC + CONTROL TOTAL
+       MODAL 9: CAMBIO DE ROL CON PIN
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalRolePin">
+    <div class="modal-sheet" style="max-width: 400px; text-align: center;">
+      <button class="modal-close-btn" onclick="closeModal('modalRolePin')">&times;</button>
+      <h3 class="modal-title">Cambio de Rol de Acceso</h3>
+      <p class="modal-subtitle" id="pinPromptText">Ingresa el PIN de seguridad</p>
+      
+      <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;">
+        <button class="btn-card-action" onclick="requestSwitchRole('admin')">👑 Admin</button>
+        <button class="btn-card-action" onclick="requestSwitchRole('cajero')">💼 Cajero</button>
+        <button class="btn-card-action" onclick="requestSwitchRole('lavador')">🧼 Lavador</button>
+      </div>
+
+      <div class="form-group" id="pinInputGroup" style="display: none;">
+        <label class="form-label">PIN (Admin por defecto: 1234 &bull; Cajero: 0000)</label>
+        <input type="password" id="rolePinInput" class="form-input" style="text-align: center; font-size: 1.4rem; letter-spacing: 0.3em;" maxlength="4">
+        <p id="pinErrorMsg" style="color: var(--status-danger); font-size: 0.78rem; display: none; margin-top: 4px;">PIN incorrecto</p>
+        <button type="button" class="modal-btn-primary" onclick="verifyRolePin()">Confirmar Acceso</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BARRA DE NAVEGACIÓN MÓVIL PWA -->
+  <nav class="mobile-bottom-nav" aria-label="Navegación móvil">
+    <button class="mob-nav-btn active" id="mob-nav-overview" onclick="switchView('overview')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-patio" onclick="switchView('patio')">
+      <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+      <span>Patio</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-caja" onclick="switchView('caja')">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      <span>Caja</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-comisiones" onclick="switchView('comisiones')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+      <span>Lavadores</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-config" onclick="switchView('config')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+
+  <!-- ==========================================================================
+       LÓGICA JAVASCRIPT COMPLETA CON CONTROL TOTAL DEL ADMIN
        ========================================================================== -->
   <script>
-    // Registro Inicial de Autolavados (Multi-Tenant SaaS)
-    const DEFAULT_TENANTS = [
-      {
-        id: 'cali-express',
-        code: 'CALI-01',
-        name: 'Autolavado Cali Express',
-        city: 'Cali',
-        address: 'Calle 5 # 38-20, Cali - Valle',
-        phone: '317 015 4654',
-        ownerPhone: '315 555 1234',
-        active: true,
-        adminPin: '1234',
-        cajeroPin: '0000',
-        lavadorPin: '1111'
-      },
-      {
-        id: 'master-detail-medellin',
-        code: 'MED-02',
-        name: 'Master Detail & Car Wash',
-        city: 'Medellín',
-        address: 'Carrera 43A # 18 Sur, El Poblado, Medellín',
-        phone: '300 456 7890',
-        ownerPhone: '310 987 6543',
-        active: true,
-        adminPin: '1234',
-        cajeroPin: '0000',
-        lavadorPin: '1111'
-      },
-      {
-        id: 'ecowash-bogota',
-        code: 'BOG-03',
-        name: 'EcoWash Premium Bogotá',
-        city: 'Bogotá',
-        address: 'Calle 127 # 15-45, Usaquén, Bogotá',
-        phone: '312 345 6789',
-        ownerPhone: '320 123 4567',
-        active: true,
-        adminPin: '1234',
-        cajeroPin: '0000',
-        lavadorPin: '1111'
-      }
-    ];
+    const DEFAULT_CONFIG = {
+      businessName: 'WASHQ &bull; AUTOLAVADO EXPRESS',
+      address: 'Calle 5 # 38-20, Cali - Valle',
+      phone: '317 015 4654',
+      ownerPhone: '315 555 1234',
+      footerText: '¡Gracias por su visita! Cuidamos su vehículo.'
+    };
 
     const DEFAULT_SERVICES = [
       { id: 's_m1', type: 'moto', name: 'Lavado Sencillo Moto', price: 12000, duration: 20, commType: 'porcentaje', commVal: 40 },
@@ -2899,20 +2396,22 @@
       'Varios / Imprevistos'
     ];
 
-    // Estado del Multi-Tenant
-    let tenantsRegistry = [];
-    let activeTenant = null;
-    let selectedAuthRole = 'admin';
+    const DEFAULT_ROLES = [
+      { id: 'admin', name: 'Super Admin', icon: '👑', pin: '1234' },
+      { id: 'cajero', name: 'Cajero / Recepción', icon: '💼', pin: '0000' },
+      { id: 'lavador', name: 'Lavador de Patio', icon: '🧼', pin: '' }
+    ];
 
-    // Estado de la Sede Activa (Aislado)
+    // Estado Global
     let appState = {
-      tenantId: 'cali-express',
-      config: {},
+      config: { ...DEFAULT_CONFIG },
       services: [...DEFAULT_SERVICES],
       washers: [...DEFAULT_WASHERS],
       paymentMethods: [...DEFAULT_PAYMENT_METHODS],
       expenseCategories: [...DEFAULT_EXPENSE_CATEGORIES],
+      roles: [...DEFAULT_ROLES],
       currentRole: 'admin',
+      pendingRoleSwitch: null,
       orders: [],
       expenses: [],
       selectedVehicleType: 'carro',
@@ -2923,11 +2422,11 @@
       return '$ ' + Number(num || 0).toLocaleString('es-CO');
     }
 
-    // ================= INICIALIZACIÓN MULTI-SEDE =================
+    // Inicialización
     document.addEventListener('DOMContentLoaded', () => {
-      initTenantsRegistry();
-      checkAuthRouteOrSession();
+      loadFromStorage();
       setupEventListeners();
+      renderAllViews();
       initPwaInstallPrompt();
       registerPwaServiceWorker();
 
@@ -2936,269 +2435,29 @@
       }, 15000);
     });
 
-    function initTenantsRegistry() {
+    function loadFromStorage() {
       try {
-        const saved = localStorage.getItem('washq_tenants_registry');
+        const saved = localStorage.getItem('washq_cali_db');
         if (saved) {
-          tenantsRegistry = JSON.parse(saved);
-        } else {
-          tenantsRegistry = [...DEFAULT_TENANTS];
-          localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
-        }
-      } catch (e) {
-        tenantsRegistry = [...DEFAULT_TENANTS];
-      }
-      renderTenantsListOnAuth();
-    }
-
-    // Comprueba si hay sede en URL (ej: ?sede=cali-express o ?codigo=CALI-01) o sesión guardada
-    function checkAuthRouteOrSession() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlSede = urlParams.get('sede');
-      const urlCode = urlParams.get('codigo');
-      const urlRole = urlParams.get('rol');
-
-      let targetTenant = null;
-      if (urlSede) {
-        targetTenant = tenantsRegistry.find(t => t.id === urlSede);
-      } else if (urlCode) {
-        targetTenant = tenantsRegistry.find(t => t.code.toUpperCase() === urlCode.toUpperCase());
-      }
-
-      if (targetTenant) {
-        chooseTenantForLogin(targetTenant.id);
-        if (urlRole && ['admin', 'cajero', 'lavador'].includes(urlRole)) {
-          selectLoginRole(urlRole);
-          // Si es lavador por URL de patio, ingresa directo
-          if (urlRole === 'lavador') {
-            executeLoginSuccess(targetTenant, 'lavador');
-            return;
+          appState = { ...appState, ...JSON.parse(saved) };
+          if (!appState.expenseCategories || appState.expenseCategories.length === 0) {
+            appState.expenseCategories = [...DEFAULT_EXPENSE_CATEGORIES];
           }
-        }
-        return;
-      }
-
-      // Comprobar sesión guardada
-      const savedSession = localStorage.getItem('washq_active_session');
-      if (savedSession) {
-        try {
-          const sess = JSON.parse(savedSession);
-          const found = tenantsRegistry.find(t => t.id === sess.tenantId);
-          if (found) {
-            executeLoginSuccess(found, sess.role);
-            return;
-          }
-        } catch (e) {}
-      }
-
-      // Si no hay sesión, mostrar pantalla de login multi-sede
-      showAuthScreen();
-    }
-
-    function showAuthScreen() {
-      document.getElementById('authScreen').style.display = 'flex';
-      document.getElementById('appShell').style.display = 'none';
-      renderTenantsListOnAuth();
-    }
-
-    function renderTenantsListOnAuth() {
-      const list = document.getElementById('tenantsSelectionList');
-      if (!list) return;
-      list.innerHTML = '';
-
-      tenantsRegistry.forEach(t => {
-        const card = document.createElement('div');
-        card.className = 'tenant-select-card';
-        card.onclick = () => chooseTenantForLogin(t.id);
-        card.innerHTML = `
-          <div class="tenant-card-left">
-            <div class="tenant-avatar-badge">${t.name.charAt(0)}</div>
-            <div class="tenant-info-titles">
-              <span class="tenant-name-text">${t.name}</span>
-              <span class="tenant-location-text">📍 ${t.city} &bull; ${t.address}</span>
-            </div>
-          </div>
-          <span class="tenant-code-tag">${t.code}</span>
-        `;
-        list.appendChild(card);
-      });
-    }
-
-    function submitTenantCode() {
-      const code = document.getElementById('tenantCodeInput').value.trim().toUpperCase();
-      if (!code) {
-        alert('Por favor ingresa el código de tu autolavado (ej: CALI-01)');
-        return;
-      }
-      const tenant = tenantsRegistry.find(t => t.code.toUpperCase() === code || t.id.toUpperCase() === code);
-      if (tenant) {
-        chooseTenantForLogin(tenant.id);
-      } else {
-        alert(`No se encontró ningún autolavado con el código "${code}". Puedes registrarlo con el botón "+ Nueva Sede".`);
-      }
-    }
-
-    function chooseTenantForLogin(tenantId) {
-      const tenant = tenantsRegistry.find(t => t.id === tenantId);
-      if (!tenant) return;
-      activeTenant = tenant;
-
-      document.getElementById('authActiveTenantName').textContent = tenant.name;
-      document.getElementById('authActiveTenantLocation').textContent = `${tenant.city} • Código: ${tenant.code}`;
-
-      document.getElementById('authStepTenant').style.display = 'none';
-      document.getElementById('authStepProfile').style.display = 'block';
-
-      selectLoginRole('admin');
-      clearPinKey();
-      document.getElementById('authPinError').style.display = 'none';
-    }
-
-    function backToTenantStep() {
-      document.getElementById('authStepTenant').style.display = 'block';
-      document.getElementById('authStepProfile').style.display = 'none';
-    }
-
-    function selectLoginRole(roleId) {
-      selectedAuthRole = roleId;
-      document.querySelectorAll('.role-login-card').forEach(c => c.classList.remove('selected'));
-      const activeCard = document.getElementById('authRoleCard-' + roleId);
-      if (activeCard) activeCard.classList.add('selected');
-
-      const pinHint = document.getElementById('pinHintText');
-      if (roleId === 'admin') {
-        pinHint.textContent = `PIN Demo: ${activeTenant ? activeTenant.adminPin || '1234' : '1234'}`;
-      } else if (roleId === 'cajero') {
-        pinHint.textContent = `PIN Demo: ${activeTenant ? activeTenant.cajeroPin || '0000' : '0000'}`;
-      } else {
-        pinHint.textContent = `PIN Demo: ${activeTenant ? activeTenant.lavadorPin || '1111' : '1111'} (o directo)`;
-      }
-
-      clearPinKey();
-      document.getElementById('authPinError').style.display = 'none';
-      setTimeout(() => document.getElementById('authPinInput').focus(), 150);
-    }
-
-    // Teclado PIN
-    function pressPinKey(digit) {
-      const input = document.getElementById('authPinInput');
-      if (input.value.length < 4) {
-        input.value += digit;
-      }
-      if (input.value.length === 4) {
-        setTimeout(submitAuthLogin, 100);
-      }
-    }
-
-    function deletePinKey() {
-      const input = document.getElementById('authPinInput');
-      input.value = input.value.slice(0, -1);
-    }
-
-    function clearPinKey() {
-      document.getElementById('authPinInput').value = '';
-    }
-
-    function submitAuthLogin() {
-      if (!activeTenant) return;
-      const enteredPin = document.getElementById('authPinInput').value;
-
-      let expectedPin = '1234';
-      if (selectedAuthRole === 'admin') expectedPin = activeTenant.adminPin || '1234';
-      else if (selectedAuthRole === 'cajero') expectedPin = activeTenant.cajeroPin || '0000';
-      else if (selectedAuthRole === 'lavador') expectedPin = activeTenant.lavadorPin || '1111';
-
-      // Acceso de lavador puede ser con PIN o directo si ingresa el PIN configurado
-      if (enteredPin === expectedPin || (selectedAuthRole === 'lavador' && enteredPin === '')) {
-        const remember = document.getElementById('rememberSessionCheck').checked;
-        if (remember) {
-          localStorage.setItem('washq_active_session', JSON.stringify({
-            tenantId: activeTenant.id,
-            role: selectedAuthRole,
-            timestamp: Date.now()
-          }));
-        }
-        executeLoginSuccess(activeTenant, selectedAuthRole);
-      } else {
-        document.getElementById('authPinError').style.display = 'block';
-        clearPinKey();
-      }
-    }
-
-    function executeLoginSuccess(tenant, role) {
-      activeTenant = tenant;
-      appState.tenantId = tenant.id;
-      appState.currentRole = role;
-
-      // Cargar base de datos aislada de esta sede
-      loadTenantDatabase(tenant.id);
-
-      // Ocultar pantalla de auth y mostrar panel principal
-      document.getElementById('authScreen').style.display = 'none';
-      document.getElementById('appShell').style.display = 'flex';
-
-      // Aplicar restricciones según el Rol (RBAC)
-      applyRoleInterfaceRestrictions(role);
-
-      // Renderizar vistas
-      renderAllViews();
-    }
-
-    function logoutAppSession() {
-      localStorage.removeItem('washq_active_session');
-      clearPinKey();
-      showAuthScreen();
-    }
-
-    // ================= AISLAMIENTO DE DATOS POR SEDE (DATABASE) =================
-    function loadTenantDatabase(tenantId) {
-      const storageKey = `washq_tenant_${tenantId}_db`;
-      try {
-        const saved = localStorage.getItem(storageKey);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          appState = {
-            ...appState,
-            ...parsed,
-            tenantId: tenantId
-          };
         } else {
-          // Inicializar datos demo específicos para esta sede
-          initializeTenantFreshData(tenantId);
+          seedInitialOrders();
           saveToStorage();
         }
       } catch (e) {
-        initializeTenantFreshData(tenantId);
-        saveToStorage();
+        console.error('Error cargando storage:', e);
       }
     }
 
     function saveToStorage() {
-      if (!appState.tenantId) return;
-      const storageKey = `washq_tenant_${appState.tenantId}_db`;
       try {
-        localStorage.setItem(storageKey, JSON.stringify(appState));
+        localStorage.setItem('washq_cali_db', JSON.stringify(appState));
       } catch (e) {
-        console.error('Error guardando datos de la sede:', e);
+        console.error('Error guardando storage:', e);
       }
-    }
-
-    function initializeTenantFreshData(tenantId) {
-      const tenant = tenantsRegistry.find(t => t.id === tenantId) || DEFAULT_TENANTS[0];
-      appState.config = {
-        businessName: tenant.name.toUpperCase(),
-        address: tenant.address,
-        phone: tenant.phone,
-        ownerPhone: tenant.ownerPhone || '',
-        footerText: `¡Gracias por visitarnos en ${tenant.city}! Cuidamos su vehículo.`
-      };
-      appState.services = [...DEFAULT_SERVICES];
-      appState.washers = [...DEFAULT_WASHERS];
-      appState.paymentMethods = [...DEFAULT_PAYMENT_METHODS];
-      appState.expenseCategories = [...DEFAULT_EXPENSE_CATEGORIES];
-      appState.orders = [];
-      appState.expenses = [];
-      seedInitialOrders();
     }
 
     function seedInitialOrders() {
@@ -3288,192 +2547,11 @@
       ];
     }
 
-    // ================= RESTRICCIONES SEGÚN EL ROL (RBAC) =================
-    function applyRoleInterfaceRestrictions(role) {
-      const navOverview = document.getElementById('nav-overview');
-      const navCaja = document.getElementById('nav-caja');
-      const navConfig = document.getElementById('nav-config');
-      const mobNavOverview = document.getElementById('mob-nav-overview');
-      const mobNavCaja = document.getElementById('mob-nav-caja');
-      const mobNavConfig = document.getElementById('mob-nav-config');
-      const runwayWidget = document.getElementById('sidebarRunwayWidget');
-      const restrictedBanner = document.getElementById('patioRestrictedBanner');
-      const adminBadge = document.getElementById('adminControlBadge');
-      const headerTenantName = document.getElementById('headerTenantName');
-
-      if (activeTenant) {
-        headerTenantName.textContent = activeTenant.name;
-      }
-
-      if (role === 'lavador') {
-        // Ocultar finanzas y configuración
-        if (navOverview) navOverview.style.display = 'none';
-        if (navCaja) navCaja.style.display = 'none';
-        if (navConfig) navConfig.style.display = 'none';
-        if (mobNavOverview) mobNavOverview.style.display = 'none';
-        if (mobNavCaja) mobNavCaja.style.display = 'none';
-        if (mobNavConfig) mobNavConfig.style.display = 'none';
-        if (runwayWidget) runwayWidget.style.display = 'none';
-        if (restrictedBanner) restrictedBanner.style.display = 'flex';
-
-        adminBadge.textContent = '🧼 Lavador de Patio';
-        adminBadge.style.background = '#F1F5F9';
-        adminBadge.style.color = '#475569';
-        adminBadge.style.borderColor = '#CBD5E1';
-
-        // Ir directamente a Patio
-        switchView('patio');
-      } else if (role === 'cajero') {
-        if (navOverview) navOverview.style.display = 'block';
-        if (navCaja) navCaja.style.display = 'block';
-        if (navConfig) navConfig.style.display = 'none'; // No altera configuraciones base
-        if (mobNavOverview) mobNavOverview.style.display = 'flex';
-        if (mobNavCaja) mobNavCaja.style.display = 'flex';
-        if (mobNavConfig) mobNavConfig.style.display = 'none';
-        if (runwayWidget) runwayWidget.style.display = 'block';
-        if (restrictedBanner) restrictedBanner.style.display = 'none';
-
-        adminBadge.textContent = '💼 Cajero / Recepción';
-        adminBadge.style.background = 'var(--accent-subtle)';
-        adminBadge.style.color = 'var(--accent-primary)';
-        adminBadge.style.borderColor = 'var(--accent-border)';
-
-        switchView('patio');
-      } else {
-        // Super Admin
-        if (navOverview) navOverview.style.display = 'block';
-        if (navCaja) navCaja.style.display = 'block';
-        if (navConfig) navConfig.style.display = 'block';
-        if (mobNavOverview) mobNavOverview.style.display = 'flex';
-        if (mobNavCaja) mobNavCaja.style.display = 'flex';
-        if (mobNavConfig) mobNavConfig.style.display = 'flex';
-        if (runwayWidget) runwayWidget.style.display = 'block';
-        if (restrictedBanner) restrictedBanner.style.display = 'none';
-
-        adminBadge.textContent = '👑 Super Admin';
-        adminBadge.style.background = 'var(--accent-subtle)';
-        adminBadge.style.color = 'var(--accent-primary)';
-        adminBadge.style.borderColor = 'var(--accent-border)';
-
-        switchView('overview');
-      }
-    }
-
-    // ================= GESTIÓN MULTI-SEDE (CREAR Y CAMBIAR SEDE) =================
-    function openCreateTenantModal() {
-      document.getElementById('newTenantName').value = '';
-      document.getElementById('newTenantCity').value = '';
-      document.getElementById('newTenantCode').value = '';
-      document.getElementById('newTenantAddress').value = '';
-      document.getElementById('newTenantPhone').value = '';
-      document.getElementById('newTenantAdminPin').value = '1234';
-      openModal('modalCreateTenant');
-    }
-
-    function submitCreateNewTenant() {
-      const name = document.getElementById('newTenantName').value.trim();
-      const city = document.getElementById('newTenantCity').value.trim();
-      let code = document.getElementById('newTenantCode').value.trim().toUpperCase();
-      const address = document.getElementById('newTenantAddress').value.trim();
-      const phone = document.getElementById('newTenantPhone').value.trim();
-      const adminPin = document.getElementById('newTenantAdminPin').value.trim() || '1234';
-
-      if (!name || !city) {
-        alert('Por favor ingrese al menos el nombre y la ciudad del autolavado');
-        return;
-      }
-
-      if (!code) {
-        code = city.slice(0, 3).toUpperCase() + '-' + String(tenantsRegistry.length + 1).padStart(2, '0');
-      }
-
-      const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-      const newTenant = {
-        id: slug + '-' + Date.now().toString().slice(-4),
-        code: code,
-        name: name,
-        city: city,
-        address: address || city,
-        phone: phone || '',
-        ownerPhone: phone || '',
-        active: true,
-        adminPin: adminPin,
-        cajeroPin: '0000',
-        lavadorPin: '1111'
-      };
-
-      tenantsRegistry.push(newTenant);
-      localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
-      closeModal('modalCreateTenant');
-
-      // Iniciar sesión inmediatamente en la nueva sede creada
-      executeLoginSuccess(newTenant, 'admin');
-      alert(`🎉 ¡Autolavado "${name}" creado exitosamente! Código asignado: ${code}`);
-    }
-
-    function openTenantSwitcherModal() {
-      const list = document.getElementById('modalTenantsList');
-      list.innerHTML = '';
-      tenantsRegistry.forEach(t => {
-        const item = document.createElement('div');
-        item.className = 'tenant-select-card';
-        if (activeTenant && t.id === activeTenant.id) {
-          item.style.borderColor = 'var(--accent-primary)';
-          item.style.background = 'var(--accent-subtle)';
-        }
-        item.onclick = () => {
-          closeModal('modalTenantSwitcher');
-          executeLoginSuccess(t, appState.currentRole);
-        };
-        item.innerHTML = `
-          <div class="tenant-card-left">
-            <div class="tenant-avatar-badge">${t.name.charAt(0)}</div>
-            <div class="tenant-info-titles">
-              <span class="tenant-name-text">${t.name}</span>
-              <span class="tenant-location-text">📍 ${t.city} &bull; ${t.address}</span>
-            </div>
-          </div>
-          <span class="tenant-code-tag">${t.code}</span>
-        `;
-        list.appendChild(item);
-      });
-      openModal('modalTenantSwitcher');
-    }
-
-    function renderMultiTenantConfigList() {
-      const container = document.getElementById('multiTenantManagerList');
-      if (!container) return;
-      container.innerHTML = '';
-
-      tenantsRegistry.forEach(t => {
-        const row = document.createElement('div');
-        row.className = 'queue-item';
-        const isCurrent = activeTenant && t.id === activeTenant.id;
-        row.innerHTML = `
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="tenant-avatar-badge" style="width:32px; height:32px; font-size:0.85rem;">${t.name.charAt(0)}</span>
-            <div>
-              <strong style="font-size:0.86rem;">${t.name}</strong>
-              <div style="font-size:0.72rem; color:var(--text-muted);">${t.city} &bull; Código: <code>${t.code}</code></div>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            ${isCurrent 
-              ? `<span class="queue-status-tag tag-ready">Sede Activa</span>`
-              : `<button class="btn-card-action" style="padding:3px 8px; font-size:0.75rem;" onclick="executeLoginSuccess(tenantsRegistry.find(x => x.id === '${t.id}'), 'admin')">Cambiar a esta</button>`
-            }
-          </div>
-        `;
-        container.appendChild(row);
-      });
-    }
-
-    // ================= EVENTOS Y NAVEGACIÓN =================
     function setupEventListeners() {
       window.addEventListener('keydown', (e) => {
         if (e.key === 'F2') {
           e.preventDefault();
-          if (appState.currentRole !== 'lavador') openNewOrderModal();
+          openNewOrderModal();
         }
         if (e.key === 'Escape') {
           closeAllModals();
@@ -3495,15 +2573,15 @@
     function switchView(viewId) {
       document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.mob-tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mob-nav-btn').forEach(el => el.classList.remove('active'));
 
       const targetView = document.getElementById('view-' + viewId);
       const targetNav = document.getElementById('nav-' + viewId);
-      const targetMob = document.getElementById('mob-nav-' + viewId);
+      const targetMobNav = document.getElementById('mob-nav-' + viewId);
 
       if (targetView) targetView.classList.add('active');
       if (targetNav) targetNav.classList.add('active');
-      if (targetMob) targetMob.classList.add('active');
+      if (targetMobNav) targetMobNav.classList.add('active');
 
       const headings = {
         'overview': 'Resumen General',
@@ -3511,7 +2589,7 @@
         'caja': 'Caja & Arqueo Diario',
         'comisiones': 'Liquidación de Comisiones',
         'historial': 'Historial de Vehículos',
-        'config': 'Configuración & Control Multi-Sede'
+        'config': 'Configuración & Control Total'
       };
       document.getElementById('viewMainHeading').textContent = headings[viewId] || 'WashQ';
       renderAllViews();
@@ -3527,7 +2605,6 @@
       renderBusinessConfig();
       renderPaymentMethodsConfig();
       renderExpenseCategoriesConfig();
-      renderMultiTenantConfigList();
     }
 
     // ================= OVERVIEW =================
@@ -3545,11 +2622,6 @@
 
       const activeCount = todayOrders.filter(o => o.status === 'espera' || o.status === 'lavando').length;
       document.getElementById('badgeActivePatio').textContent = activeCount;
-      const mobBadge = document.getElementById('mobBadgePatio');
-      if (mobBadge) {
-        mobBadge.textContent = activeCount;
-        mobBadge.style.display = activeCount > 0 ? 'inline-block' : 'none';
-      }
       document.getElementById('overviewActiveVehiclesCount').textContent = `${activeCount} en Proceso`;
       document.getElementById('sidebarPatioCapacity').innerHTML = `${Math.min(100, activeCount * 20)}% <small>(${activeCount} bahías)</small>`;
 
@@ -3624,7 +2696,7 @@
       document.getElementById('overviewGiantTotal').textContent = formatCOP(base * mult);
     }
 
-    // ================= KANBAN CON CONTROL DE ROLES =================
+    // ================= KANBAN CON HERRAMIENTAS ADMIN =================
     function renderKanban() {
       const cols = {
         'espera': document.getElementById('cards-espera'),
@@ -3655,17 +2727,14 @@
       card.className = 'order-card';
       const elapsedMin = Math.floor((Date.now() - order.createdAt) / 60000);
       const isDelayed = order.status !== 'entregado' && elapsedMin > order.estimatedDuration;
-      const isLavador = appState.currentRole === 'lavador';
 
       card.innerHTML = `
         <div class="card-row-top">
           <span class="colombian-plate">${order.plate}</span>
           <div class="card-top-admin-tools">
             <span class="card-meta-type">${order.vehicleType}</span>
-            ${!isLavador ? `
-              <button class="btn-admin-icon" title="Editar orden (Admin)" onclick="openEditOrderModal('${order.id}')">✏️</button>
-              <button class="btn-admin-icon danger" title="Eliminar orden (Admin)" onclick="deleteOrderById('${order.id}')">🗑️</button>
-            ` : ''}
+            <button class="btn-admin-icon" title="Editar orden completa (Admin)" onclick="openEditOrderModal('${order.id}')">✏️</button>
+            <button class="btn-admin-icon danger" title="Eliminar orden (Admin)" onclick="deleteOrderById('${order.id}')">🗑️</button>
           </div>
         </div>
         <div class="card-service-name">${order.serviceName}</div>
@@ -3677,7 +2746,7 @@
           <span class="timer-badge ${isDelayed ? 'timer-delayed' : ''}">
             ⏱️ ${elapsedMin} min ${isDelayed ? '(Retrasado)' : ''}
           </span>
-          <span class="table-num">${!isLavador ? formatCOP(order.price) : 'En Turno'}</span>
+          <span class="table-num">${formatCOP(order.price)}</span>
         </div>
         <div class="card-action-bar">
           ${getActionButtonsForOrder(order)}
@@ -3687,22 +2756,16 @@
     }
 
     function getActionButtonsForOrder(order) {
-      const isLavador = appState.currentRole === 'lavador';
-
       if (order.status === 'espera') {
         return `<button class="btn-card-action btn-card-primary" onclick="advanceOrderStatus('${order.id}', 'lavando')">▶ Pasar a Lavado</button>`;
       } else if (order.status === 'lavando') {
         return `<button class="btn-card-action btn-card-primary" onclick="advanceOrderStatus('${order.id}', 'listo')">✓ Marcar como Listo</button>`;
       } else if (order.status === 'listo') {
-        if (isLavador) {
-          return `<button class="btn-card-action" style="cursor:default; opacity:0.8;">Esperando Retiro del Cliente</button>`;
-        }
         return `
           ${order.phone ? `<a href="${getWhatsAppLink(order)}" target="_blank" class="btn-card-action btn-whatsapp-action">📲 Avisar WhatsApp</a>` : ''}
           <button class="btn-card-action btn-card-primary" onclick="openCheckoutModal('${order.id}')">💵 Cobrar y Entregar</button>
         `;
       } else {
-        if (isLavador) return '';
         return `<button class="btn-card-action" onclick="viewOrderTicket('${order.id}')">🖨️ Ver Ticket POS</button>`;
       }
     }
@@ -3742,6 +2805,7 @@
       document.getElementById('editOrderNotes').value = order.notes || '';
       document.getElementById('editOrderStatusSelect').value = order.status;
 
+      // Dropdown de servicios
       const sSelect = document.getElementById('editOrderServiceSelect');
       sSelect.innerHTML = '';
       appState.services.forEach(s => {
@@ -3752,6 +2816,7 @@
         sSelect.appendChild(opt);
       });
 
+      // Dropdown de lavadores
       const wSelect = document.getElementById('editOrderWasherSelect');
       wSelect.innerHTML = '<option value="">-- Sin Lavador Asignado --</option>';
       appState.washers.forEach(w => {
@@ -3762,6 +2827,7 @@
         wSelect.appendChild(opt);
       });
 
+      // Dropdown de métodos de pago
       const pmSelect = document.getElementById('editOrderPaymentMethodSelect');
       pmSelect.innerHTML = '<option value="">-- Pendiente de Cobro --</option>';
       appState.paymentMethods.forEach(pm => {
@@ -4000,7 +3066,7 @@
       openModal('modalTicket');
     }
 
-    // ================= GASTOS & CATEGORÍAS =================
+    // ================= GASTOS & CATEGORÍAS (CONTROL TOTAL) =================
     function renderCaja() {
       const totalIngresos = appState.orders.reduce((sum, o) => sum + (o.price || 0), 0);
       const totalComisiones = appState.orders.reduce((sum, o) => sum + (o.commission || 0), 0);
@@ -4130,6 +3196,7 @@
       }
     }
 
+    // Gestión de Categorías de Gasto
     function openCategoryManagerModal() {
       renderCategoriesModalTable();
       openModal('modalCategories');
@@ -4142,8 +3209,9 @@
         const count = appState.expenses.filter(e => e.category === cat).length;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><strong>${cat}</strong> <small style="color:var(--text-muted);">(${count} gastos)</small></td>
+          <td><strong>${cat}</strong> <small style="color:var(--text-muted);">(${count} gastos asociados)</small></td>
           <td style="text-align: right;">
+            <button class="btn-admin-icon" onclick="promptEditCategory('${cat}')">✏️</button>
             <button class="btn-admin-icon danger" onclick="deleteCategory('${cat}')">🗑️</button>
           </td>
         `;
@@ -4152,7 +3220,7 @@
     }
 
     function promptNewCategory() {
-      const name = prompt('Nombre del nuevo tipo de gasto (ej: Seguro, Arriendo, Nómina, etc.):');
+      const name = prompt('Escribe el nombre del nuevo tipo de gasto (ej: Seguro, Arriendo, Nómina, etc.):');
       if (name && name.trim()) {
         const clean = name.trim();
         if (!appState.expenseCategories.includes(clean)) {
@@ -4176,6 +3244,24 @@
         renderCategoriesModalTable();
         renderExpenseCategoriesConfig();
         populateExpenseCategoriesDropdown();
+      }
+    }
+
+    function promptEditCategory(oldCat) {
+      const newCat = prompt(`Editar nombre de la categoría "${oldCat}":`, oldCat);
+      if (newCat && newCat.trim() && newCat !== oldCat) {
+        const clean = newCat.trim();
+        const idx = appState.expenseCategories.indexOf(oldCat);
+        if (idx !== -1) {
+          appState.expenseCategories[idx] = clean;
+          appState.expenses.forEach(e => {
+            if (e.category === oldCat) e.category = clean;
+          });
+          saveToStorage();
+          renderCategoriesModalTable();
+          renderExpenseCategoriesConfig();
+          renderAllViews();
+        }
       }
     }
 
@@ -4216,85 +3302,13 @@
       appState.expenses.forEach(e => {
         csv += `Gasto,${e.desc},-${e.amount},${e.category}\n`;
       });
-      downloadCSV(csv, `Arqueo_${appState.tenantId}_WashQ.csv`);
+      downloadCSV(csv, 'Arqueo_Caja_WashQ.csv');
     }
 
-    // ================= CORTE POR WHATSAPP AL DUEÑO =================
-    function sendCajaReportWhatsApp() {
-      const biz = appState.config;
-      const ownerPhone = (biz.ownerPhone || '').replace(/\D/g, '');
-
-      const todayStr = new Date().toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric', month: 'short' });
-      const timeStr = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-
-      const totalVehiculos = appState.orders.length;
-      const totalIngresos = appState.orders.reduce((sum, o) => sum + (o.price || 0), 0);
-      const totalComisiones = appState.orders.reduce((sum, o) => sum + (o.commission || 0), 0);
-      const totalGastos = appState.expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
-
-      let pmBreakdown = '';
-      let efectivoCobrado = 0;
-      appState.paymentMethods.forEach(pm => {
-        const pmOrders = appState.orders.filter(o => o.paymentMethod === pm.id);
-        const pmTotal = pmOrders.reduce((sum, o) => sum + (o.price || 0), 0);
-        if (pm.id === 'pm_efectivo') efectivoCobrado = pmTotal;
-        if (pmTotal > 0 || pmOrders.length > 0) {
-          pmBreakdown += `• ${pm.icon || '💳'} ${pm.name}: ${formatCOP(pmTotal)} (${pmOrders.length} pagos)\n`;
-        }
-      });
-
-      let washersBreakdown = '';
-      appState.washers.forEach(w => {
-        const wOrders = appState.orders.filter(o => o.washerId === w.id);
-        const wComm = wOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
-        if (wOrders.length > 0) {
-          washersBreakdown += `• 🧼 ${w.name}: ${formatCOP(wComm)} (${wOrders.length} vehíc.)\n`;
-        }
-      });
-      if (!washersBreakdown) washersBreakdown = '• Sin comisiones liquidadas hoy\n';
-
-      let expensesBreakdown = '';
-      appState.expenses.forEach(e => {
-        expensesBreakdown += `• 🔻 ${e.desc}: ${formatCOP(e.amount)} (${e.category})\n`;
-      });
-      if (!expensesBreakdown) expensesBreakdown = '• Sin gastos registrados\n';
-
-      const netoEnCaja = totalIngresos - totalComisiones - totalGastos;
-      const efectivoFisicoCajon = efectivoCobrado - totalComisiones - totalGastos;
-      const cleanBizName = (biz.businessName || 'WashQ').replace(/&bull;/g, '•');
-
-      const msg = 
-`📊 *CORTE DE CAJA — ${cleanBizName}*
-🗓️ *${todayStr} | ${timeStr}*
-━━━━━━━━━━━━━━━━━━━━
-🚗 *Vehículos Atendidos:* ${totalVehiculos}
-💰 *Total Facturado:* ${formatCOP(totalIngresos)}
-
-📥 *RECAUDO POR CANALES:*
-${pmBreakdown || '• Sin recaudos registrados\n'}
-🧼 *LIQUIDACIÓN OPERARIOS:*
-${washersBreakdown}
-📉 *GASTOS / SALIDAS:*
-${expensesBreakdown}
-━━━━━━━━━━━━━━━━━━━━
-💵 *EFECTIVO FÍSICO EN CAJÓN:* *${formatCOP(efectivoFisicoCajon)}*
-📈 *Balance Neto de la Sede:* *${formatCOP(netoEnCaja)}*
-━━━━━━━━━━━━━━━━━━━━
-✨ _Generado por WashQ SaaS (kodiquett.com/washq)_`;
-
-      const targetPhone = ownerPhone ? (ownerPhone.startsWith('57') ? ownerPhone : '57' + ownerPhone) : '';
-      const url = targetPhone 
-        ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`
-        : `https://wa.me/?text=${encodeURIComponent(msg)}`;
-
-      window.open(url, '_blank');
-    }
-
-    // ================= LAVADORES =================
+    // ================= LAVADORES (CONTROL TOTAL: CREAR, EDITAR, ELIMINAR) =================
     function renderWashers() {
       const grid = document.getElementById('washersCardsGrid');
       grid.innerHTML = '';
-      const isLavador = appState.currentRole === 'lavador';
 
       appState.washers.forEach(w => {
         const washerOrders = appState.orders.filter(o => o.washerId === w.id);
@@ -4313,10 +3327,8 @@ ${expensesBreakdown}
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
               <span class="washer-status-pill" style="${w.active ? '' : 'background:#F1F5F9; color:#64748B;'}">${w.active ? 'Activo' : 'Inactivo'}</span>
-              ${!isLavador ? `
-                <button class="btn-admin-icon" title="Editar Lavador" onclick="openEditWasherModal('${w.id}')">✏️</button>
-                <button class="btn-admin-icon danger" title="Eliminar Lavador" onclick="deleteWasher('${w.id}')">🗑️</button>
-              ` : ''}
+              <button class="btn-admin-icon" title="Editar Lavador (Admin)" onclick="openEditWasherModal('${w.id}')">✏️</button>
+              <button class="btn-admin-icon danger" title="Eliminar Lavador (Admin)" onclick="deleteWasher('${w.id}')">🗑️</button>
             </div>
           </div>
           <div class="washer-stats-row">
@@ -4326,19 +3338,17 @@ ${expensesBreakdown}
             </div>
             <div>
               <span class="caja-stat-label">Comisión Total</span>
-              <div class="table-num" style="color: var(--accent-primary);">${!isLavador ? formatCOP(totalComm) : '***'}</div>
+              <div class="table-num" style="color: var(--accent-primary);">${formatCOP(totalComm)}</div>
             </div>
           </div>
-          ${!isLavador ? `
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-card-action" style="flex: 1;" onclick="settleWasherCommission('${w.id}', '${w.name}', ${totalComm})">
-                💵 Pagar Liquidación
-              </button>
-              <button class="btn-card-action" onclick="toggleWasherActive('${w.id}')">
-                ${w.active ? 'Pausar' : 'Reactivar'}
-              </button>
-            </div>
-          ` : ''}
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-card-action" style="flex: 1;" onclick="settleWasherCommission('${w.id}', '${w.name}', ${totalComm})">
+              💵 Pagar Liquidación
+            </button>
+            <button class="btn-card-action" onclick="toggleWasherActive('${w.id}')">
+              ${w.active ? 'Pausar' : 'Reactivar'}
+            </button>
+          </div>
         `;
         grid.appendChild(card);
       });
@@ -4402,7 +3412,7 @@ ${expensesBreakdown}
     function deleteWasher(wId) {
       const washer = appState.washers.find(w => w.id === wId);
       if (!washer) return;
-      if (confirm(`¿Eliminar a ${washer.name} de los lavadores?`)) {
+      if (confirm(`¿Eliminar definitivamente a ${washer.name} de la lista de lavadores?`)) {
         appState.washers = appState.washers.filter(w => w.id !== wId);
         saveToStorage();
         renderAllViews();
@@ -4441,7 +3451,6 @@ ${expensesBreakdown}
       const tbody = document.getElementById('historyTableBody');
       tbody.innerHTML = '';
       const filter = filterText.toLowerCase();
-      const isLavador = appState.currentRole === 'lavador';
 
       appState.orders.filter(o => {
         return o.plate.toLowerCase().includes(filter) ||
@@ -4455,15 +3464,13 @@ ${expensesBreakdown}
           <td style="text-transform: capitalize;">${o.vehicleType}</td>
           <td>${o.serviceName}</td>
           <td>${o.washerName || 'Por asignar'}</td>
-          <td class="table-num">${!isLavador ? formatCOP(o.price) : '---'}</td>
-          <td>${!isLavador ? (o.paymentMethod || 'Pendiente') : '---'}</td>
+          <td class="table-num">${formatCOP(o.price)}</td>
+          <td>${o.paymentMethod || 'Pendiente'}</td>
           <td><span class="queue-status-tag ${o.status === 'entregado' ? 'tag-ready' : 'tag-washing'}">${o.status}</span></td>
           <td style="text-align: right;">
-            ${!isLavador ? `
-              <button class="btn-admin-icon" title="Editar orden" onclick="openEditOrderModal('${o.id}')">✏️</button>
-              <button class="btn-admin-icon danger" title="Eliminar orden" onclick="deleteOrderById('${o.id}')">🗑️</button>
-              <button class="btn-card-action" style="padding: 2px 7px;" onclick="viewOrderTicket('${o.id}')">Ticket</button>
-            ` : '---'}
+            <button class="btn-admin-icon" title="Editar orden (Admin)" onclick="openEditOrderModal('${o.id}')">✏️</button>
+            <button class="btn-admin-icon danger" title="Eliminar orden (Admin)" onclick="deleteOrderById('${o.id}')">🗑️</button>
+            <button class="btn-card-action" style="padding: 2px 7px;" onclick="viewOrderTicket('${o.id}')">Ticket</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -4480,10 +3487,10 @@ ${expensesBreakdown}
       appState.orders.forEach(o => {
         csv += `${o.ticketNumber},${o.plate},${o.vehicleType},${o.serviceName},${o.washerName || ''},${o.price},${o.commission},${o.status},${o.phone || ''}\n`;
       });
-      downloadCSV(csv, `Historial_${appState.tenantId}_WashQ.csv`);
+      downloadCSV(csv, 'Historial_WashQ.csv');
     }
 
-    // ================= SERVICIOS Y TARIFAS =================
+    // ================= SERVICIOS Y TARIFAS (CONTROL TOTAL) =================
     function renderServicesConfig() {
       const tbody = document.getElementById('servicesConfigTableBody');
       tbody.innerHTML = '';
@@ -4584,7 +3591,7 @@ ${expensesBreakdown}
       }
     }
 
-    // ================= MÉTODOS DE PAGO =================
+    // ================= MÉTODOS DE PAGO (CONTROL TOTAL) =================
     function renderPaymentMethodsConfig() {
       const tbody = document.getElementById('configPaymentMethodsTableBody');
       if (!tbody) return;
@@ -4642,13 +3649,12 @@ ${expensesBreakdown}
 
     // ================= CONFIGURACIÓN DEL NEGOCIO =================
     function renderBusinessConfig() {
-      if (!appState.config) return;
-      document.getElementById('configBizName').value = (appState.config.businessName || '').replace('&bull;', '•');
-      document.getElementById('configBizAddress').value = appState.config.address || '';
-      document.getElementById('configBizPhone').value = appState.config.phone || '';
+      document.getElementById('configBizName').value = appState.config.businessName.replace('&bull;', '•');
+      document.getElementById('configBizAddress').value = appState.config.address;
+      document.getElementById('configBizPhone').value = appState.config.phone;
       const ownerInput = document.getElementById('configBizOwnerPhone');
       if (ownerInput) ownerInput.value = appState.config.ownerPhone || '';
-      document.getElementById('configBizFooter').value = appState.config.footerText || '';
+      document.getElementById('configBizFooter').value = appState.config.footerText;
     }
 
     function saveBusinessConfig() {
@@ -4658,26 +3664,15 @@ ${expensesBreakdown}
       const ownerInput = document.getElementById('configBizOwnerPhone');
       if (ownerInput) appState.config.ownerPhone = ownerInput.value.trim();
       appState.config.footerText = document.getElementById('configBizFooter').value.trim();
-
-      // Sincronizar también en el registro de sedes
-      if (activeTenant) {
-        activeTenant.name = appState.config.businessName;
-        activeTenant.address = appState.config.address;
-        activeTenant.phone = appState.config.phone;
-        activeTenant.ownerPhone = appState.config.ownerPhone;
-        localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
-        document.getElementById('headerTenantName').textContent = activeTenant.name;
-      }
-
       saveToStorage();
-      alert('Configuración de la sede guardada exitosamente.');
+      alert('Configuración guardada exitosamente.');
     }
 
     function exportBackupJSON() {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `Backup_${appState.tenantId}_${new Date().toISOString().split('T')[0]}.json`);
+      downloadAnchor.setAttribute("download", `Backup_WashQ_${new Date().toISOString().split('T')[0]}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -4691,8 +3686,8 @@ ${expensesBreakdown}
         try {
           const parsed = JSON.parse(e.target.result);
           if (parsed && Array.isArray(parsed.services) && Array.isArray(parsed.orders)) {
-            if (confirm(`¿Restaurar esta copia de seguridad en la sede actual (${activeTenant ? activeTenant.name : 'Sede'})?`)) {
-              appState = { ...appState, ...parsed, tenantId: activeTenant.id };
+            if (confirm('¿Restaurar esta copia de seguridad? Se reemplazarán los datos actuales del autolavado.')) {
+              appState = { ...appState, ...parsed };
               saveToStorage();
               renderAllViews();
               alert('✅ ¡Copia de seguridad restaurada exitosamente!');
@@ -4708,24 +3703,182 @@ ${expensesBreakdown}
       event.target.value = '';
     }
 
-    // ================= SOPORTE PWA =================
+    function resetDemoData() {
+      if (confirm('¿Restablecer los datos a los valores de demostración iniciales?')) {
+        localStorage.removeItem('washq_cali_db');
+        location.reload();
+      }
+    }
+
+    // ================= CORTE DE CAJA POR WHATSAPP AL DUEÑO =================
+    function sendCajaReportWhatsApp() {
+      const biz = appState.config;
+      const ownerPhone = (biz.ownerPhone || '').replace(/\D/g, '');
+
+      const todayStr = new Date().toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric', month: 'short' });
+      const timeStr = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+
+      const totalVehiculos = appState.orders.length;
+      const totalIngresos = appState.orders.reduce((sum, o) => sum + (o.price || 0), 0);
+      const totalComisiones = appState.orders.reduce((sum, o) => sum + (o.commission || 0), 0);
+      const totalGastos = appState.expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+
+      // Desglose por método de pago
+      let pmBreakdown = '';
+      let efectivoCobrado = 0;
+      appState.paymentMethods.forEach(pm => {
+        const pmOrders = appState.orders.filter(o => o.paymentMethod === pm.id);
+        const pmTotal = pmOrders.reduce((sum, o) => sum + (o.price || 0), 0);
+        if (pm.id === 'pm_efectivo') efectivoCobrado = pmTotal;
+        if (pmTotal > 0 || pmOrders.length > 0) {
+          pmBreakdown += `• ${pm.icon || '💳'} ${pm.name}: ${formatCOP(pmTotal)} (${pmOrders.length} pagos)\n`;
+        }
+      });
+
+      // Desglose por operario
+      let washersBreakdown = '';
+      appState.washers.forEach(w => {
+        const wOrders = appState.orders.filter(o => o.washerId === w.id);
+        const wComm = wOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
+        if (wOrders.length > 0) {
+          washersBreakdown += `• 🧼 ${w.name}: ${formatCOP(wComm)} (${wOrders.length} vehíc.)\n`;
+        }
+      });
+      if (!washersBreakdown) washersBreakdown = '• Sin comisiones liquidadas hoy\n';
+
+      // Desglose de gastos
+      let expensesBreakdown = '';
+      appState.expenses.forEach(e => {
+        expensesBreakdown += `• 🔻 ${e.desc}: ${formatCOP(e.amount)} (${e.category})\n`;
+      });
+      if (!expensesBreakdown) expensesBreakdown = '• Sin gastos registrados\n';
+
+      const netoEnCaja = totalIngresos - totalComisiones - totalGastos;
+      const efectivoFisicoCajon = efectivoCobrado - totalComisiones - totalGastos;
+
+      const cleanBizName = biz.businessName.replace(/&bull;/g, '•');
+
+      const msg = 
+`📊 *CORTE DE CAJA — ${cleanBizName}*
+🗓️ *${todayStr} | ${timeStr}*
+━━━━━━━━━━━━━━━━━━━━
+🚗 *Vehículos Atendidos:* ${totalVehiculos}
+💰 *Total Facturado:* ${formatCOP(totalIngresos)}
+
+📥 *RECAUDO POR CANALES:*
+${pmBreakdown || '• Sin recaudos registrados\n'}
+🧼 *LIQUIDACIÓN OPERARIOS:*
+${washersBreakdown}
+📉 *GASTOS / SALIDAS:*
+${expensesBreakdown}
+━━━━━━━━━━━━━━━━━━━━
+💵 *EFECTIVO FÍSICO EN CAJÓN:* *${formatCOP(efectivoFisicoCajon)}*
+*(Total Efectivo recabado menos comisiones y gastos)*
+📈 *Balance Neto del Negocio:* *${formatCOP(netoEnCaja)}*
+━━━━━━━━━━━━━━━━━━━━
+✨ _Generado automáticamente por WashQ (100% Local)_`;
+
+      const targetPhone = ownerPhone ? (ownerPhone.startsWith('57') ? ownerPhone : '57' + ownerPhone) : '';
+      const url = targetPhone 
+        ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`
+        : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+
+      window.open(url, '_blank');
+    }
+
+    // ================= SOPORTE PWA (INSTALACIÓN & SERVICE WORKER) =================
     let deferredPwaPrompt = null;
+
     function initPwaInstallPrompt() {
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPwaPrompt = e;
+        const installBtn = document.getElementById('btnPwaInstall');
+        if (installBtn) installBtn.style.display = 'inline-flex';
       });
+
+      window.addEventListener('appinstalled', () => {
+        console.log('🎉 WashQ PWA instalada exitosamente en el sistema');
+        deferredPwaPrompt = null;
+        const installBtn = document.getElementById('btnPwaInstall');
+        if (installBtn) installBtn.style.display = 'none';
+      });
+    }
+
+    function installPWA() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        deferredPwaPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('El usuario aceptó instalar WashQ');
+          }
+          deferredPwaPrompt = null;
+          const installBtn = document.getElementById('btnPwaInstall');
+          if (installBtn) installBtn.style.display = 'none';
+        });
+      } else {
+        alert('Para instalar WashQ en tu dispositivo:\n\n• En Android / Chrome: Toca el menú (3 puntos) y presiona "Instalar aplicación" o "Añadir a pantalla de inicio".\n• En iPhone / Safari: Toca el botón Compartir y presiona "Añadir a la pantalla de inicio".\n• En PC / Windows: Toca el icono de instalación en la barra de direcciones del navegador.');
+      }
     }
 
     function registerPwaServiceWorker() {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
-          .then((reg) => console.log('⚡ [WashQ PWA] Service Worker activo:', reg.scope))
-          .catch((err) => console.log('Aviso: Service Worker no registrado (modo local):', err));
+          .then((reg) => {
+            console.log('⚡ [WashQ PWA] Service Worker activo en alcance:', reg.scope);
+          })
+          .catch((err) => {
+            console.log('Aviso: Service Worker no activo (común en modo file:// local):', err);
+          });
       }
     }
 
-    // ================= UTILIDADES DE MODALES =================
+    // ================= ROLES & PIN =================
+    function openRolePinModal() {
+      document.getElementById('pinInputGroup').style.display = 'none';
+      document.getElementById('pinErrorMsg').style.display = 'none';
+      openModal('modalRolePin');
+    }
+
+    function requestSwitchRole(roleId) {
+      if (roleId === 'lavador') {
+        setRole('lavador');
+        closeModal('modalRolePin');
+        return;
+      }
+      appState.pendingRoleSwitch = roleId;
+      document.getElementById('pinInputGroup').style.display = 'block';
+      document.getElementById('rolePinInput').value = '';
+      document.getElementById('rolePinInput').focus();
+    }
+
+    function verifyRolePin() {
+      const pin = document.getElementById('rolePinInput').value;
+      const role = appState.roles.find(r => r.id === appState.pendingRoleSwitch);
+      if (role && role.pin === pin) {
+        setRole(role.id);
+        closeModal('modalRolePin');
+      } else {
+        document.getElementById('pinErrorMsg').style.display = 'block';
+      }
+    }
+
+    function setRole(roleId) {
+      appState.currentRole = roleId;
+      const role = appState.roles.find(r => r.id === roleId);
+      document.getElementById('headerRoleIcon').textContent = role.icon;
+      document.getElementById('headerRoleName').textContent = role.name;
+
+      const badge = document.getElementById('adminControlBadge');
+      if (roleId === 'admin') {
+        badge.textContent = '👑 Admin Activo';
+        badge.style.display = 'inline-flex';
+      } else {
+        badge.textContent = role.icon + ' ' + role.name;
+      }
+    }
+
+    // ================= UTILIDADES =================
     function openModal(modalId) {
       document.getElementById(modalId).classList.add('active');
     }

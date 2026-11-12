@@ -3,22 +3,21 @@
  * Permite que el sistema opere en PC, Tablets y Celulares sin conexión a internet.
  */
 
-const CACHE_NAME = 'washq-cache-v2';
+const CACHE_NAME = 'washq-cache-v3';
 const CORE_ASSETS = [
-  './',
-  './index.html',
-  './dashboard.html',
-  './manifest.json',
-  './assets/icon.svg',
-  './assets/icon-192.png',
-  './assets/icon-512.png'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/assets/icon.svg',
+  '/assets/icon-192.png',
+  '/assets/icon-512.png'
 ];
 
 // Instalación: Cachear recursos indispensables
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('⚡ [WashQ PWA] Precargando núcleo offline...');
+      console.log('⚡ [WashQ PWA] Precargando núcleo offline v3...');
       return cache.addAll(CORE_ASSETS);
     }).then(() => self.skipWaiting())
   );
@@ -68,7 +67,6 @@ self.addEventListener('fetch', (event) => {
 
         const responseToCache = networkResponse.clone();
         caches.open(CACHE_NAME).then((cache) => {
-          // Solo cachear recursos de nuestro origen o CDNs de fuentes/iconos
           if (req.url.startsWith('http') || req.url.startsWith('https')) {
             cache.put(req, responseToCache);
           }
@@ -76,9 +74,9 @@ self.addEventListener('fetch', (event) => {
 
         return networkResponse;
       }).catch(() => {
-        // Fallback offline para navegación
+        // Fallback offline universal para navegación
         if (req.mode === 'navigate') {
-          return caches.match('./index.html') || caches.match('./dashboard.html');
+          return caches.match('/') || caches.match('/index.html') || caches.match('./index.html');
         }
       });
     })
