@@ -1,7 +1,7 @@
 {
-  "name": "WashQ — Control Operativo de Autolavado",
+  "name": "WashQ: Control Operativo de Autolavados",
   "short_name": "WashQ",
-  "description": "Sistema de control operativo, patio en vivo, comisiones de lavadores y tickets térmicos POS 100% offline.",
+  "description": "Sistema de control operativo, zona de lavado, comisiones de operarios y tickets térmicos POS.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

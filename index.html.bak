@@ -1,0 +1,4495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>WashQ &mdash; Control Operativo, Arqueo de Caja y Liquidación</title>
+  <meta name="description" content="Software de control de patio, arqueo de caja, comisiones de lavadores y gestión total para autolavados en Colombia.">
+
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#252736">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="WashQ">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="icon" type="image/png" href="assets/icon-192.png">
+
+  <!-- Limpieza de Caché y Service Workers Obsoletos -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var i = 0; i < registrations.length; i++) {
+          if (registrations[i].active && !registrations[i].active.scriptURL.includes('washq-cache-v3')) {
+            registrations[i].unregister();
+          }
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (var i = 0; i < names.length; i++) {
+          if (names[i] !== 'washq-cache-v5') caches.delete(names[i]);
+        }
+      });
+    }
+  </script>
+
+  <!-- Tipografías Oficiales Solicitadas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       VARIABLES Y SISTEMA DE DISEÑO (Apple Design + Paleta Calibrada)
+       Optimizado para subdominio VPS (kodiquett.com/washq) y funcionamiento Local
+       ========================================================================== */
+    :root {
+      --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Paleta Calibrada: Warm Amber, Obsidian, Slate & Mist */
+      --accent-primary: #EA580C;
+      --accent-hover: #C2410C;
+      --accent-deep: #9A3412;
+      --accent-subtle: #FFF7ED;
+      --accent-border: #FFEDD5;
+      --accent-glow: rgba(234, 88, 12, 0.16);
+
+      --color-obsidian: #252736;
+      --color-obsidian-card: #1D1F2C;
+      --color-slate: #747484;
+      --color-mist: #A9B0BF;
+
+      --bg-canvas: #F5F7FA;
+      --bg-surface: #FFFFFF;
+      --bg-surface-subtle: #F0F2F6;
+      --bg-surface-hover: #F8F9FC;
+
+      --text-title: #1A1D29;
+      --text-body: #3E4353;
+      --text-muted: #747484;
+      --text-subtle: #98A1B2;
+      --text-white: #FFFFFF;
+
+      --status-success: #059669;
+      --status-success-bg: #ECFDF5;
+      --status-warning: #D97706;
+      --status-warning-bg: #FFFBEB;
+      --status-danger: #DC2626;
+      --status-danger-bg: #FEF2F2;
+
+      --border-subtle: rgba(116, 116, 132, 0.12);
+      --border-card: rgba(116, 116, 132, 0.14);
+      --border-strong: rgba(116, 116, 132, 0.24);
+
+      --shadow-subtle: 0 1px 3px rgba(37, 39, 54, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-card: 0 10px 28px -6px rgba(37, 39, 54, 0.05), 0 2px 8px -2px rgba(37, 39, 54, 0.03);
+      --shadow-floating: 0 20px 40px -12px rgba(37, 39, 54, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+      --shadow-dark-card: 0 16px 36px -8px rgba(18, 20, 30, 0.45);
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --radius-pill: 9999px;
+
+      --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      overscroll-behavior-x: none;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-body);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      overflow-x: hidden;
+      position: relative;
+      overscroll-behavior-x: none;
+      padding: 16px;
+    }
+
+    /* Shell Principal */
+    .app-shell {
+      display: flex;
+      width: 100%;
+      max-width: 1560px;
+      min-width: 0;
+      margin: 0 auto;
+      background: var(--bg-surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-floating);
+      overflow: hidden;
+      position: relative;
+      min-height: calc(100vh - 32px);
+      min-height: calc(100dvh - 32px);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px 24px 8px;
+      text-decoration: none;
+    }
+
+    .brand-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--color-obsidian);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-white);
+      box-shadow: 0 4px 10px rgba(37, 39, 54, 0.18);
+    }
+
+    .brand-logo-icon svg {
+      width: 19px;
+      height: 19px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-title);
+    }
+
+    .brand-title span { color: var(--accent-primary); }
+
+    .nav-section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 0 12px;
+      margin-bottom: 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-item button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-body);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s var(--ease-apple);
+    }
+
+    .nav-item button .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-item button svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--color-slate);
+      stroke-width: 1.8;
+      fill: none;
+      transition: stroke 0.18s var(--ease-apple);
+    }
+
+    .nav-item button:hover {
+      background: var(--bg-surface-subtle);
+      color: var(--text-title);
+    }
+
+    .nav-item.active button {
+      background: var(--bg-surface-subtle);
+      color: var(--text-title);
+      font-weight: 700;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-item.active button svg { stroke: var(--accent-primary); }
+
+    .nav-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-border);
+    }
+
+    .sidebar-spacer { flex: 1; }
+
+    .patio-runway-widget {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      margin-top: 16px;
+    }
+
+    .runway-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .runway-label { font-size: 0.74rem; font-weight: 600; color: var(--text-muted); }
+    .runway-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .runway-value {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-title);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .runway-value small { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+
+    .segmented-meter {
+      display: flex;
+      gap: 3px;
+      height: 6px;
+      width: 100%;
+    }
+
+    .meter-pip {
+      flex: 1;
+      border-radius: 3px;
+      background: rgba(116, 116, 132, 0.2);
+    }
+    .meter-pip.filled { background: var(--accent-primary); }
+    .meter-pip.amber-deep { background: var(--accent-deep); }
+
+    /* CANVAS PRINCIPAL */
+    .main-canvas {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-canvas) 240px);
+    }
+
+    /* HEADER */
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px 14px 32px;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .header-titles h1 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text-title);
+      letter-spacing: -0.03em;
+    }
+
+    .header-titles p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-pill-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent-border);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .btn-quick-new {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-primary);
+      color: var(--text-white);
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-body);
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s var(--ease-apple);
+    }
+
+    .btn-quick-new:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    .search-pill-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 7px 12px;
+      border-radius: var(--radius-pill);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-apple);
+    }
+
+    .search-pill-btn:hover { border-color: var(--border-strong); color: var(--text-title); }
+
+    .kbd-shortcut {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--bg-surface-subtle);
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: var(--color-slate);
+    }
+
+    .role-badge-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px 4px 4px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .role-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-obsidian);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .role-text-wrap {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      text-align: left;
+    }
+
+    .role-text-name { font-size: 0.78rem; font-weight: 700; color: var(--text-title); }
+    .role-text-sub { font-size: 0.66rem; color: var(--text-muted); }
+
+    /* CONTENEDORES DE VISTAS */
+    .view-container {
+      display: none;
+      padding: 24px 32px 36px 32px;
+      animation: viewFadeIn 0.22s var(--ease-apple);
+    }
+
+    .view-container.active { display: block; }
+
+    @keyframes viewFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* HERO METRIC */
+    .hero-metric-stage {
+      position: relative;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 22px;
+    }
+
+    .hero-art-backdrop {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 55%;
+      pointer-events: none;
+      opacity: 0.05;
+      background-image: 
+        radial-gradient(circle at 100% 0%, #252736 0%, transparent 60%),
+        linear-gradient(135deg, rgba(37,39,54,0.4) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(37,39,54,0.4) 25%, transparent 25%);
+      background-size: 100% 100%, 36px 36px, 36px 36px;
+      mask-image: linear-gradient(to right, transparent, black 40%);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 40%);
+    }
+
+    .hero-metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .metric-eyebrow { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+
+    .time-segmented-control {
+      display: inline-flex;
+      background: var(--bg-surface-subtle);
+      padding: 4px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .time-tab {
+      background: transparent;
+      border: none;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s var(--ease-apple);
+    }
+
+    .time-tab.active {
+      background: var(--bg-surface);
+      color: var(--text-title);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .hero-metric-giant {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .giant-number {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 3.8vw, 3.1rem);
+      font-weight: 800;
+      color: var(--text-title);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      font-feature-settings: "tnum" on;
+    }
+
+    .giant-badge-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid var(--accent-border);
+    }
+
+    .hero-submetrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      gap: 40px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .submetric-col { display: flex; flex-direction: column; }
+    .submetric-val {
+      font-family: var(--font-mono);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-title);
+    }
+    .submetric-title {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-indicator { width: 7px; height: 7px; border-radius: 50%; }
+    .dot-amber { background: var(--accent-primary); }
+    .dot-terracotta { background: var(--accent-deep); }
+    .dot-obsidian { background: var(--color-obsidian); }
+
+    /* BENTO GRID */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 22px;
+    }
+
+    .bento-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-xl);
+      padding: 24px 26px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .card-top-bar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-title);
+      letter-spacing: -0.02em;
+    }
+
+    .card-subtitle { font-size: 0.76rem; color: var(--text-muted); margin-top: 2px; }
+
+    .card-action-icon {
+      color: var(--text-muted);
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      transition: color 0.18s ease;
+    }
+    .card-action-icon:hover { color: var(--accent-primary); }
+
+    .payments-meter-bar {
+      display: flex;
+      height: 8px;
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin-bottom: 18px;
+      background: var(--bg-surface-subtle);
+    }
+
+    .pm-seg-cash { width: 48%; background: var(--color-obsidian); }
+    .pm-seg-nequi { width: 30%; background: var(--accent-primary); }
+    .pm-seg-davi { width: 14%; background: var(--accent-deep); }
+    .pm-seg-banco { width: 8%; background: var(--color-slate); }
+
+    .payments-breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .payment-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .payment-row-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-body);
+      font-weight: 500;
+    }
+
+    .payment-row-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text-title);
+    }
+
+    /* CARD OSCURA */
+    .bento-card-dark {
+      background: var(--color-obsidian);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: var(--text-white);
+      box-shadow: var(--shadow-dark-card);
+    }
+
+    .bento-card-dark .card-title { color: var(--text-white); }
+    .bento-card-dark .card-subtitle { color: var(--color-mist); }
+    .bento-card-dark .card-action-icon { color: var(--color-mist); }
+
+    .dark-metric-headline { margin-bottom: 18px; }
+    .dark-metric-number {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-white);
+    }
+    .dark-metric-note { font-size: 0.78rem; color: var(--color-mist); }
+
+    .bay-matrix-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 7px;
+      height: 90px;
+      margin-bottom: 14px;
+    }
+
+    .matrix-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 3px;
+      height: 100%;
+    }
+
+    .matrix-block {
+      height: 8px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .matrix-block.active { background: rgba(255, 255, 255, 0.45); }
+    .matrix-block.peak {
+      background: var(--accent-primary);
+      box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
+    }
+
+    .matrix-labels {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--color-mist);
+      font-family: var(--font-mono);
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* MINI QUEUE */
+    .live-queue-list { display: flex; flex-direction: column; gap: 8px; }
+    .queue-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .colombian-plate {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #FEF08A;
+      color: #713F12;
+      border: 1px solid #FACC15;
+      padding: 3px 8px;
+      border-radius: 5px;
+      letter-spacing: 0.04em;
+    }
+
+    .vehicle-details { display: flex; flex-direction: column; margin-left: 10px; }
+    .vehicle-service { font-size: 0.82rem; font-weight: 600; color: var(--text-title); }
+    .vehicle-washer { font-size: 0.72rem; color: var(--text-muted); }
+    .queue-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+    .queue-price { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; }
+    .queue-status-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+    }
+    .tag-washing { background: var(--accent-subtle); color: var(--accent-primary); }
+    .tag-ready { background: var(--status-success-bg); color: var(--status-success); }
+    .tag-waiting { background: #F1F5F9; color: #475569; }
+
+    /* TREEMAP */
+    .washer-treemap-container {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      grid-template-rows: 85px 85px;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .treemap-tile {
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .tile-lead { grid-row: span 2; background: var(--color-obsidian); color: var(--text-white); }
+    .tile-second { background: var(--accent-subtle); border: 1px solid var(--accent-border); }
+    .tile-third { background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); }
+    .treemap-name { font-size: 0.8rem; font-weight: 700; }
+    .treemap-count { font-size: 0.7rem; opacity: 0.8; }
+    .treemap-val { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; }
+    .tile-lead .treemap-val { color: var(--accent-primary); }
+
+    /* KANBAN BOARD */
+    .kanban-board-wrapper {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .kanban-column {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      min-height: 540px;
+      overflow: hidden;
+    }
+
+    .kanban-col-header {
+      padding: 14px 16px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .col-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .col-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .col-dot-espera { background: #94A3B8; }
+    .col-dot-lavando { background: var(--accent-primary); }
+    .col-dot-listo { background: var(--status-success); }
+    .col-dot-entregado { background: var(--color-obsidian); }
+
+    .col-title {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-title);
+    }
+
+    .col-counter-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--bg-surface-subtle);
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      color: var(--text-muted);
+    }
+
+    .kanban-cards-area {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .order-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s var(--ease-apple);
+      position: relative;
+    }
+
+    .order-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-top-admin-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-admin-icon {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 3px 6px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-admin-icon:hover {
+      background: var(--bg-surface-subtle);
+      color: var(--text-title);
+    }
+
+    .btn-admin-icon.danger:hover {
+      color: var(--status-danger);
+      background: var(--status-danger-bg);
+    }
+
+    .card-meta-type {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: capitalize;
+    }
+
+    .card-service-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-title);
+      line-height: 1.25;
+    }
+
+    .card-washer-info {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+
+    .timer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--bg-surface-subtle);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .timer-delayed {
+      background: var(--status-danger-bg);
+      color: var(--status-danger);
+      font-weight: 700;
+    }
+
+    .card-action-bar {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .btn-card-action {
+      background: var(--bg-surface-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-title);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-card-action:hover {
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      border-color: var(--accent-border);
+    }
+
+    .btn-card-primary {
+      background: var(--accent-primary);
+      color: var(--text-white);
+      border: none;
+    }
+    .btn-card-primary:hover {
+      background: var(--accent-hover);
+      color: var(--text-white);
+    }
+
+    .btn-whatsapp-action {
+      background: #25D366;
+      color: #FFFFFF;
+      border: none;
+    }
+    .btn-whatsapp-action:hover { background: #20BD5A; }
+
+    /* CAJA Y ARQUEO */
+    .caja-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .caja-stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .caja-stat-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .caja-stat-val {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-title);
+      letter-spacing: -0.02em;
+    }
+
+    .caja-stat-net {
+      background: var(--color-obsidian);
+      color: var(--text-white);
+    }
+    .caja-stat-net .caja-stat-label { color: var(--color-mist); }
+    .caja-stat-net .caja-stat-val { color: var(--accent-primary); }
+
+    .caja-columns-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .caja-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-xl);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* TABLAS */
+    .ui-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      margin-top: 12px;
+    }
+
+    .ui-table th {
+      text-align: left;
+      padding: 10px 10px;
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .ui-table td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-body);
+    }
+
+    .ui-table tr:last-child td { border-bottom: none; }
+    .ui-table tr:hover td { background: var(--bg-surface-hover); }
+
+    .table-num {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text-title);
+    }
+
+    /* LAVADORES */
+    .washers-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .washer-profile-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .washer-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .washer-avatar-large {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--bg-surface-subtle);
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 800;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .washer-status-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--status-success-bg);
+      color: var(--status-success);
+    }
+
+    .washer-stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: var(--bg-canvas);
+      padding: 12px;
+      border-radius: var(--radius-md);
+    }
+
+    /* MODALES ESTILO APPLE */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(37, 39, 54, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-sheet {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-floating);
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      position: relative;
+      animation: modalSlideUp 0.24s var(--ease-apple);
+    }
+
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-surface-subtle);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      transition: all 0.18s ease;
+    }
+    .modal-close-btn:hover { color: var(--text-title); background: #E2E8F0; }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-title);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    /* FORMULARIOS */
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-title);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: var(--text-title);
+      outline: none;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+      background: #FFFFFF;
+    }
+
+    .input-plate-stylized {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: #FEF08A;
+      color: #713F12;
+      border: 2px solid #FACC15;
+    }
+
+    .vehicle-type-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .vtype-btn {
+      background: var(--bg-surface-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.18s var(--ease-apple);
+    }
+
+    .vtype-btn.active {
+      background: var(--color-obsidian);
+      border-color: var(--color-obsidian);
+      color: #FFFFFF;
+      box-shadow: var(--shadow-card);
+    }
+
+    .modal-services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      max-height: 190px;
+      overflow-y: auto;
+      margin-bottom: 14px;
+    }
+
+    .service-select-card {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .service-select-card:hover { border-color: var(--border-strong); }
+    .service-select-card.active {
+      border-color: var(--accent-primary);
+      background: var(--accent-subtle);
+    }
+
+    .svc-card-name { font-size: 0.82rem; font-weight: 700; color: var(--text-title); }
+    .svc-card-price {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-top: 4px;
+    }
+
+    .modal-btn-primary {
+      width: 100%;
+      background: var(--accent-primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 11px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s var(--ease-apple);
+      margin-top: 8px;
+    }
+    .modal-btn-primary:hover { background: var(--accent-hover); }
+
+    .modal-btn-danger {
+      background: var(--status-danger);
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+    }
+    .modal-btn-danger:hover { background: #B91C1C; }
+
+    /* TICKET IMPRESIÓN */
+    .thermal-ticket-view {
+      width: 280px;
+      margin: 0 auto;
+      padding: 20px 14px;
+      background: #FFFFFF;
+      border: 1px dashed #CBD5E1;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: #000000;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .ticket-header-biz { font-size: 0.95rem; font-weight: 800; }
+    .ticket-divider { border-top: 1px dashed #000000; margin: 10px 0; }
+    .ticket-plate-box {
+      font-size: 1.4rem;
+      font-weight: 800;
+      border: 2px solid #000000;
+      padding: 6px;
+      margin: 8px 0;
+      letter-spacing: 0.08em;
+    }
+
+    @media print {
+      @page {
+        margin: 0;
+        size: auto;
+      }
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      html, body {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+      }
+      body > :not(#modalTicket) {
+        display: none !important;
+      }
+      #modalTicket {
+        display: block !important;
+        position: static !important;
+        inset: auto !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+      }
+      #modalTicket .modal-sheet {
+        display: block !important;
+        position: static !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        animation: none !important;
+        transform: none !important;
+      }
+      #modalTicket .modal-close-btn,
+      #modalTicket .modal-btn-primary {
+        display: none !important;
+      }
+      #printableTicketArea {
+        display: block !important;
+        visibility: visible !important;
+        position: static !important;
+        width: 280px !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 10px 6px !important;
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        border: none !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      #printableTicketArea * {
+        visibility: visible !important;
+        color: #000000 !important;
+      }
+      .ticket-plate-box {
+        border: 2px solid #000000 !important;
+        color: #000000 !important;
+      }
+      .ticket-divider {
+        border-top: 1px dashed #000000 !important;
+      }
+    }
+
+    /* BOTÓN INSTALAR PWA */
+    .header-install-pwa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-border);
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-apple);
+    }
+    .header-install-pwa-btn:hover {
+      background: var(--accent-primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    /* BARRA DE NAVEGACIÓN MÓVIL (PWA MOBILE) */
+    .mobile-bottom-nav {
+      display: none;
+    }
+
+    /* TABLAS RESPONSIVAS */
+    .table-responsive {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 12px;
+      border-radius: var(--radius-md);
+      scrollbar-width: thin;
+    }
+    .table-responsive .ui-table {
+      min-width: 620px;
+      margin-top: 0;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .kanban-board-wrapper { grid-template-columns: repeat(2, 1fr); }
+      .bento-grid { grid-template-columns: 1fr; }
+      .caja-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .caja-columns-split { grid-template-columns: 1fr; }
+      .washers-cards-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        display: block;
+        padding: 0 0 calc(76px + env(safe-area-inset-bottom, 0px)) 0;
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+        min-height: 100dvh;
+      }
+
+      .app-shell {
+        display: flex;
+        flex-direction: column;
+        border-radius: 0;
+        border: none;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-shadow: none;
+        overflow-x: hidden;
+        min-height: 100dvh;
+      }
+
+      .sidebar { display: none; }
+
+      .main-canvas {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 14px 14px 12px 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .header-titles {
+        width: 100%;
+      }
+
+      .header-actions {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-start;
+      }
+
+      .header-actions .btn-quick-new,
+      .header-actions .search-pill-btn {
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+
+      .view-container {
+        padding: 14px 12px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        overflow-x: hidden;
+      }
+
+      /* Overview Hero */
+      .hero-metric-stage {
+        padding: 18px 14px;
+        border-radius: var(--radius-lg);
+        margin-bottom: 16px;
+      }
+
+      .hero-metric-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .hero-metric-header .time-segmented-control {
+        width: 100%;
+        display: flex;
+      }
+
+      .hero-metric-header .time-segmented-control .time-tab {
+        flex: 1;
+        text-align: center;
+        padding: 6px 8px;
+      }
+
+      .giant-number {
+        font-size: clamp(2rem, 8.5vw, 3.2rem);
+      }
+
+      .hero-submetrics-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding-top: 14px;
+      }
+
+      /* Bento Cards & Grids */
+      .bento-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .bento-card {
+        padding: 16px 14px;
+        border-radius: var(--radius-lg);
+        overflow-x: hidden;
+      }
+
+      .caja-panel {
+        padding: 16px 14px;
+        border-radius: var(--radius-lg);
+        overflow-x: hidden;
+      }
+
+      .caja-summary-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .caja-columns-split {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Treemap Móvil - Diseño de Tarjetas Limpias para Lavadores */
+      .washer-treemap-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        grid-template-columns: unset;
+        grid-template-rows: unset;
+        margin-top: 8px;
+        width: 100%;
+      }
+
+      .treemap-tile {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 14px 16px !important;
+        min-height: auto !important;
+        gap: 12px;
+        border-radius: var(--radius-md);
+      }
+
+      .tile-lead {
+        grid-row: auto !important;
+      }
+
+      .treemap-tile > div:first-child {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        text-align: left;
+      }
+
+      .treemap-name {
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+      }
+
+      .treemap-count {
+        font-size: 0.76rem !important;
+        opacity: 0.85;
+      }
+
+      .treemap-val {
+        font-size: 1.15rem !important;
+        font-weight: 800 !important;
+        white-space: nowrap !important;
+        text-align: right;
+      }
+
+      .kanban-board-wrapper {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .vehicle-type-selector {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      /* Card Top Bar & Controls */
+      .card-top-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .card-top-bar > div:first-child {
+        width: 100%;
+      }
+
+      .card-top-bar > div:last-child {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .card-top-bar input#historySearchInput {
+        width: 100% !important;
+        max-width: 100%;
+      }
+
+      /* Modales Responsivos */
+      .modal-overlay {
+        padding: 12px;
+      }
+
+      .modal-sheet {
+        padding: 20px 16px;
+        border-radius: var(--radius-lg);
+        max-width: 100% !important;
+        box-sizing: border-box;
+      }
+
+      /* Inputs sin Auto-zoom en Celulares (Mínimo 16px evita que el navegador haga zoom y desplace la pantalla) */
+      .form-input, .form-select, .form-textarea, input, select, textarea {
+        font-size: 16px !important;
+      }
+
+      /* Barra de Navegación Móvil PWA */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: calc(64px + env(safe-area-inset-bottom, 0px));
+        padding: 0 4px env(safe-area-inset-bottom, 0px) 4px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid var(--border-subtle);
+        z-index: 999;
+        align-items: center;
+        justify-content: space-around;
+        box-sizing: border-box;
+      }
+
+      .mob-nav-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 0.68rem;
+        font-weight: 600;
+        cursor: pointer;
+        flex: 1;
+        height: 100%;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+        transition: color 0.15s ease;
+      }
+
+      .mob-nav-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        stroke-width: 2.2;
+        fill: none;
+      }
+
+      .mob-nav-btn.active {
+        color: var(--accent-primary);
+        font-weight: 800;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SHELL PRINCIPAL -->
+  <div class="app-shell">
+
+    <!-- 1. SIDEBAR LATERAL -->
+    <aside class="sidebar">
+      <a href="#" class="brand-mark">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+        </div>
+        <div class="brand-title">Wash<span>Q</span></div>
+      </a>
+
+      <div class="nav-section-label">Navegación</div>
+      <ul class="nav-list">
+        <li class="nav-item active" id="nav-overview">
+          <button onclick="switchView('overview')">
+            <div class="nav-left">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+              <span>Overview</span>
+            </div>
+          </button>
+        </li>
+        <li class="nav-item" id="nav-patio">
+          <button onclick="switchView('patio')">
+            <div class="nav-left">
+              <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              <span>Patio en Vivo</span>
+            </div>
+            <span class="nav-badge" id="badgeActivePatio">0</span>
+          </button>
+        </li>
+        <li class="nav-item" id="nav-caja">
+          <button onclick="switchView('caja')">
+            <div class="nav-left">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              <span>Caja &amp; Arqueo</span>
+            </div>
+          </button>
+        </li>
+        <li class="nav-item" id="nav-comisiones">
+          <button onclick="switchView('comisiones')">
+            <div class="nav-left">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>Comisiones</span>
+            </div>
+          </button>
+        </li>
+        <li class="nav-item" id="nav-historial">
+          <button onclick="switchView('historial')">
+            <div class="nav-left">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Historial</span>
+            </div>
+          </button>
+        </li>
+        <li class="nav-item" id="nav-config">
+          <button onclick="switchView('config')">
+            <div class="nav-left">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              <span>Tarifas &amp; Admin</span>
+            </div>
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-spacer"></div>
+
+      <!-- Widget de Capacidad de Patio -->
+      <div class="patio-runway-widget">
+        <div class="runway-header">
+          <span class="runway-label">Ocupación Patio</span>
+          <div class="runway-badge">
+            <span class="pulse-dot"></span>
+            <span>En vivo</span>
+          </div>
+        </div>
+        <div class="runway-value" id="sidebarPatioCapacity">0% <small>(0 bahías)</small></div>
+        <div class="segmented-meter" id="sidebarMeterPips">
+          <div class="meter-pip"></div>
+          <div class="meter-pip"></div>
+          <div class="meter-pip"></div>
+          <div class="meter-pip"></div>
+          <div class="meter-pip"></div>
+          <div class="meter-pip"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN CANVAS -->
+    <main class="main-canvas">
+
+      <!-- Header Toolbar -->
+      <header class="dashboard-header">
+        <div class="header-titles">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h1 id="viewMainHeading">Resumen General</h1>
+            <span class="admin-pill-status" id="adminControlBadge">👑 Admin Activo</span>
+          </div>
+          <p id="currentLiveDate">Cali, Colombia &bull; Sistema en Línea</p>
+        </div>
+
+        <div class="header-actions">
+          <button class="header-install-pwa-btn" id="btnPwaInstall" onclick="installPWA()" style="display: none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Instalar App</span>
+          </button>
+
+          <button class="btn-quick-new" onclick="openNewOrderModal()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>+ Ingreso Rápido</span>
+            <span class="kbd-shortcut" style="background: rgba(255,255,255,0.25); color: #fff;">F2</span>
+          </button>
+
+          <button class="search-pill-btn" onclick="focusSearch()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Buscar placa</span>
+          </button>
+
+          <div class="role-badge-btn" onclick="openRolePinModal()">
+            <div class="role-avatar" id="headerRoleIcon">👑</div>
+            <div class="role-text-wrap">
+              <span class="role-text-name" id="headerRoleName">Super Admin</span>
+              <span class="role-text-sub">Permisos Totales</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- VISTA 1: OVERVIEW -->
+      <div class="view-container active" id="view-overview">
+        <section class="hero-metric-stage">
+          <div class="hero-art-backdrop"></div>
+          <div class="hero-metric-header">
+            <span class="metric-eyebrow">Ingresos totales hoy &bull; Moneda COP</span>
+            <div class="time-segmented-control">
+              <button class="time-tab active" onclick="switchPeriod(this, 'hoy')">Hoy</button>
+              <button class="time-tab" onclick="switchPeriod(this, 'semana')">Semana</button>
+              <button class="time-tab" onclick="switchPeriod(this, 'mes')">Mes</button>
+            </div>
+          </div>
+
+          <div class="hero-metric-giant">
+            <div class="giant-number" id="overviewGiantTotal">$ 0</div>
+            <div class="giant-badge-trend">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              <span>+14.8% hoy</span>
+            </div>
+          </div>
+
+          <div class="hero-submetrics-row">
+            <div class="submetric-col">
+              <span class="submetric-val" id="overviewComisiones">$ 0</span>
+              <span class="submetric-title"><span class="dot-indicator dot-amber"></span>Comisiones lavadores</span>
+            </div>
+            <div class="submetric-col">
+              <span class="submetric-val" id="overviewGastos">$ 0</span>
+              <span class="submetric-title"><span class="dot-indicator dot-terracotta"></span>Gastos del día</span>
+            </div>
+            <div class="submetric-col">
+              <span class="submetric-val" id="overviewNeto">$ 0</span>
+              <span class="submetric-title"><span class="dot-indicator dot-obsidian"></span>Efectivo neto caja</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bento Grid -->
+        <div class="bento-grid">
+          <div class="bento-card">
+            <div class="card-top-bar">
+              <div>
+                <h2 class="card-title">Caja por Método de Pago</h2>
+                <p class="card-subtitle">Recaudo consolidado</p>
+              </div>
+              <button class="card-action-icon" onclick="switchView('caja')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </button>
+            </div>
+            <div class="payments-meter-bar" id="overviewPaymentMeterBar">
+              <div class="pm-seg-cash" style="width: 48%;"></div>
+              <div class="pm-seg-nequi" style="width: 32%;"></div>
+              <div class="pm-seg-davi" style="width: 14%;"></div>
+              <div class="pm-seg-banco" style="width: 6%;"></div>
+            </div>
+            <div class="payments-breakdown-list" id="overviewPaymentsBreakdownList"></div>
+          </div>
+
+          <div class="bento-card bento-card-dark">
+            <div class="card-top-bar">
+              <div>
+                <h2 class="card-title">Rendimiento de Bahías</h2>
+                <p class="card-subtitle">Monitoreo de flujo y tiempos</p>
+              </div>
+              <button class="card-action-icon" onclick="switchView('patio')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </button>
+            </div>
+            <div class="dark-metric-headline">
+              <div class="dark-metric-number" id="overviewActiveVehiclesCount">0 en Proceso</div>
+              <div class="dark-metric-note">Tiempo promedio de lavado: 25 minutos</div>
+            </div>
+            <div class="bay-matrix-chart">
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block"></div><div class="matrix-block"></div><div class="matrix-block"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block"></div><div class="matrix-block"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block peak"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block"></div></div>
+            </div>
+            <div class="matrix-labels">
+              <span>8:00 AM</span>
+              <span>12:00 PM</span>
+              <span style="color: var(--accent-primary); font-weight: 700;">2:30 PM (Pico)</span>
+              <span>En vivo</span>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div class="card-top-bar">
+              <div>
+                <h2 class="card-title">Turnos en Patio</h2>
+                <p class="card-subtitle">Vehículos activos</p>
+              </div>
+              <button class="card-action-icon" onclick="switchView('patio')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </button>
+            </div>
+            <div class="live-queue-list" id="overviewMiniQueueList"></div>
+          </div>
+
+          <div class="bento-card">
+            <div class="card-top-bar">
+              <div>
+                <h2 class="card-title">Comisiones por Lavador</h2>
+                <p class="card-subtitle">Liquidación automática acumulada</p>
+              </div>
+              <button class="card-action-icon" onclick="switchView('comisiones')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </button>
+            </div>
+            <div class="washer-treemap-container" id="overviewTreemapContainer"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 2: PATIO KANBAN -->
+      <div class="view-container" id="view-patio">
+        <div class="kanban-board-wrapper">
+          <div class="kanban-column">
+            <div class="kanban-col-header">
+              <div class="col-title-wrap">
+                <span class="col-dot col-dot-espera"></span>
+                <span class="col-title">En Espera</span>
+              </div>
+              <span class="col-counter-badge" id="count-espera">0</span>
+            </div>
+            <div class="kanban-cards-area" id="cards-espera"></div>
+          </div>
+
+          <div class="kanban-column">
+            <div class="kanban-col-header">
+              <div class="col-title-wrap">
+                <span class="col-dot col-dot-lavando"></span>
+                <span class="col-title">En Bahía / Lavando</span>
+              </div>
+              <span class="col-counter-badge" id="count-lavando">0</span>
+            </div>
+            <div class="kanban-cards-area" id="cards-lavando"></div>
+          </div>
+
+          <div class="kanban-column">
+            <div class="kanban-col-header">
+              <div class="col-title-wrap">
+                <span class="col-dot col-dot-listo"></span>
+                <span class="col-title">Listo para Retiro</span>
+              </div>
+              <span class="col-counter-badge" id="count-listo">0</span>
+            </div>
+            <div class="kanban-cards-area" id="cards-listo"></div>
+          </div>
+
+          <div class="kanban-column">
+            <div class="kanban-col-header">
+              <div class="col-title-wrap">
+                <span class="col-dot col-dot-entregado"></span>
+                <span class="col-title">Entregados Hoy</span>
+              </div>
+              <span class="col-counter-badge" id="count-entregado">0</span>
+            </div>
+            <div class="kanban-cards-area" id="cards-entregado"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 3: CAJA & ARQUEO -->
+      <div class="view-container" id="view-caja">
+        <div class="caja-summary-grid">
+          <div class="caja-stat-card">
+            <div class="caja-stat-label">Total Ingresos Brutos</div>
+            <div class="caja-stat-val" id="cajaTotalIngresos">$ 0</div>
+          </div>
+          <div class="caja-stat-card">
+            <div class="caja-stat-label">Comisiones Lavadores</div>
+            <div class="caja-stat-val" id="cajaTotalComisiones" style="color: var(--accent-primary);">$ 0</div>
+          </div>
+          <div class="caja-stat-card">
+            <div class="caja-stat-label">Gastos Registrados</div>
+            <div class="caja-stat-val" id="cajaTotalGastos" style="color: var(--status-danger);">$ 0</div>
+          </div>
+          <div class="caja-stat-card caja-stat-net">
+            <div class="caja-stat-label">Efectivo Neto en Caja</div>
+            <div class="caja-stat-val" id="cajaNeto">$ 0</div>
+          </div>
+        </div>
+
+        <div class="caja-columns-split">
+          <!-- Métodos de Pago -->
+          <div class="caja-panel">
+            <div class="card-top-bar">
+              <div>
+                <h3 class="card-title">Canales de Recaudo</h3>
+                <p class="card-subtitle">Efectivo y transferencias en tiempo real</p>
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn-card-action" style="background: #25D366; color: #FFFFFF; font-weight: 700; border: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(37,211,102,0.25);" onclick="sendCajaReportWhatsApp()">
+                  <span>📲 Enviar Arqueo al Dueño</span>
+                </button>
+                <button class="btn-card-action" onclick="exportCajaReportExcel()" title="Descargar reporte en formato Excel con filtros y formato">📊 Exportar a Excel (.xlsx)</button>
+              </div>
+            </div>
+            <div class="payments-breakdown-list" id="cajaPaymentMethodsBreakdown"></div>
+          </div>
+
+          <!-- Gastos y Salidas -->
+          <div class="caja-panel">
+            <div class="card-top-bar">
+              <div>
+                <h3 class="card-title">Gastos del Día</h3>
+                <p class="card-subtitle">Control de egresos e insumos</p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn-card-action" style="font-size: 0.75rem;" onclick="openCategoryManagerModal()">⚙️ Categorías</button>
+                <button class="btn-quick-new" style="padding: 5px 12px; font-size: 0.78rem;" onclick="openExpenseModal()">+ Nuevo Gasto</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="ui-table">
+                <thead>
+                  <tr>
+                    <th>Concepto</th>
+                    <th>Categoría</th>
+                    <th>Monto COP</th>
+                    <th style="text-align: right;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="expensesTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 4: COMISIONES & LAVADORES -->
+      <div class="view-container" id="view-comisiones">
+        <div class="card-top-bar" style="margin-bottom: 20px;">
+          <div>
+            <h2 class="card-title" style="font-size: 1.3rem;">Personal &amp; Liquidación de Lavadores</h2>
+            <p class="card-subtitle">Control total: añade, edita porcentajes o elimina empleados</p>
+          </div>
+          <button class="btn-quick-new" onclick="openNewWasherModal()">+ Nuevo Lavador</button>
+        </div>
+
+        <div class="washers-cards-grid" id="washersCardsGrid"></div>
+      </div>
+
+      <!-- VISTA 5: HISTORIAL DE SERVICIOS -->
+      <div class="view-container" id="view-historial">
+        <div class="card-top-bar" style="margin-bottom: 16px;">
+          <div style="display: flex; gap: 12px; align-items: center; width: 100%; max-width: 380px;">
+            <input type="text" id="historySearchInput" class="form-input" placeholder="Buscar por placa, servicio, lavador..." style="width: 100%; max-width: 320px;" oninput="filterHistory()">
+          </div>
+          <button class="btn-card-action" onclick="exportHistoryExcel()" title="Descargar auditoría completa en Excel nativo con filtros de búsqueda">📊 Exportar a Excel (.xlsx)</button>
+        </div>
+
+        <div class="bento-card" style="padding: 16px;">
+          <div class="table-responsive">
+            <table class="ui-table">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Placa</th>
+                  <th>Tipo</th>
+                  <th>Servicio</th>
+                  <th>Lavador</th>
+                  <th>Valor COP</th>
+                  <th>Método</th>
+                  <th>Estado</th>
+                  <th style="text-align: right;">Control Admin</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 6: CONFIGURACIÓN & ADMINISTRACIÓN TOTAL -->
+      <div class="view-container" id="view-config">
+        <div class="caja-columns-split">
+          <!-- Datos del Negocio & Categorías de Gasto -->
+          <div class="caja-panel">
+            <h3 class="card-title" style="margin-bottom: 4px;">Datos del Autolavado</h3>
+            <p class="card-subtitle" style="margin-bottom: 16px;">Configura la información del ticket impreso</p>
+
+            <div class="form-group">
+              <label class="form-label">Nombre del Negocio</label>
+              <input type="text" id="configBizName" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dirección / Sede</label>
+              <input type="text" id="configBizAddress" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono del Negocio</label>
+              <input type="text" id="configBizPhone" class="form-input" placeholder="Ej: 317 015 4654">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp Privado del Dueño (Para recibir los cortes de caja)</label>
+              <input type="text" id="configBizOwnerPhone" class="form-input" placeholder="Ej: 315 123 4567">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pie de Ticket POS</label>
+              <input type="text" id="configBizFooter" class="form-input">
+            </div>
+            <button class="modal-btn-primary" onclick="saveBusinessConfig()">Guardar Información</button>
+
+            <!-- Administración de Categorías de Gasto -->
+            <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
+              <div class="card-top-bar" style="margin-bottom: 10px;">
+                <div>
+                  <h4 style="font-size: 0.95rem; font-weight: 700;">Tipos de Gasto Configurados</h4>
+                  <p class="card-subtitle">Añade o elimina tipos de salida de dinero</p>
+                </div>
+                <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptNewCategory()">+ Añadir Tipo</button>
+              </div>
+              <div id="configCategoriesList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;"></div>
+            </div>
+
+            <!-- Copia de Seguridad -->
+            <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
+              <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 8px;">Respaldo y Seguridad Soberana (100% Local)</h4>
+              <p class="card-subtitle" style="margin-bottom: 12px;">Descarga tus datos a un archivo propio o restaura una copia en un nuevo computador.</p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn-card-action" onclick="exportBackupJSON()">💾 Descargar Backup .JSON</button>
+                <input type="file" id="importBackupFileInput" accept=".json" style="display: none;" onchange="importBackupJSON(event)">
+                <button class="btn-card-action" onclick="document.getElementById('importBackupFileInput').click()">📂 Restaurar Copia .JSON</button>
+                <button class="btn-card-action" style="color: var(--status-danger);" onclick="resetDemoData()">Restablecer Demos</button>
+              </div>
+            </div>
+
+            <!-- Control de Versión y Estado PWA -->
+            <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div>
+                  <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-title);">Versión del Sistema &amp; Control PWA</h4>
+                  <p class="card-subtitle">Seguimiento de compilación y sincronización offline</p>
+                </div>
+                <span class="badge-status-pwa" style="background: var(--status-success-bg); color: var(--status-success); border: 1px solid var(--status-success); padding: 3px 10px; border-radius: var(--radius-pill); font-size: 0.74rem; font-weight: 800; font-family: var(--font-mono);">v4.2.0</span>
+              </div>
+              
+              <div style="background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: var(--text-muted);">Compilación (Build):</span>
+                  <span style="font-family: var(--font-mono); font-weight: 700; color: var(--text-title);">2026.11.14 &bull; Móvil Ready S26</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: var(--text-muted);">Núcleo de Caché:</span>
+                  <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-primary);" id="lblActiveCacheVersion">washq-cache-v4</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: var(--text-muted);">Estado del Motor:</span>
+                  <span style="font-weight: 700; color: var(--status-success);" id="lblPwaEngineStatus">⚡ PWA Soberana Offline Activa</span>
+                </div>
+              </div>
+
+              <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn-card-action" style="width: 100%; min-height: 40px; font-weight: 700; background: var(--accent-subtle); color: var(--accent-primary); border-color: var(--accent-border); cursor: pointer;" onclick="forcePwaCacheRefresh()">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  Forzar Actualización / Limpiar Caché
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarifas y Catálogo de Servicios -->
+          <div class="caja-panel">
+            <div class="card-top-bar">
+              <div>
+                <h3 class="card-title">Catálogo de Servicios y Tarifas</h3>
+                <p class="card-subtitle">Edita precios COP, duraciones y comisiones</p>
+              </div>
+              <button class="btn-quick-new" style="padding: 5px 12px; font-size: 0.78rem;" onclick="openNewServiceModal()">+ Añadir Tarifa</button>
+            </div>
+            <div class="table-responsive">
+              <table class="ui-table">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Servicio</th>
+                    <th>Precio COP</th>
+                    <th>Tiempo</th>
+                    <th style="text-align: right;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="servicesConfigTableBody"></tbody>
+              </table>
+            </div>
+
+            <!-- Métodos de Pago Editables -->
+            <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
+              <div class="card-top-bar" style="margin-bottom: 10px;">
+                <div>
+                  <h4 style="font-size: 0.95rem; font-weight: 700;">Métodos de Pago Habilitados</h4>
+                  <p class="card-subtitle">Administra los canales de recaudo</p>
+                </div>
+                <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptNewPaymentMethod()">+ Añadir Método</button>
+              </div>
+              <div class="table-responsive">
+                <table class="ui-table">
+                  <thead>
+                    <tr>
+                      <th>Ícono</th>
+                      <th>Nombre del Método</th>
+                      <th style="text-align: right;">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="configPaymentMethodsTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer con Versión para Control -->
+      <footer style="padding: 24px 16px 12px 16px; text-align: center; font-size: 0.74rem; color: var(--text-muted); font-family: var(--font-mono); border-top: 1px solid var(--border-subtle); margin-top: 20px;">
+        WashQ &bull; Versión <strong>v4.2.0</strong> (Build 2026.11.14 Móvil S26) &bull; 100% Offline
+      </footer>
+
+    </main>
+
+  </div> <!-- /app-shell -->
+
+  <!-- ==========================================================================
+       MODAL 1: INGRESO RÁPIDO EXPRESS (+ NUEVO VEHÍCULO - F2)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalNewOrder">
+    <div class="modal-sheet">
+      <button class="modal-close-btn" onclick="closeModal('modalNewOrder')">&times;</button>
+      <h3 class="modal-title">Nuevo Ingreso a Patio</h3>
+      <p class="modal-subtitle">Registro ágil en menos de 10 segundos &bull; Atajo F2</p>
+
+      <div class="form-group">
+        <label class="form-label">Tipo de Vehículo</label>
+        <div class="vehicle-type-selector">
+          <button type="button" class="vtype-btn active" onclick="selectVehicleType('carro', this)">🚗 Carro</button>
+          <button type="button" class="vtype-btn" onclick="selectVehicleType('moto', this)">🏍️ Moto</button>
+          <button type="button" class="vtype-btn" onclick="selectVehicleType('suv', this)">🚙 SUV / 4x4</button>
+          <button type="button" class="vtype-btn" onclick="selectVehicleType('taxi', this)">🚕 Taxi</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Placa del Vehículo</label>
+        <input type="text" id="orderPlateInput" class="form-input input-plate-stylized" placeholder="ABC-123" maxlength="8" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Servicio Requerido</label>
+        <div class="modal-services-grid" id="modalServicesGrid"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Asignar Lavador</label>
+        <select id="orderWasherSelect" class="form-select"></select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Celular Cliente (Opcional &bull; Aviso por WhatsApp)</label>
+        <input type="tel" id="orderPhoneInput" class="form-input" placeholder="Ej: 3151234567">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Observaciones (Rayones, pertenencias, casco)</label>
+        <input type="text" id="orderNotesInput" class="form-input" placeholder="Ej: Dejó llaves y casco en recepción">
+      </div>
+
+      <button type="button" class="modal-btn-primary" onclick="submitNewOrder()">Registrar Turno e Imprimir Ticket</button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: EDICIÓN COMPLETA DE ORDEN DE TRABAJO (ADMIN)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalEditOrder">
+    <div class="modal-sheet">
+      <button class="modal-close-btn" onclick="closeModal('modalEditOrder')">&times;</button>
+      <h3 class="modal-title">Editar Turno / Orden de Trabajo</h3>
+      <p class="modal-subtitle">Control total del administrador: modifica valores, lavador o estado</p>
+      <input type="hidden" id="editOrderId">
+
+      <div class="form-group">
+        <label class="form-label">Placa</label>
+        <input type="text" id="editOrderPlate" class="form-input input-plate-stylized">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Servicio</label>
+        <select id="editOrderServiceSelect" class="form-select" onchange="syncEditOrderService()"></select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Precio Cobrado (COP)</label>
+        <input type="number" id="editOrderPrice" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Comisión Lavador (COP)</label>
+        <input type="number" id="editOrderCommission" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Lavador Asignado</label>
+        <select id="editOrderWasherSelect" class="form-select"></select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Estado Actual en Patio</label>
+        <select id="editOrderStatusSelect" class="form-select">
+          <option value="espera">En Espera</option>
+          <option value="lavando">En Bahía / Lavando</option>
+          <option value="listo">Listo para Retiro</option>
+          <option value="entregado">Entregado y Cobrado</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Método de Pago (Si ya fue cobrado)</label>
+        <select id="editOrderPaymentMethodSelect" class="form-select">
+          <option value="">-- Pendiente de Cobro --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Celular Cliente</label>
+        <input type="tel" id="editOrderPhone" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Observaciones</label>
+        <input type="text" id="editOrderNotes" class="form-input">
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="modal-btn-primary" onclick="saveOrderEdits()">Guardar Cambios</button>
+        <button type="button" class="modal-btn-primary modal-btn-danger" style="width: 140px;" onclick="deleteCurrentOrder()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: REGISTRAR / EDITAR GASTO
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalExpense">
+    <div class="modal-sheet" style="max-width: 440px;">
+      <button class="modal-close-btn" onclick="closeModal('modalExpense')">&times;</button>
+      <h3 class="modal-title" id="modalExpenseTitle">Registrar Gasto de Caja</h3>
+      <p class="modal-subtitle">Salidas de dinero, compras de patio o insumos</p>
+      <input type="hidden" id="expenseEditId">
+
+      <div class="form-group">
+        <label class="form-label">Descripción del Gasto</label>
+        <input type="text" id="expenseDescription" class="form-input" placeholder="Ej: Compra de cera y silicona">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span>Tipo / Categoría de Gasto</span>
+          <a href="javascript:void(0)" onclick="promptNewCategory()" style="font-size: 0.72rem; color: var(--accent-primary); font-weight: 700; text-decoration: none;">+ Crear Tipo</a>
+        </label>
+        <select id="expenseCategory" class="form-select"></select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Monto (COP)</label>
+        <input type="number" id="expenseAmount" class="form-input" placeholder="Ej: 25000" step="500">
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="modal-btn-primary" onclick="saveExpense()">Guardar Gasto</button>
+        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteExpenseInModal" style="display: none; width: 130px;" onclick="deleteExpenseFromModal()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 4: GESTIONAR CATEGORÍAS DE GASTO
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalCategories">
+    <div class="modal-sheet" style="max-width: 480px;">
+      <button class="modal-close-btn" onclick="closeModal('modalCategories')">&times;</button>
+      <h3 class="modal-title">Tipos de Gasto</h3>
+      <p class="modal-subtitle">Agrega, renombra o elimina categorías de salida de dinero</p>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <input type="text" id="newCategoryInputName" class="form-input" placeholder="Nombre de nuevo tipo de gasto..." style="flex: 1;">
+        <button class="btn-quick-new" onclick="addExpenseCategoryFromInput()">Añadir</button>
+      </div>
+
+      <div style="max-height: 280px; overflow-y: auto;">
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th>Nombre de Categoría</th>
+              <th style="text-align: right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="categoriesModalTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 5: COBRO & SALIDA (CHECKOUT)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalCheckout">
+    <div class="modal-sheet" style="max-width: 440px;">
+      <button class="modal-close-btn" onclick="closeModal('modalCheckout')">&times;</button>
+      <h3 class="modal-title">Cobro y Salida de Patio</h3>
+      <p class="modal-subtitle">Confirmar método de pago para registrar en caja</p>
+
+      <div style="background: var(--bg-canvas); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; text-align: center;">
+        <div class="colombian-plate" id="checkoutPlateDisplay" style="font-size: 1.25rem; display: inline-block; margin-bottom: 8px;">ABC-123</div>
+        <div id="checkoutServiceDisplay" style="font-weight: 600; font-size: 0.9rem;">Lavado General</div>
+        <div id="checkoutPriceDisplay" style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: var(--accent-primary); margin-top: 6px;">$ 26.000 COP</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Método de Pago Recibido</label>
+        <select id="checkoutPaymentMethod" class="form-select" style="font-weight: 600;"></select>
+      </div>
+
+      <input type="hidden" id="checkoutOrderId">
+      <button type="button" class="modal-btn-primary" onclick="confirmCheckout()">Completar Cobro &amp; Salida</button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 6: AÑADIR / EDITAR LAVADOR
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalWasher">
+    <div class="modal-sheet" style="max-width: 440px;">
+      <button class="modal-close-btn" onclick="closeModal('modalWasher')">&times;</button>
+      <h3 class="modal-title" id="modalWasherTitle">Lavador de Patio</h3>
+      <p class="modal-subtitle">Control de personal y liquidación</p>
+      <input type="hidden" id="washerEditId">
+
+      <div class="form-group">
+        <label class="form-label">Nombre Completo</label>
+        <input type="text" id="washerNameInput" class="form-input" placeholder="Ej: Carlos Murillo">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Teléfono Celular</label>
+        <input type="tel" id="washerPhoneInput" class="form-input" placeholder="Ej: 312 456 7890">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Estado del Empleado</label>
+        <select id="washerActiveStatusSelect" class="form-select">
+          <option value="true">Activo en Patio</option>
+          <option value="false">Inactivo / Descanso</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="modal-btn-primary" onclick="saveWasher()">Guardar Lavador</button>
+        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteWasherInModal" style="display: none; width: 130px;" onclick="deleteWasherFromModal()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 7: AÑADIR / EDITAR SERVICIO (TARIFA)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalService">
+    <div class="modal-sheet" style="max-width: 480px;">
+      <button class="modal-close-btn" onclick="closeModal('modalService')">&times;</button>
+      <h3 class="modal-title" id="modalServiceTitle">Tarifa de Servicio</h3>
+      <p class="modal-subtitle">Configura precio en COP, tiempo y comisiones</p>
+      <input type="hidden" id="serviceEditId">
+
+      <div class="form-group">
+        <label class="form-label">Tipo de Vehículo</label>
+        <select id="serviceTypeSelect" class="form-select">
+          <option value="carro">Carro</option>
+          <option value="moto">Moto</option>
+          <option value="suv">SUV / Camioneta</option>
+          <option value="taxi">Taxi</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nombre del Servicio</label>
+        <input type="text" id="serviceNameInput" class="form-input" placeholder="Ej: Lavado Full + Motor">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Precio en COP</label>
+        <input type="number" id="servicePriceInput" class="form-input" placeholder="Ej: 45000" step="1000">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Duración Estimada (Minutos)</label>
+        <input type="number" id="serviceDurationInput" class="form-input" placeholder="Ej: 45">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tipo de Comisión</label>
+        <select id="serviceCommissionType" class="form-select">
+          <option value="porcentaje">Porcentaje (%)</option>
+          <option value="fijo">Valor Fijo en COP ($)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Valor de Comisión (ej: 40 para 40%, o 6000 para COP)</label>
+        <input type="number" id="serviceCommissionVal" class="form-input" placeholder="40">
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="modal-btn-primary" onclick="saveServiceConfig()">Guardar Tarifa</button>
+        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteServiceInModal" style="display: none; width: 130px;" onclick="deleteServiceFromModal()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 8: VISOR DE TICKET TÉRMICO POS
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalTicket">
+    <div class="modal-sheet" style="max-width: 360px;">
+      <button class="modal-close-btn" onclick="closeModal('modalTicket')">&times;</button>
+      <div id="printableTicketArea" class="thermal-ticket-view"></div>
+      <button type="button" class="modal-btn-primary" style="margin-top: 14px;" onclick="window.print()">🖨️ Imprimir Ticket POS</button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 9: CAMBIO DE ROL CON PIN
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalRolePin">
+    <div class="modal-sheet" style="max-width: 400px; text-align: center;">
+      <button class="modal-close-btn" onclick="closeModal('modalRolePin')">&times;</button>
+      <h3 class="modal-title">Cambio de Rol de Acceso</h3>
+      <p class="modal-subtitle" id="pinPromptText">Ingresa el PIN de seguridad</p>
+      
+      <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;">
+        <button class="btn-card-action" onclick="requestSwitchRole('admin')">👑 Admin</button>
+        <button class="btn-card-action" onclick="requestSwitchRole('cajero')">💼 Cajero</button>
+        <button class="btn-card-action" onclick="requestSwitchRole('lavador')">🧼 Lavador</button>
+      </div>
+
+      <div class="form-group" id="pinInputGroup" style="display: none;">
+        <label class="form-label">PIN (Admin por defecto: 1234 &bull; Cajero: 0000)</label>
+        <input type="password" id="rolePinInput" class="form-input" style="text-align: center; font-size: 1.4rem; letter-spacing: 0.3em;" maxlength="4">
+        <p id="pinErrorMsg" style="color: var(--status-danger); font-size: 0.78rem; display: none; margin-top: 4px;">PIN incorrecto</p>
+        <button type="button" class="modal-btn-primary" onclick="verifyRolePin()">Confirmar Acceso</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BARRA DE NAVEGACIÓN MÓVIL PWA -->
+  <nav class="mobile-bottom-nav" aria-label="Navegación móvil">
+    <button class="mob-nav-btn active" id="mob-nav-overview" onclick="switchView('overview')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-patio" onclick="switchView('patio')">
+      <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+      <span>Patio</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-caja" onclick="switchView('caja')">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      <span>Caja</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-comisiones" onclick="switchView('comisiones')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+      <span>Lavadores</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-config" onclick="switchView('config')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+
+  <!-- Librería SheetJS para exportación nativa a Excel (.xlsx) 100% offline -->
+  <script src="assets/xlsx.full.min.js"></script>
+
+  <!-- ==========================================================================
+       LÓGICA JAVASCRIPT COMPLETA CON CONTROL TOTAL DEL ADMIN
+       ========================================================================== -->
+  <script>
+    const DEFAULT_CONFIG = {
+      businessName: 'WASHQ &bull; AUTOLAVADO EXPRESS',
+      address: 'Calle 5 # 38-20, Cali - Valle',
+      phone: '317 015 4654',
+      ownerPhone: '315 555 1234',
+      footerText: '¡Gracias por su visita! Cuidamos su vehículo.'
+    };
+
+    const DEFAULT_SERVICES = [
+      { id: 's_m1', type: 'moto', name: 'Lavado Sencillo Moto', price: 12000, duration: 20, commType: 'porcentaje', commVal: 40 },
+      { id: 's_m2', type: 'moto', name: 'Lavado Especial + Silicona', price: 18000, duration: 30, commType: 'porcentaje', commVal: 40 },
+      { id: 's_m3', type: 'moto', name: 'Desengrase Motor + Detailing', price: 32000, duration: 45, commType: 'porcentaje', commVal: 40 },
+      { id: 's_c1', type: 'carro', name: 'Lavado Sencillo (Solo Por Fuera)', price: 18000, duration: 25, commType: 'porcentaje', commVal: 40 },
+      { id: 's_c2', type: 'carro', name: 'Lavado General (Interior + Exterior)', price: 26000, duration: 40, commType: 'porcentaje', commVal: 40 },
+      { id: 's_c3', type: 'carro', name: 'Lavado Full + Motor + Chasis', price: 45000, duration: 60, commType: 'porcentaje', commVal: 40 },
+      { id: 's_suv1', type: 'suv', name: 'Lavado General SUV / Camioneta', price: 35000, duration: 50, commType: 'porcentaje', commVal: 40 },
+      { id: 's_suv2', type: 'suv', name: 'Lavado Full + Motor SUV', price: 60000, duration: 75, commType: 'porcentaje', commVal: 40 },
+      { id: 's_t1', type: 'taxi', name: 'Lavado Exprés Taxi', price: 16000, duration: 20, commType: 'porcentaje', commVal: 40 }
+    ];
+
+    const DEFAULT_WASHERS = [
+      { id: 'w_1', name: 'Carlos Murillo', phone: '312 456 7890', active: true },
+      { id: 'w_2', name: 'Andrés Valencia', phone: '318 654 3210', active: true },
+      { id: 'w_3', name: 'Jhon Alexander Gómez', phone: '310 987 6543', active: true }
+    ];
+
+    const DEFAULT_PAYMENT_METHODS = [
+      { id: 'pm_efectivo', name: 'Efectivo', icon: '💵' },
+      { id: 'pm_nequi', name: 'Nequi', icon: '📱' },
+      { id: 'pm_daviplata', name: 'Daviplata', icon: '🔴' },
+      { id: 'pm_transf', name: 'Bancolombia Transferencia', icon: '🏦' }
+    ];
+
+    const DEFAULT_EXPENSE_CATEGORIES = [
+      'Insumos de Lavado',
+      'Alimentación & Refrigerios',
+      'Mantenimiento de Máquinas',
+      'Servicios Públicos',
+      'Arriendo de Patio',
+      'Nómina Fija',
+      'Publicidad & Redes',
+      'Varios / Imprevistos'
+    ];
+
+    const DEFAULT_ROLES = [
+      { id: 'admin', name: 'Super Admin', icon: '👑', pin: '1234' },
+      { id: 'cajero', name: 'Cajero / Recepción', icon: '💼', pin: '0000' },
+      { id: 'lavador', name: 'Lavador de Patio', icon: '🧼', pin: '' }
+    ];
+
+    // Estado Global
+    let appState = {
+      config: { ...DEFAULT_CONFIG },
+      services: [...DEFAULT_SERVICES],
+      washers: [...DEFAULT_WASHERS],
+      paymentMethods: [...DEFAULT_PAYMENT_METHODS],
+      expenseCategories: [...DEFAULT_EXPENSE_CATEGORIES],
+      roles: [...DEFAULT_ROLES],
+      currentRole: 'admin',
+      pendingRoleSwitch: null,
+      orders: [],
+      expenses: [],
+      selectedVehicleType: 'carro',
+      selectedServiceId: null
+    };
+
+    function formatCOP(num) {
+      return '$ ' + Number(num || 0).toLocaleString('es-CO');
+    }
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFromStorage();
+      setupEventListeners();
+      renderAllViews();
+      initPwaInstallPrompt();
+      registerPwaServiceWorker();
+
+      setInterval(() => {
+        updateKanbanTimers();
+      }, 15000);
+    });
+
+    function loadFromStorage() {
+      try {
+        const saved = localStorage.getItem('washq_cali_db');
+        if (saved) {
+          appState = { ...appState, ...JSON.parse(saved) };
+          if (!appState.expenseCategories || appState.expenseCategories.length === 0) {
+            appState.expenseCategories = [...DEFAULT_EXPENSE_CATEGORIES];
+          }
+        } else {
+          seedInitialOrders();
+          saveToStorage();
+        }
+      } catch (e) {
+        console.error('Error cargando storage:', e);
+      }
+    }
+
+    function saveToStorage() {
+      try {
+        localStorage.setItem('washq_cali_db', JSON.stringify(appState));
+      } catch (e) {
+        console.error('Error guardando storage:', e);
+      }
+    }
+
+    function seedInitialOrders() {
+      const now = Date.now();
+      appState.orders = [
+        {
+          id: 'ord_1',
+          ticketNumber: 1,
+          plate: 'ABC-123',
+          vehicleType: 'carro',
+          serviceId: 's_c2',
+          serviceName: 'Lavado General (Interior + Exterior)',
+          price: 26000,
+          washerId: 'w_1',
+          washerName: 'Carlos Murillo',
+          commission: 10400,
+          createdAt: now - (35 * 60 * 1000),
+          estimatedDuration: 40,
+          estimatedDelivery: now + (5 * 60 * 1000),
+          status: 'listo',
+          phone: '3151234567',
+          notes: 'Cuidado con retrovisor',
+          paymentMethod: null
+        },
+        {
+          id: 'ord_2',
+          ticketNumber: 2,
+          plate: 'WXQ-45E',
+          vehicleType: 'moto',
+          serviceId: 's_m2',
+          serviceName: 'Lavado Especial + Silicona',
+          price: 18000,
+          washerId: 'w_2',
+          washerName: 'Andrés Valencia',
+          commission: 7200,
+          createdAt: now - (15 * 60 * 1000),
+          estimatedDuration: 30,
+          estimatedDelivery: now + (15 * 60 * 1000),
+          status: 'lavando',
+          phone: '',
+          notes: '',
+          paymentMethod: null
+        },
+        {
+          id: 'ord_3',
+          ticketNumber: 3,
+          plate: 'KDY-890',
+          vehicleType: 'suv',
+          serviceId: 's_suv2',
+          serviceName: 'Lavado Full + Motor SUV',
+          price: 60000,
+          washerId: 'w_3',
+          washerName: 'Jhon Alexander Gómez',
+          commission: 24000,
+          createdAt: now - (20 * 60 * 1000),
+          estimatedDuration: 75,
+          estimatedDelivery: now + (55 * 60 * 1000),
+          status: 'lavando',
+          phone: '3187654321',
+          notes: '',
+          paymentMethod: null
+        },
+        {
+          id: 'ord_4',
+          ticketNumber: 4,
+          plate: 'VAA-201',
+          vehicleType: 'carro',
+          serviceId: 's_c1',
+          serviceName: 'Lavado Sencillo (Solo Por Fuera)',
+          price: 18000,
+          washerId: 'w_1',
+          washerName: 'Carlos Murillo',
+          commission: 7200,
+          createdAt: now - (5 * 60 * 1000),
+          estimatedDuration: 25,
+          estimatedDelivery: now + (20 * 60 * 1000),
+          status: 'espera',
+          phone: '',
+          notes: '',
+          paymentMethod: null
+        }
+      ];
+
+      appState.expenses = [
+        { id: 'exp_1', desc: 'Compra de cera y silicona', category: 'Insumos de Lavado', amount: 25000, date: now - (2 * 3600 * 1000) },
+        { id: 'exp_2', desc: 'Almuerzo operarios de patio', category: 'Alimentación & Refrigerios', amount: 32000, date: now - (5 * 3600 * 1000) }
+      ];
+    }
+
+    function setupEventListeners() {
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'F2') {
+          e.preventDefault();
+          openNewOrderModal();
+        }
+        if (e.key === 'Escape') {
+          closeAllModals();
+        }
+      });
+
+      const plateInput = document.getElementById('orderPlateInput');
+      if (plateInput) {
+        plateInput.addEventListener('input', (e) => {
+          let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+          if (val.length > 3) {
+            val = val.slice(0, 3) + '-' + val.slice(3, 6);
+          }
+          e.target.value = val;
+        });
+      }
+    }
+
+    function switchView(viewId) {
+      document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mob-nav-btn').forEach(el => el.classList.remove('active'));
+
+      const targetView = document.getElementById('view-' + viewId);
+      const targetNav = document.getElementById('nav-' + viewId);
+      const targetMobNav = document.getElementById('mob-nav-' + viewId);
+
+      if (targetView) targetView.classList.add('active');
+      if (targetNav) targetNav.classList.add('active');
+      if (targetMobNav) targetMobNav.classList.add('active');
+
+      const headings = {
+        'overview': 'Resumen General',
+        'patio': 'Tablero de Patio en Vivo',
+        'caja': 'Caja & Arqueo Diario',
+        'comisiones': 'Liquidación de Comisiones',
+        'historial': 'Historial de Vehículos',
+        'config': 'Configuración & Control Total'
+      };
+      document.getElementById('viewMainHeading').textContent = headings[viewId] || 'WashQ';
+      renderAllViews();
+    }
+
+    function renderAllViews() {
+      renderOverview();
+      renderKanban();
+      renderCaja();
+      renderWashers();
+      renderHistory();
+      renderServicesConfig();
+      renderBusinessConfig();
+      renderPaymentMethodsConfig();
+      renderExpenseCategoriesConfig();
+    }
+
+    // ================= OVERVIEW =================
+    function renderOverview() {
+      const todayOrders = appState.orders;
+      const totalIngresos = todayOrders.reduce((sum, o) => sum + (o.price || 0), 0);
+      const totalComisiones = todayOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
+      const totalGastos = appState.expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+      const neto = totalIngresos - totalComisiones - totalGastos;
+
+      document.getElementById('overviewGiantTotal').textContent = formatCOP(totalIngresos);
+      document.getElementById('overviewComisiones').textContent = formatCOP(totalComisiones);
+      document.getElementById('overviewGastos').textContent = formatCOP(totalGastos);
+      document.getElementById('overviewNeto').textContent = formatCOP(neto);
+
+      const activeCount = todayOrders.filter(o => o.status === 'espera' || o.status === 'lavando').length;
+      document.getElementById('badgeActivePatio').textContent = activeCount;
+      document.getElementById('overviewActiveVehiclesCount').textContent = `${activeCount} en Proceso`;
+      document.getElementById('sidebarPatioCapacity').innerHTML = `${Math.min(100, activeCount * 20)}% <small>(${activeCount} bahías)</small>`;
+
+      // Mini cola
+      const miniQueue = document.getElementById('overviewMiniQueueList');
+      miniQueue.innerHTML = '';
+      todayOrders.slice(0, 4).forEach(o => {
+        const item = document.createElement('div');
+        item.className = 'queue-item';
+        item.innerHTML = `
+          <div style="display:flex; align-items:center;">
+            <span class="colombian-plate">${o.plate}</span>
+            <div class="vehicle-details">
+              <span class="vehicle-service">${o.serviceName}</span>
+              <span class="vehicle-washer">Lavador: ${o.washerName || 'Por Asignar'}</span>
+            </div>
+          </div>
+          <div class="queue-right">
+            <span class="queue-price">${formatCOP(o.price)}</span>
+            <span class="queue-status-tag ${o.status === 'listo' ? 'tag-ready' : o.status === 'lavando' ? 'tag-washing' : 'tag-waiting'}">
+              ${o.status.toUpperCase()}
+            </span>
+          </div>
+        `;
+        miniQueue.appendChild(item);
+      });
+
+      // Treemap
+      const treemap = document.getElementById('overviewTreemapContainer');
+      treemap.innerHTML = '';
+      appState.washers.slice(0, 3).forEach((w, idx) => {
+        const washerOrders = todayOrders.filter(o => o.washerId === w.id);
+        const washerTotal = washerOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
+        const tile = document.createElement('div');
+        tile.className = `treemap-tile ${idx === 0 ? 'tile-lead' : idx === 1 ? 'tile-second' : 'tile-third'}`;
+        tile.onclick = () => switchView('comisiones');
+        tile.innerHTML = `
+          <div>
+            <div class="treemap-name">${w.name}</div>
+            <div class="treemap-count">${washerOrders.length} servicios lavados</div>
+          </div>
+          <div class="treemap-val">${formatCOP(washerTotal)}</div>
+        `;
+        treemap.appendChild(tile);
+      });
+
+      // Métodos de pago
+      const pmList = document.getElementById('overviewPaymentsBreakdownList');
+      pmList.innerHTML = '';
+      appState.paymentMethods.forEach(pm => {
+        const pmOrders = todayOrders.filter(o => o.paymentMethod === pm.id);
+        const total = pmOrders.reduce((sum, o) => sum + (o.price || 0), 0);
+        const row = document.createElement('div');
+        row.className = 'payment-row';
+        row.innerHTML = `
+          <div class="payment-row-left">
+            <span>${pm.icon}</span>
+            <span>${pm.name}</span>
+          </div>
+          <span class="payment-row-val">${formatCOP(total)}</span>
+        `;
+        pmList.appendChild(row);
+      });
+    }
+
+    function switchPeriod(btn, period) {
+      document.querySelectorAll('.time-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      const multipliers = { 'hoy': 1, 'semana': 6.2, 'mes': 25.5 };
+      const mult = multipliers[period] || 1;
+      const base = appState.orders.reduce((sum, o) => sum + (o.price || 0), 0);
+      document.getElementById('overviewGiantTotal').textContent = formatCOP(base * mult);
+    }
+
+    // ================= KANBAN CON HERRAMIENTAS ADMIN =================
+    function renderKanban() {
+      const cols = {
+        'espera': document.getElementById('cards-espera'),
+        'lavando': document.getElementById('cards-lavando'),
+        'listo': document.getElementById('cards-listo'),
+        'entregado': document.getElementById('cards-entregado')
+      };
+
+      Object.values(cols).forEach(col => col.innerHTML = '');
+      const counts = { 'espera': 0, 'lavando': 0, 'listo': 0, 'entregado': 0 };
+
+      appState.orders.forEach(order => {
+        counts[order.status] = (counts[order.status] || 0) + 1;
+        const card = createOrderCard(order);
+        if (cols[order.status]) {
+          cols[order.status].appendChild(card);
+        }
+      });
+
+      document.getElementById('count-espera').textContent = counts['espera'] || 0;
+      document.getElementById('count-lavando').textContent = counts['lavando'] || 0;
+      document.getElementById('count-listo').textContent = counts['listo'] || 0;
+      document.getElementById('count-entregado').textContent = counts['entregado'] || 0;
+    }
+
+    function createOrderCard(order) {
+      const card = document.createElement('div');
+      card.className = 'order-card';
+      const elapsedMin = Math.floor((Date.now() - order.createdAt) / 60000);
+      const isDelayed = order.status !== 'entregado' && elapsedMin > order.estimatedDuration;
+
+      card.innerHTML = `
+        <div class="card-row-top">
+          <span class="colombian-plate">${order.plate}</span>
+          <div class="card-top-admin-tools">
+            <span class="card-meta-type">${order.vehicleType}</span>
+            <button class="btn-admin-icon" title="Editar orden completa (Admin)" onclick="openEditOrderModal('${order.id}')">✏️</button>
+            <button class="btn-admin-icon danger" title="Eliminar orden (Admin)" onclick="deleteOrderById('${order.id}')">🗑️</button>
+          </div>
+        </div>
+        <div class="card-service-name">${order.serviceName}</div>
+        <div class="card-washer-info">
+          <span>🧼</span>
+          <span>${order.washerName || 'Sin asignar'}</span>
+        </div>
+        <div class="card-timer-row">
+          <span class="timer-badge ${isDelayed ? 'timer-delayed' : ''}">
+            ⏱️ ${elapsedMin} min ${isDelayed ? '(Retrasado)' : ''}
+          </span>
+          <span class="table-num">${formatCOP(order.price)}</span>
+        </div>
+        <div class="card-action-bar">
+          ${getActionButtonsForOrder(order)}
+        </div>
+      `;
+      return card;
+    }
+
+    function getActionButtonsForOrder(order) {
+      if (order.status === 'espera') {
+        return `<button class="btn-card-action btn-card-primary" onclick="advanceOrderStatus('${order.id}', 'lavando')">▶ Pasar a Lavado</button>`;
+      } else if (order.status === 'lavando') {
+        return `<button class="btn-card-action btn-card-primary" onclick="advanceOrderStatus('${order.id}', 'listo')">✓ Marcar como Listo</button>`;
+      } else if (order.status === 'listo') {
+        return `
+          ${order.phone ? `<a href="${getWhatsAppLink(order)}" target="_blank" class="btn-card-action btn-whatsapp-action">📲 Avisar WhatsApp</a>` : ''}
+          <button class="btn-card-action btn-card-primary" onclick="openCheckoutModal('${order.id}')">💵 Cobrar y Entregar</button>
+        `;
+      } else {
+        return `<button class="btn-card-action" onclick="viewOrderTicket('${order.id}')">🖨️ Ver Ticket POS</button>`;
+      }
+    }
+
+    function advanceOrderStatus(orderId, nextStatus) {
+      const order = appState.orders.find(o => o.id === orderId);
+      if (order) {
+        order.status = nextStatus;
+        saveToStorage();
+        renderAllViews();
+      }
+    }
+
+    function updateKanbanTimers() {
+      if (document.getElementById('view-patio').classList.contains('active')) {
+        renderKanban();
+      }
+    }
+
+    function getWhatsAppLink(order) {
+      const cleanPhone = (order.phone || '').replace(/\D/g, '');
+      const fullPhone = cleanPhone.startsWith('57') ? cleanPhone : '57' + cleanPhone;
+      const msg = encodeURIComponent(`¡Hola! Tu vehículo con placa *${order.plate}* ya está listo en *${appState.config.businessName}*. Total a pagar: *${formatCOP(order.price)}*. ¡Te esperamos!`);
+      return `https://wa.me/${fullPhone}?text=${msg}`;
+    }
+
+    // ================= CONTROL TOTAL DE ÓRDENES (EDITAR / ELIMINAR) =================
+    function openEditOrderModal(orderId) {
+      const order = appState.orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      document.getElementById('editOrderId').value = order.id;
+      document.getElementById('editOrderPlate').value = order.plate;
+      document.getElementById('editOrderPrice').value = order.price;
+      document.getElementById('editOrderCommission').value = order.commission;
+      document.getElementById('editOrderPhone').value = order.phone || '';
+      document.getElementById('editOrderNotes').value = order.notes || '';
+      document.getElementById('editOrderStatusSelect').value = order.status;
+
+      // Dropdown de servicios
+      const sSelect = document.getElementById('editOrderServiceSelect');
+      sSelect.innerHTML = '';
+      appState.services.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = `[${s.type.toUpperCase()}] ${s.name} - ${formatCOP(s.price)}`;
+        if (s.id === order.serviceId) opt.selected = true;
+        sSelect.appendChild(opt);
+      });
+
+      // Dropdown de lavadores
+      const wSelect = document.getElementById('editOrderWasherSelect');
+      wSelect.innerHTML = '<option value="">-- Sin Lavador Asignado --</option>';
+      appState.washers.forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w.id;
+        opt.textContent = w.name;
+        if (w.id === order.washerId) opt.selected = true;
+        wSelect.appendChild(opt);
+      });
+
+      // Dropdown de métodos de pago
+      const pmSelect = document.getElementById('editOrderPaymentMethodSelect');
+      pmSelect.innerHTML = '<option value="">-- Pendiente de Cobro --</option>';
+      appState.paymentMethods.forEach(pm => {
+        const opt = document.createElement('option');
+        opt.value = pm.id;
+        opt.textContent = `${pm.icon} ${pm.name}`;
+        if (pm.id === order.paymentMethod) opt.selected = true;
+        pmSelect.appendChild(opt);
+      });
+
+      openModal('modalEditOrder');
+    }
+
+    function syncEditOrderService() {
+      const sId = document.getElementById('editOrderServiceSelect').value;
+      const service = appState.services.find(s => s.id === sId);
+      if (service) {
+        document.getElementById('editOrderPrice').value = service.price;
+        let comm = service.commType === 'porcentaje' ? (service.price * service.commVal / 100) : service.commVal;
+        document.getElementById('editOrderCommission').value = comm;
+      }
+    }
+
+    function saveOrderEdits() {
+      const orderId = document.getElementById('editOrderId').value;
+      const order = appState.orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const plate = document.getElementById('editOrderPlate').value.trim();
+      if (!plate) { alert('La placa no puede estar vacía'); return; }
+
+      const sId = document.getElementById('editOrderServiceSelect').value;
+      const service = appState.services.find(s => s.id === sId);
+      const wId = document.getElementById('editOrderWasherSelect').value;
+      const washer = appState.washers.find(w => w.id === wId);
+
+      order.plate = plate;
+      if (service) {
+        order.serviceId = service.id;
+        order.serviceName = service.name;
+        order.vehicleType = service.type;
+      }
+      order.price = Number(document.getElementById('editOrderPrice').value);
+      order.commission = Number(document.getElementById('editOrderCommission').value);
+      order.washerId = washer ? washer.id : null;
+      order.washerName = washer ? washer.name : null;
+      order.status = document.getElementById('editOrderStatusSelect').value;
+      order.paymentMethod = document.getElementById('editOrderPaymentMethodSelect').value || null;
+      order.phone = document.getElementById('editOrderPhone').value.trim();
+      order.notes = document.getElementById('editOrderNotes').value.trim();
+
+      saveToStorage();
+      closeModal('modalEditOrder');
+      renderAllViews();
+    }
+
+    function deleteCurrentOrder() {
+      const orderId = document.getElementById('editOrderId').value;
+      deleteOrderById(orderId);
+      closeModal('modalEditOrder');
+    }
+
+    function deleteOrderById(orderId) {
+      const order = appState.orders.find(o => o.id === orderId);
+      if (!order) return;
+      if (confirm(`¿Eliminar definitivamente el vehículo ${order.plate} del sistema? Esta acción ajustará los ingresos y comisiones automáticamente.`)) {
+        appState.orders = appState.orders.filter(o => o.id !== orderId);
+        saveToStorage();
+        renderAllViews();
+      }
+    }
+
+    // ================= MODAL INGRESO EXPRESS =================
+    function openNewOrderModal() {
+      selectVehicleType('carro');
+      populateWashersDropdown();
+      document.getElementById('orderPlateInput').value = '';
+      document.getElementById('orderPhoneInput').value = '';
+      document.getElementById('orderNotesInput').value = '';
+      openModal('modalNewOrder');
+      setTimeout(() => document.getElementById('orderPlateInput').focus(), 150);
+    }
+
+    function selectVehicleType(type, btn) {
+      appState.selectedVehicleType = type;
+      if (btn) {
+        document.querySelectorAll('.vtype-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      const grid = document.getElementById('modalServicesGrid');
+      grid.innerHTML = '';
+      const services = appState.services.filter(s => s.type === type);
+      services.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.className = `service-select-card ${idx === 0 ? 'active' : ''}`;
+        if (idx === 0) appState.selectedServiceId = s.id;
+        card.onclick = () => {
+          document.querySelectorAll('.service-select-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          appState.selectedServiceId = s.id;
+        };
+        card.innerHTML = `
+          <div class="svc-card-name">${s.name}</div>
+          <div class="svc-card-price">${formatCOP(s.price)} &bull; ${s.duration} min</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function populateWashersDropdown() {
+      const select = document.getElementById('orderWasherSelect');
+      select.innerHTML = '<option value="">-- Asignación Automática / Por Asignar --</option>';
+      appState.washers.filter(w => w.active).forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w.id;
+        opt.textContent = w.name;
+        select.appendChild(opt);
+      });
+    }
+
+    function submitNewOrder() {
+      const plate = document.getElementById('orderPlateInput').value.trim();
+      if (!plate || plate.length < 5) {
+        alert('Por favor ingrese una placa válida (ej: ABC-123)');
+        return;
+      }
+
+      const service = appState.services.find(s => s.id === appState.selectedServiceId);
+      if (!service) {
+        alert('Seleccione un servicio');
+        return;
+      }
+
+      const washerId = document.getElementById('orderWasherSelect').value;
+      const washer = appState.washers.find(w => w.id === washerId);
+
+      let commVal = 0;
+      if (service.commType === 'porcentaje') {
+        commVal = (service.price * service.commVal) / 100;
+      } else {
+        commVal = Number(service.commVal || 0);
+      }
+
+      const newOrder = {
+        id: 'ord_' + Date.now(),
+        ticketNumber: appState.orders.length + 1,
+        plate: plate,
+        vehicleType: appState.selectedVehicleType,
+        serviceId: service.id,
+        serviceName: service.name,
+        price: service.price,
+        washerId: washer ? washer.id : null,
+        washerName: washer ? washer.name : null,
+        commission: commVal,
+        createdAt: Date.now(),
+        estimatedDuration: service.duration,
+        estimatedDelivery: Date.now() + (service.duration * 60000),
+        status: 'espera',
+        phone: document.getElementById('orderPhoneInput').value.trim(),
+        notes: document.getElementById('orderNotesInput').value.trim(),
+        paymentMethod: null
+      };
+
+      appState.orders.unshift(newOrder);
+      saveToStorage();
+      closeModal('modalNewOrder');
+      renderAllViews();
+      viewOrderTicket(newOrder.id);
+    }
+
+    // ================= COBRO & CHECKOUT =================
+    function openCheckoutModal(orderId) {
+      const order = appState.orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      document.getElementById('checkoutOrderId').value = order.id;
+      document.getElementById('checkoutPlateDisplay').textContent = order.plate;
+      document.getElementById('checkoutServiceDisplay').textContent = order.serviceName;
+      document.getElementById('checkoutPriceDisplay').textContent = formatCOP(order.price);
+
+      const pmSelect = document.getElementById('checkoutPaymentMethod');
+      pmSelect.innerHTML = '';
+      appState.paymentMethods.forEach(pm => {
+        const opt = document.createElement('option');
+        opt.value = pm.id;
+        opt.textContent = `${pm.icon} ${pm.name}`;
+        pmSelect.appendChild(opt);
+      });
+
+      openModal('modalCheckout');
+    }
+
+    function confirmCheckout() {
+      const orderId = document.getElementById('checkoutOrderId').value;
+      const pm = document.getElementById('checkoutPaymentMethod').value;
+      const order = appState.orders.find(o => o.id === orderId);
+
+      if (order) {
+        order.status = 'entregado';
+        order.paymentMethod = pm;
+        order.completedAt = Date.now();
+        saveToStorage();
+        closeModal('modalCheckout');
+        renderAllViews();
+      }
+    }
+
+    // ================= VISOR DE TICKET POS =================
+    function viewOrderTicket(orderId) {
+      const order = appState.orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const dateStr = new Date(order.createdAt).toLocaleString('es-CO');
+      const ticketHtml = `
+        <div class="ticket-header-biz">${appState.config.businessName}</div>
+        <div>${appState.config.address}</div>
+        <div>Tel: ${appState.config.phone}</div>
+        <div class="ticket-divider"></div>
+        <div><strong>TICKET DE TURNO #${order.ticketNumber}</strong></div>
+        <div class="ticket-plate-box">${order.plate}</div>
+        <div style="text-align: left; margin: 8px 0;">
+          <div><strong>Fecha:</strong> ${dateStr}</div>
+          <div><strong>Tipo:</strong> ${order.vehicleType.toUpperCase()}</div>
+          <div><strong>Servicio:</strong> ${order.serviceName}</div>
+          <div><strong>Lavador:</strong> ${order.washerName || 'Por asignar'}</div>
+          <div><strong>Tiempo Estimado:</strong> ${order.estimatedDuration} min</div>
+        </div>
+        <div class="ticket-divider"></div>
+        <div style="font-size: 1.1rem; font-weight: 800;">TOTAL: ${formatCOP(order.price)}</div>
+        <div class="ticket-divider"></div>
+        <div style="font-size: 0.7rem;">${appState.config.footerText}</div>
+      `;
+
+      document.getElementById('printableTicketArea').innerHTML = ticketHtml;
+      openModal('modalTicket');
+    }
+
+    // ================= GASTOS & CATEGORÍAS (CONTROL TOTAL) =================
+    function renderCaja() {
+      const totalIngresos = appState.orders.reduce((sum, o) => sum + (o.price || 0), 0);
+      const totalComisiones = appState.orders.reduce((sum, o) => sum + (o.commission || 0), 0);
+      const totalGastos = appState.expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+      const neto = totalIngresos - totalComisiones - totalGastos;
+
+      document.getElementById('cajaTotalIngresos').textContent = formatCOP(totalIngresos);
+      document.getElementById('cajaTotalComisiones').textContent = formatCOP(totalComisiones);
+      document.getElementById('cajaTotalGastos').textContent = formatCOP(totalGastos);
+      document.getElementById('cajaNeto').textContent = formatCOP(neto);
+
+      const pmContainer = document.getElementById('cajaPaymentMethodsBreakdown');
+      pmContainer.innerHTML = '';
+      appState.paymentMethods.forEach(pm => {
+        const pmOrders = appState.orders.filter(o => o.paymentMethod === pm.id);
+        const total = pmOrders.reduce((sum, o) => sum + (o.price || 0), 0);
+        const row = document.createElement('div');
+        row.className = 'payment-row';
+        row.innerHTML = `
+          <div class="payment-row-left">
+            <span>${pm.icon}</span>
+            <span>${pm.name} (${pmOrders.length} pagos)</span>
+          </div>
+          <span class="payment-row-val">${formatCOP(total)}</span>
+        `;
+        pmContainer.appendChild(row);
+      });
+
+      const expensesBody = document.getElementById('expensesTableBody');
+      expensesBody.innerHTML = '';
+      appState.expenses.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${e.desc}</strong></td>
+          <td><span class="queue-status-tag tag-waiting">${e.category}</span></td>
+          <td class="table-num" style="color: var(--status-danger);">${formatCOP(e.amount)}</td>
+          <td style="text-align: right;">
+            <button class="btn-admin-icon" title="Editar gasto" onclick="openEditExpenseModal('${e.id}')">✏️</button>
+            <button class="btn-admin-icon danger" title="Eliminar gasto" onclick="deleteExpense('${e.id}')">🗑️</button>
+          </td>
+        `;
+        expensesBody.appendChild(tr);
+      });
+    }
+
+    function populateExpenseCategoriesDropdown(selectedCat = '') {
+      const select = document.getElementById('expenseCategory');
+      select.innerHTML = '';
+      appState.expenseCategories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        if (cat === selectedCat) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function openExpenseModal() {
+      document.getElementById('expenseEditId').value = '';
+      document.getElementById('modalExpenseTitle').textContent = 'Registrar Gasto de Caja';
+      document.getElementById('expenseDescription').value = '';
+      document.getElementById('expenseAmount').value = '';
+      document.getElementById('btnDeleteExpenseInModal').style.display = 'none';
+      populateExpenseCategoriesDropdown();
+      openModal('modalExpense');
+    }
+
+    function openEditExpenseModal(expId) {
+      const exp = appState.expenses.find(e => e.id === expId);
+      if (!exp) return;
+
+      document.getElementById('expenseEditId').value = exp.id;
+      document.getElementById('modalExpenseTitle').textContent = 'Editar Gasto de Caja';
+      document.getElementById('expenseDescription').value = exp.desc;
+      document.getElementById('expenseAmount').value = exp.amount;
+      document.getElementById('btnDeleteExpenseInModal').style.display = 'block';
+      populateExpenseCategoriesDropdown(exp.category);
+      openModal('modalExpense');
+    }
+
+    function saveExpense() {
+      const editId = document.getElementById('expenseEditId').value;
+      const desc = document.getElementById('expenseDescription').value.trim();
+      const cat = document.getElementById('expenseCategory').value;
+      const amt = Number(document.getElementById('expenseAmount').value);
+
+      if (!desc || !amt) {
+        alert('Complete la descripción y el monto');
+        return;
+      }
+
+      if (editId) {
+        const exp = appState.expenses.find(e => e.id === editId);
+        if (exp) {
+          exp.desc = desc;
+          exp.category = cat;
+          exp.amount = amt;
+        }
+      } else {
+        appState.expenses.unshift({
+          id: 'exp_' + Date.now(),
+          desc: desc,
+          category: cat,
+          amount: amt,
+          date: Date.now()
+        });
+      }
+
+      saveToStorage();
+      closeModal('modalExpense');
+      renderAllViews();
+    }
+
+    function deleteExpense(expId) {
+      if (confirm('¿Eliminar este gasto de caja?')) {
+        appState.expenses = appState.expenses.filter(e => e.id !== expId);
+        saveToStorage();
+        renderAllViews();
+      }
+    }
+
+    function deleteExpenseFromModal() {
+      const expId = document.getElementById('expenseEditId').value;
+      if (expId) {
+        deleteExpense(expId);
+        closeModal('modalExpense');
+      }
+    }
+
+    // Gestión de Categorías de Gasto
+    function openCategoryManagerModal() {
+      renderCategoriesModalTable();
+      openModal('modalCategories');
+    }
+
+    function renderCategoriesModalTable() {
+      const tbody = document.getElementById('categoriesModalTableBody');
+      tbody.innerHTML = '';
+      appState.expenseCategories.forEach(cat => {
+        const count = appState.expenses.filter(e => e.category === cat).length;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${cat}</strong> <small style="color:var(--text-muted);">(${count} gastos asociados)</small></td>
+          <td style="text-align: right;">
+            <button class="btn-admin-icon" onclick="promptEditCategory('${cat}')">✏️</button>
+            <button class="btn-admin-icon danger" onclick="deleteCategory('${cat}')">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function promptNewCategory() {
+      const name = prompt('Escribe el nombre del nuevo tipo de gasto (ej: Seguro, Arriendo, Nómina, etc.):');
+      if (name && name.trim()) {
+        const clean = name.trim();
+        if (!appState.expenseCategories.includes(clean)) {
+          appState.expenseCategories.push(clean);
+          saveToStorage();
+          populateExpenseCategoriesDropdown(clean);
+          renderCategoriesModalTable();
+          renderExpenseCategoriesConfig();
+        }
+      }
+    }
+
+    function addExpenseCategoryFromInput() {
+      const input = document.getElementById('newCategoryInputName');
+      const val = input.value.trim();
+      if (!val) return;
+      if (!appState.expenseCategories.includes(val)) {
+        appState.expenseCategories.push(val);
+        input.value = '';
+        saveToStorage();
+        renderCategoriesModalTable();
+        renderExpenseCategoriesConfig();
+        populateExpenseCategoriesDropdown();
+      }
+    }
+
+    function promptEditCategory(oldCat) {
+      const newCat = prompt(`Editar nombre de la categoría "${oldCat}":`, oldCat);
+      if (newCat && newCat.trim() && newCat !== oldCat) {
+        const clean = newCat.trim();
+        const idx = appState.expenseCategories.indexOf(oldCat);
+        if (idx !== -1) {
+          appState.expenseCategories[idx] = clean;
+          appState.expenses.forEach(e => {
+            if (e.category === oldCat) e.category = clean;
+          });
+          saveToStorage();
+          renderCategoriesModalTable();
+          renderExpenseCategoriesConfig();
+          renderAllViews();
+        }
+      }
+    }
+
+    function deleteCategory(cat) {
+      if (confirm(`¿Eliminar la categoría "${cat}"?`)) {
+        appState.expenseCategories = appState.expenseCategories.filter(c => c !== cat);
+        saveToStorage();
+        renderCategoriesModalTable();
+        renderExpenseCategoriesConfig();
+        renderAllViews();
+      }
+    }
+
+    function renderExpenseCategoriesConfig() {
+      const container = document.getElementById('configCategoriesList');
+      if (!container) return;
+      container.innerHTML = '';
+      appState.expenseCategories.forEach(cat => {
+        const pill = document.createElement('span');
+        pill.className = 'queue-status-tag tag-waiting';
+        pill.style.display = 'inline-flex';
+        pill.style.alignItems = 'center';
+        pill.style.gap = '6px';
+        pill.style.padding = '4px 8px';
+        pill.innerHTML = `
+          <span>${cat}</span>
+          <button style="border:none;background:transparent;cursor:pointer;color:var(--text-muted);" onclick="deleteCategory('${cat}')">&times;</button>
+        `;
+        container.appendChild(pill);
+      });
+    }
+
+    function exportCajaReportExcel() {
+      if (typeof XLSX !== 'undefined') {
+        const fechaHoy = new Date().toISOString().slice(0, 10);
+
+        // 1. Hoja de Ingresos por Servicios
+        const ingresosRows = appState.orders.map(o => {
+          const d = o.createdAt ? new Date(o.createdAt) : new Date();
+          return {
+            'Ticket': o.ticketNumber || '',
+            'Fecha': d.toLocaleDateString('es-CO'),
+            'Hora': d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }),
+            'Placa': (o.plate || '').toUpperCase(),
+            'Servicio': o.serviceName || '',
+            'Lavador / Operario': o.washerName || 'Sin asignar',
+            'Monto (COP)': Number(o.price) || 0,
+            'Comisión (COP)': Number(o.commission) || 0,
+            'Método de Pago': o.paymentMethod || 'Pendiente'
+          };
+        });
+
+        // 2. Hoja de Gastos
+        const gastosRows = (appState.expenses || []).map(e => ({
+          'Concepto': e.desc || e.concept || '',
+          'Categoría': e.category || 'General',
+          'Monto (COP)': Number(e.amount) || 0
+        }));
+
+        // 3. Resumen Ejecutivo de Caja
+        const totalIngresos = appState.orders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
+        const totalComisiones = appState.orders.reduce((sum, o) => sum + (Number(o.commission) || 0), 0);
+        const totalGastos = (appState.expenses || []).reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+        const balanceNeto = totalIngresos - totalComisiones - totalGastos;
+
+        const resumenRows = [
+          { 'Concepto': 'TOTAL INGRESOS (VENTAS)', 'Valor (COP)': totalIngresos },
+          { 'Concepto': 'TOTAL COMISIONES OPERARIOS', 'Valor (COP)': totalComisiones },
+          { 'Concepto': 'TOTAL GASTOS DE OPERACIÓN', 'Valor (COP)': totalGastos },
+          { 'Concepto': 'BALANCE NETO DISPONIBLE', 'Valor (COP)': balanceNeto }
+        ];
+
+        const wb = XLSX.utils.book_new();
+
+        const wsIngresos = XLSX.utils.json_to_sheet(ingresosRows.length ? ingresosRows : [{ Info: 'Sin ingresos registrados' }]);
+        wsIngresos['!cols'] = [{ wch: 8 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 32 }, { wch: 22 }, { wch: 15 }, { wch: 15 }, { wch: 16 }];
+        if (ingresosRows.length) {
+          wsIngresos['!autofilter'] = { ref: wsIngresos['!ref'] };
+          const range = XLSX.utils.decode_range(wsIngresos['!ref']);
+          for (let R = 1; R <= range.e.r; ++R) {
+            [6, 7].forEach(C => {
+              const cell = wsIngresos[XLSX.utils.encode_cell({ r: R, c: C })];
+              if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+            });
+          }
+        }
+        XLSX.utils.book_append_sheet(wb, wsIngresos, 'Ingresos');
+
+        const wsGastos = XLSX.utils.json_to_sheet(gastosRows.length ? gastosRows : [{ Info: 'Sin gastos registrados' }]);
+        wsGastos['!cols'] = [{ wch: 32 }, { wch: 18 }, { wch: 15 }];
+        if (gastosRows.length) {
+          wsGastos['!autofilter'] = { ref: wsGastos['!ref'] };
+          const range = XLSX.utils.decode_range(wsGastos['!ref']);
+          for (let R = 1; R <= range.e.r; ++R) {
+            const cell = wsGastos[XLSX.utils.encode_cell({ r: R, c: 2 })];
+            if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+          }
+        }
+        XLSX.utils.book_append_sheet(wb, wsGastos, 'Gastos');
+
+        const wsResumen = XLSX.utils.json_to_sheet(resumenRows);
+        wsResumen['!cols'] = [{ wch: 35 }, { wch: 18 }];
+        const rangeRes = XLSX.utils.decode_range(wsResumen['!ref']);
+        for (let R = 1; R <= rangeRes.e.r; ++R) {
+          const cell = wsResumen[XLSX.utils.encode_cell({ r: R, c: 1 })];
+          if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+        }
+        XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen de Caja');
+
+        XLSX.writeFile(wb, `WashQ_Arqueo_Caja_${fechaHoy}.xlsx`);
+        return;
+      }
+
+      exportCajaReportCSVFallback();
+    }
+
+    function exportCajaReportCSVFallback() {
+      let csv = 'Tipo;Concepto / Placa;Monto COP;Metodo / Categoria\n';
+      appState.orders.forEach(o => {
+        csv += `Ingreso;"${o.plate} - ${o.serviceName}";${o.price};${o.paymentMethod || 'Pendiente'}\n`;
+      });
+      (appState.expenses || []).forEach(e => {
+        csv += `Gasto;"${e.desc || e.concept || ''}";-${e.amount};${e.category}\n`;
+      });
+      downloadCSV(csv, 'Arqueo_Caja_WashQ.csv');
+    }
+
+    function exportCajaReportCSV() {
+      exportCajaReportExcel();
+    }
+
+    // ================= LAVADORES (CONTROL TOTAL: CREAR, EDITAR, ELIMINAR) =================
+    function renderWashers() {
+      const grid = document.getElementById('washersCardsGrid');
+      grid.innerHTML = '';
+
+      appState.washers.forEach(w => {
+        const washerOrders = appState.orders.filter(o => o.washerId === w.id);
+        const totalComm = washerOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
+
+        const card = document.createElement('div');
+        card.className = 'washer-profile-card';
+        card.innerHTML = `
+          <div class="washer-card-top">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="washer-avatar-large">${w.name.charAt(0)}</div>
+              <div>
+                <strong style="font-size: 0.95rem;">${w.name}</strong>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">${w.phone || 'Sin celular'}</p>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="washer-status-pill" style="${w.active ? '' : 'background:#F1F5F9; color:#64748B;'}">${w.active ? 'Activo' : 'Inactivo'}</span>
+              <button class="btn-admin-icon" title="Editar Lavador (Admin)" onclick="openEditWasherModal('${w.id}')">✏️</button>
+              <button class="btn-admin-icon danger" title="Eliminar Lavador (Admin)" onclick="deleteWasher('${w.id}')">🗑️</button>
+            </div>
+          </div>
+          <div class="washer-stats-row">
+            <div>
+              <span class="caja-stat-label">Autos Lavados</span>
+              <div class="table-num">${washerOrders.length}</div>
+            </div>
+            <div>
+              <span class="caja-stat-label">Comisión Total</span>
+              <div class="table-num" style="color: var(--accent-primary);">${formatCOP(totalComm)}</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-card-action" style="flex: 1;" onclick="settleWasherCommission('${w.id}', '${w.name}', ${totalComm})">
+              💵 Pagar Liquidación
+            </button>
+            <button class="btn-card-action" onclick="toggleWasherActive('${w.id}')">
+              ${w.active ? 'Pausar' : 'Reactivar'}
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function openNewWasherModal() {
+      document.getElementById('washerEditId').value = '';
+      document.getElementById('modalWasherTitle').textContent = 'Nuevo Lavador de Patio';
+      document.getElementById('washerNameInput').value = '';
+      document.getElementById('washerPhoneInput').value = '';
+      document.getElementById('washerActiveStatusSelect').value = 'true';
+      document.getElementById('btnDeleteWasherInModal').style.display = 'none';
+      openModal('modalWasher');
+    }
+
+    function openEditWasherModal(wId) {
+      const washer = appState.washers.find(w => w.id === wId);
+      if (!washer) return;
+
+      document.getElementById('washerEditId').value = washer.id;
+      document.getElementById('modalWasherTitle').textContent = 'Editar Lavador de Patio';
+      document.getElementById('washerNameInput').value = washer.name;
+      document.getElementById('washerPhoneInput').value = washer.phone || '';
+      document.getElementById('washerActiveStatusSelect').value = String(washer.active !== false);
+      document.getElementById('btnDeleteWasherInModal').style.display = 'block';
+      openModal('modalWasher');
+    }
+
+    function saveWasher() {
+      const editId = document.getElementById('washerEditId').value;
+      const name = document.getElementById('washerNameInput').value.trim();
+      const phone = document.getElementById('washerPhoneInput').value.trim();
+      const active = document.getElementById('washerActiveStatusSelect').value === 'true';
+
+      if (!name) {
+        alert('Ingrese el nombre del lavador');
+        return;
+      }
+
+      if (editId) {
+        const washer = appState.washers.find(w => w.id === editId);
+        if (washer) {
+          washer.name = name;
+          washer.phone = phone;
+          washer.active = active;
+        }
+      } else {
+        appState.washers.push({
+          id: 'w_' + Date.now(),
+          name: name,
+          phone: phone,
+          active: active
+        });
+      }
+
+      saveToStorage();
+      closeModal('modalWasher');
+      renderAllViews();
+    }
+
+    function deleteWasher(wId) {
+      const washer = appState.washers.find(w => w.id === wId);
+      if (!washer) return;
+      if (confirm(`¿Eliminar definitivamente a ${washer.name} de la lista de lavadores?`)) {
+        appState.washers = appState.washers.filter(w => w.id !== wId);
+        saveToStorage();
+        renderAllViews();
+      }
+    }
+
+    function deleteWasherFromModal() {
+      const wId = document.getElementById('washerEditId').value;
+      if (wId) {
+        deleteWasher(wId);
+        closeModal('modalWasher');
+      }
+    }
+
+    function toggleWasherActive(wId) {
+      const washer = appState.washers.find(w => w.id === wId);
+      if (washer) {
+        washer.active = !washer.active;
+        saveToStorage();
+        renderAllViews();
+      }
+    }
+
+    function settleWasherCommission(wId, name, amount) {
+      if (amount <= 0) {
+        alert(`${name} no tiene comisiones acumuladas hoy.`);
+        return;
+      }
+      if (confirm(`¿Confirmar entrega y liquidación de ${formatCOP(amount)} a ${name}?`)) {
+        alert(`Liquidación de ${formatCOP(amount)} pagada exitosamente a ${name}.`);
+      }
+    }
+
+    // ================= HISTORIAL DE SERVICIOS =================
+    function renderHistory(filterText = '') {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+      const filter = filterText.toLowerCase();
+
+      appState.orders.filter(o => {
+        return o.plate.toLowerCase().includes(filter) ||
+               o.serviceName.toLowerCase().includes(filter) ||
+               (o.washerName && o.washerName.toLowerCase().includes(filter));
+      }).forEach(o => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>#${o.ticketNumber}</strong></td>
+          <td><span class="colombian-plate">${o.plate}</span></td>
+          <td style="text-transform: capitalize;">${o.vehicleType}</td>
+          <td>${o.serviceName}</td>
+          <td>${o.washerName || 'Por asignar'}</td>
+          <td class="table-num">${formatCOP(o.price)}</td>
+          <td>${o.paymentMethod || 'Pendiente'}</td>
+          <td><span class="queue-status-tag ${o.status === 'entregado' ? 'tag-ready' : 'tag-washing'}">${o.status}</span></td>
+          <td style="text-align: right;">
+            <button class="btn-admin-icon" title="Editar orden (Admin)" onclick="openEditOrderModal('${o.id}')">✏️</button>
+            <button class="btn-admin-icon danger" title="Eliminar orden (Admin)" onclick="deleteOrderById('${o.id}')">🗑️</button>
+            <button class="btn-card-action" style="padding: 2px 7px;" onclick="viewOrderTicket('${o.id}')">Ticket</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterHistory() {
+      const txt = document.getElementById('historySearchInput').value;
+      renderHistory(txt);
+    }
+
+    function exportHistoryExcel() {
+      if (!appState.orders || appState.orders.length === 0) {
+        alert('No hay órdenes registradas para exportar.');
+        return;
+      }
+
+      if (typeof XLSX !== 'undefined') {
+        const rows = appState.orders.map(o => {
+          const d = o.createdAt ? new Date(o.createdAt) : new Date();
+          const fechaStr = d.toLocaleDateString('es-CO', { year: 'numeric', month: '2-digit', day: '2-digit' });
+          const horaStr = d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+          const precio = Number(o.price) || 0;
+          const comision = Number(o.commission) || 0;
+          const ganancia = precio - comision;
+
+          return {
+            'Ticket': o.ticketNumber || '',
+            'Fecha': fechaStr,
+            'Hora': horaStr,
+            'Placa': (o.plate || '').toUpperCase(),
+            'Tipo Vehículo': (o.vehicleType || '').toUpperCase(),
+            'Servicio': o.serviceName || '',
+            'Operario': o.washerName || 'Sin asignar',
+            'Precio (COP)': precio,
+            'Comisión (COP)': comision,
+            'Ganancia Neta (COP)': ganancia,
+            'Método Pago': o.paymentMethod || 'Pendiente',
+            'Estado': (o.status || '').toUpperCase(),
+            'Teléfono': o.phone || '',
+            'Observaciones': o.notes || ''
+          };
+        });
+
+        const ws = XLSX.utils.json_to_sheet(rows);
+
+        // Anchos de columna óptimos para visualización inmediata en Excel
+        ws['!cols'] = [
+          { wch: 8 },  // Ticket
+          { wch: 12 }, // Fecha
+          { wch: 10 }, // Hora
+          { wch: 12 }, // Placa
+          { wch: 14 }, // Tipo Vehículo
+          { wch: 34 }, // Servicio
+          { wch: 22 }, // Operario
+          { wch: 15 }, // Precio COP
+          { wch: 15 }, // Comisión COP
+          { wch: 18 }, // Ganancia Neta COP
+          { wch: 16 }, // Método Pago
+          { wch: 12 }, // Estado
+          { wch: 14 }, // Teléfono
+          { wch: 28 }  // Observaciones
+        ];
+
+        // Formato contable/moneda para columnas numéricas
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let R = 1; R <= range.e.r; ++R) {
+          [7, 8, 9].forEach(C => {
+            const cell = ws[XLSX.utils.encode_cell({ r: R, c: C })];
+            if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+          });
+        }
+
+        // Activar filtros automáticos en encabezados para buscar y filtrar en Excel
+        ws['!autofilter'] = { ref: ws['!ref'] };
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Historial_Servicios');
+
+        const fechaHoy = new Date().toISOString().slice(0, 10);
+        XLSX.writeFile(wb, `WashQ_Historial_${fechaHoy}.xlsx`);
+        return;
+      }
+
+      exportHistoryCSVFallback();
+    }
+
+    function exportHistoryCSVFallback() {
+      let csv = 'Ticket;Fecha;Hora;Placa;Tipo;Servicio;Operario;Precio COP;Comision COP;Ganancia COP;Metodo;Estado;Telefono;Notas\n';
+      appState.orders.forEach(o => {
+        const d = o.createdAt ? new Date(o.createdAt) : new Date();
+        const fStr = d.toLocaleDateString('es-CO');
+        const hStr = d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+        const precio = Number(o.price) || 0;
+        const comision = Number(o.commission) || 0;
+        const ganancia = precio - comision;
+        const srv = (o.serviceName || '').replace(/;/g, ' ');
+        const op = (o.washerName || 'Sin asignar').replace(/;/g, ' ');
+        const notas = (o.notes || '').replace(/;/g, ' ');
+        csv += `${o.ticketNumber};${fStr};${hStr};${(o.plate || '').toUpperCase()};${o.vehicleType};"${srv}";"${op}";${precio};${comision};${ganancia};${o.paymentMethod || 'Pendiente'};${o.status};${o.phone || ''};"${notas}"\n`;
+      });
+      downloadCSV(csv, 'Historial_WashQ.csv');
+    }
+
+    function exportHistoryCSV() {
+      exportHistoryExcel();
+    }
+
+    // ================= SERVICIOS Y TARIFAS (CONTROL TOTAL) =================
+    function renderServicesConfig() {
+      const tbody = document.getElementById('servicesConfigTableBody');
+      tbody.innerHTML = '';
+      appState.services.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-transform: capitalize;">${s.type}</td>
+          <td><strong>${s.name}</strong></td>
+          <td class="table-num">${formatCOP(s.price)}</td>
+          <td>${s.duration} min</td>
+          <td style="text-align: right;">
+            <button class="btn-admin-icon" title="Editar servicio" onclick="openEditServiceModal('${s.id}')">✏️</button>
+            <button class="btn-admin-icon danger" title="Eliminar servicio" onclick="deleteService('${s.id}')">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openNewServiceModal() {
+      document.getElementById('serviceEditId').value = '';
+      document.getElementById('modalServiceTitle').textContent = 'Nueva Tarifa de Servicio';
+      document.getElementById('serviceNameInput').value = '';
+      document.getElementById('servicePriceInput').value = '';
+      document.getElementById('serviceDurationInput').value = '30';
+      document.getElementById('serviceCommissionVal').value = '40';
+      document.getElementById('btnDeleteServiceInModal').style.display = 'none';
+      openModal('modalService');
+    }
+
+    function openEditServiceModal(sId) {
+      const service = appState.services.find(s => s.id === sId);
+      if (!service) return;
+
+      document.getElementById('serviceEditId').value = service.id;
+      document.getElementById('modalServiceTitle').textContent = 'Editar Tarifa de Servicio';
+      document.getElementById('serviceTypeSelect').value = service.type;
+      document.getElementById('serviceNameInput').value = service.name;
+      document.getElementById('servicePriceInput').value = service.price;
+      document.getElementById('serviceDurationInput').value = service.duration;
+      document.getElementById('serviceCommissionType').value = service.commType;
+      document.getElementById('serviceCommissionVal').value = service.commVal;
+      document.getElementById('btnDeleteServiceInModal').style.display = 'block';
+      openModal('modalService');
+    }
+
+    function saveServiceConfig() {
+      const editId = document.getElementById('serviceEditId').value;
+      const type = document.getElementById('serviceTypeSelect').value;
+      const name = document.getElementById('serviceNameInput').value.trim();
+      const price = Number(document.getElementById('servicePriceInput').value);
+      const duration = Number(document.getElementById('serviceDurationInput').value);
+      const commType = document.getElementById('serviceCommissionType').value;
+      const commVal = Number(document.getElementById('serviceCommissionVal').value);
+
+      if (!name || !price) {
+        alert('Complete el nombre y el precio');
+        return;
+      }
+
+      if (editId) {
+        const service = appState.services.find(s => s.id === editId);
+        if (service) {
+          service.type = type;
+          service.name = name;
+          service.price = price;
+          service.duration = duration;
+          service.commType = commType;
+          service.commVal = commVal;
+        }
+      } else {
+        appState.services.push({
+          id: 's_' + Date.now(),
+          type, name, price, duration, commType, commVal
+        });
+      }
+
+      saveToStorage();
+      closeModal('modalService');
+      renderAllViews();
+    }
+
+    function deleteService(sId) {
+      const service = appState.services.find(s => s.id === sId);
+      if (!service) return;
+      if (confirm(`¿Eliminar el servicio "${service.name}" del catálogo?`)) {
+        appState.services = appState.services.filter(s => s.id !== sId);
+        saveToStorage();
+        renderAllViews();
+      }
+    }
+
+    function deleteServiceFromModal() {
+      const sId = document.getElementById('serviceEditId').value;
+      if (sId) {
+        deleteService(sId);
+        closeModal('modalService');
+      }
+    }
+
+    // ================= MÉTODOS DE PAGO (CONTROL TOTAL) =================
+    function renderPaymentMethodsConfig() {
+      const tbody = document.getElementById('configPaymentMethodsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      appState.paymentMethods.forEach(pm => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-size: 1.1rem;">${pm.icon}</td>
+          <td><strong>${pm.name}</strong></td>
+          <td style="text-align: right;">
+            <button class="btn-admin-icon" title="Editar método" onclick="promptEditPaymentMethod('${pm.id}')">✏️</button>
+            <button class="btn-admin-icon danger" title="Eliminar método" onclick="deletePaymentMethod('${pm.id}')">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function promptNewPaymentMethod() {
+      const name = prompt('Nombre del nuevo método de pago (ej: Tarjeta Débito, PSE, etc.):');
+      if (!name || !name.trim()) return;
+      const icon = prompt('Ícono / Emoji para este método:', '💳') || '💳';
+
+      appState.paymentMethods.push({
+        id: 'pm_' + Date.now(),
+        name: name.trim(),
+        icon: icon.trim()
+      });
+      saveToStorage();
+      renderAllViews();
+    }
+
+    function promptEditPaymentMethod(pmId) {
+      const pm = appState.paymentMethods.find(p => p.id === pmId);
+      if (!pm) return;
+      const newName = prompt('Editar nombre del método de pago:', pm.name);
+      if (!newName || !newName.trim()) return;
+      const newIcon = prompt('Editar ícono / emoji:', pm.icon) || pm.icon;
+
+      pm.name = newName.trim();
+      pm.icon = newIcon.trim();
+      saveToStorage();
+      renderAllViews();
+    }
+
+    function deletePaymentMethod(pmId) {
+      const pm = appState.paymentMethods.find(p => p.id === pmId);
+      if (!pm) return;
+      if (confirm(`¿Eliminar el método de pago "${pm.name}"?`)) {
+        appState.paymentMethods = appState.paymentMethods.filter(p => p.id !== pmId);
+        saveToStorage();
+        renderAllViews();
+      }
+    }
+
+    // ================= CONFIGURACIÓN DEL NEGOCIO =================
+    function renderBusinessConfig() {
+      document.getElementById('configBizName').value = appState.config.businessName.replace('&bull;', '•');
+      document.getElementById('configBizAddress').value = appState.config.address;
+      document.getElementById('configBizPhone').value = appState.config.phone;
+      const ownerInput = document.getElementById('configBizOwnerPhone');
+      if (ownerInput) ownerInput.value = appState.config.ownerPhone || '';
+      document.getElementById('configBizFooter').value = appState.config.footerText;
+    }
+
+    function saveBusinessConfig() {
+      appState.config.businessName = document.getElementById('configBizName').value.trim();
+      appState.config.address = document.getElementById('configBizAddress').value.trim();
+      appState.config.phone = document.getElementById('configBizPhone').value.trim();
+      const ownerInput = document.getElementById('configBizOwnerPhone');
+      if (ownerInput) appState.config.ownerPhone = ownerInput.value.trim();
+      appState.config.footerText = document.getElementById('configBizFooter').value.trim();
+      saveToStorage();
+      alert('Configuración guardada exitosamente.');
+    }
+
+    function exportBackupJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `Backup_WashQ_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && Array.isArray(parsed.services) && Array.isArray(parsed.orders)) {
+            if (confirm('¿Restaurar esta copia de seguridad? Se reemplazarán los datos actuales del autolavado.')) {
+              appState = { ...appState, ...parsed };
+              saveToStorage();
+              renderAllViews();
+              alert('✅ ¡Copia de seguridad restaurada exitosamente!');
+            }
+          } else {
+            alert('⚠️ El archivo seleccionado no tiene el formato válido de respaldo de WashQ.');
+          }
+        } catch (err) {
+          alert('Error al leer el archivo de copia: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function resetDemoData() {
+      if (confirm('¿Restablecer los datos a los valores de demostración iniciales?')) {
+        localStorage.removeItem('washq_cali_db');
+        location.reload();
+      }
+    }
+
+    // ================= CORTE DE CAJA POR WHATSAPP AL DUEÑO =================
+    function sendCajaReportWhatsApp() {
+      const biz = appState.config;
+      const ownerPhone = (biz.ownerPhone || '').replace(/\D/g, '');
+
+      const todayStr = new Date().toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric', month: 'short' });
+      const timeStr = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+
+      const totalVehiculos = appState.orders.length;
+      const totalIngresos = appState.orders.reduce((sum, o) => sum + (o.price || 0), 0);
+      const totalComisiones = appState.orders.reduce((sum, o) => sum + (o.commission || 0), 0);
+      const totalGastos = appState.expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+
+      // Desglose por método de pago
+      let pmBreakdown = '';
+      let efectivoCobrado = 0;
+      appState.paymentMethods.forEach(pm => {
+        const pmOrders = appState.orders.filter(o => o.paymentMethod === pm.id);
+        const pmTotal = pmOrders.reduce((sum, o) => sum + (o.price || 0), 0);
+        if (pm.id === 'pm_efectivo') efectivoCobrado = pmTotal;
+        if (pmTotal > 0 || pmOrders.length > 0) {
+          pmBreakdown += `• ${pm.icon || '💳'} ${pm.name}: ${formatCOP(pmTotal)} (${pmOrders.length} pagos)\n`;
+        }
+      });
+
+      // Desglose por operario
+      let washersBreakdown = '';
+      appState.washers.forEach(w => {
+        const wOrders = appState.orders.filter(o => o.washerId === w.id);
+        const wComm = wOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
+        if (wOrders.length > 0) {
+          washersBreakdown += `• 🧼 ${w.name}: ${formatCOP(wComm)} (${wOrders.length} vehíc.)\n`;
+        }
+      });
+      if (!washersBreakdown) washersBreakdown = '• Sin comisiones liquidadas hoy\n';
+
+      // Desglose de gastos
+      let expensesBreakdown = '';
+      appState.expenses.forEach(e => {
+        expensesBreakdown += `• 🔻 ${e.desc}: ${formatCOP(e.amount)} (${e.category})\n`;
+      });
+      if (!expensesBreakdown) expensesBreakdown = '• Sin gastos registrados\n';
+
+      const netoEnCaja = totalIngresos - totalComisiones - totalGastos;
+      const efectivoFisicoCajon = efectivoCobrado - totalComisiones - totalGastos;
+
+      const cleanBizName = biz.businessName.replace(/&bull;/g, '•');
+
+      const msg = 
+`📊 *CORTE DE CAJA — ${cleanBizName}*
+🗓️ *${todayStr} | ${timeStr}*
+━━━━━━━━━━━━━━━━━━━━
+🚗 *Vehículos Atendidos:* ${totalVehiculos}
+💰 *Total Facturado:* ${formatCOP(totalIngresos)}
+
+📥 *RECAUDO POR CANALES:*
+${pmBreakdown || '• Sin recaudos registrados\n'}
+🧼 *LIQUIDACIÓN OPERARIOS:*
+${washersBreakdown}
+📉 *GASTOS / SALIDAS:*
+${expensesBreakdown}
+━━━━━━━━━━━━━━━━━━━━
+💵 *EFECTIVO FÍSICO EN CAJÓN:* *${formatCOP(efectivoFisicoCajon)}*
+*(Total Efectivo recabado menos comisiones y gastos)*
+📈 *Balance Neto del Negocio:* *${formatCOP(netoEnCaja)}*
+━━━━━━━━━━━━━━━━━━━━
+✨ _Generado automáticamente por WashQ (100% Local)_`;
+
+      const targetPhone = ownerPhone ? (ownerPhone.startsWith('57') ? ownerPhone : '57' + ownerPhone) : '';
+      const url = targetPhone 
+        ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`
+        : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+
+      window.open(url, '_blank');
+    }
+
+    // ================= SOPORTE PWA (INSTALACIÓN & SERVICE WORKER) =================
+    let deferredPwaPrompt = null;
+
+    function initPwaInstallPrompt() {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPwaPrompt = e;
+        const installBtn = document.getElementById('btnPwaInstall');
+        if (installBtn) installBtn.style.display = 'inline-flex';
+      });
+
+      window.addEventListener('appinstalled', () => {
+        console.log('🎉 WashQ PWA instalada exitosamente en el sistema');
+        deferredPwaPrompt = null;
+        const installBtn = document.getElementById('btnPwaInstall');
+        if (installBtn) installBtn.style.display = 'none';
+      });
+    }
+
+    function installPWA() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        deferredPwaPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('El usuario aceptó instalar WashQ');
+          }
+          deferredPwaPrompt = null;
+          const installBtn = document.getElementById('btnPwaInstall');
+          if (installBtn) installBtn.style.display = 'none';
+        });
+      } else {
+        alert('Para instalar WashQ en tu dispositivo:\n\n• En Android / Chrome: Toca el menú (3 puntos) y presiona "Instalar aplicación" o "Añadir a pantalla de inicio".\n• En iPhone / Safari: Toca el botón Compartir y presiona "Añadir a la pantalla de inicio".\n• En PC / Windows: Toca el icono de instalación en la barra de direcciones del navegador.');
+      }
+    }
+
+    function registerPwaServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => {
+            console.log('⚡ [WashQ PWA] Service Worker activo en alcance:', reg.scope);
+          })
+          .catch((err) => {
+            console.log('Aviso: Service Worker no activo (común en modo file:// local):', err);
+          });
+      }
+    }
+
+    function forcePwaCacheRefresh() {
+      if (!confirm('¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión móvil.')) return;
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          return Promise.all(names.map(name => caches.delete(name)));
+        }).then(function() {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              return Promise.all(registrations.map(r => r.unregister()));
+            }).then(function() {
+              window.location.reload(true);
+            });
+          } else {
+            window.location.reload(true);
+          }
+        }).catch(function() {
+          window.location.reload(true);
+        });
+      } else {
+        window.location.reload(true);
+      }
+    }
+
+    // ================= ROLES & PIN =================
+    function openRolePinModal() {
+      document.getElementById('pinInputGroup').style.display = 'none';
+      document.getElementById('pinErrorMsg').style.display = 'none';
+      openModal('modalRolePin');
+    }
+
+    function requestSwitchRole(roleId) {
+      if (roleId === 'lavador') {
+        setRole('lavador');
+        closeModal('modalRolePin');
+        return;
+      }
+      appState.pendingRoleSwitch = roleId;
+      document.getElementById('pinInputGroup').style.display = 'block';
+      document.getElementById('rolePinInput').value = '';
+      document.getElementById('rolePinInput').focus();
+    }
+
+    function verifyRolePin() {
+      const pin = document.getElementById('rolePinInput').value;
+      const role = appState.roles.find(r => r.id === appState.pendingRoleSwitch);
+      if (role && role.pin === pin) {
+        setRole(role.id);
+        closeModal('modalRolePin');
+      } else {
+        document.getElementById('pinErrorMsg').style.display = 'block';
+      }
+    }
+
+    function setRole(roleId) {
+      appState.currentRole = roleId;
+      const role = appState.roles.find(r => r.id === roleId);
+      document.getElementById('headerRoleIcon').textContent = role.icon;
+      document.getElementById('headerRoleName').textContent = role.name;
+
+      const badge = document.getElementById('adminControlBadge');
+      if (roleId === 'admin') {
+        badge.textContent = '👑 Admin Activo';
+        badge.style.display = 'inline-flex';
+      } else {
+        badge.textContent = role.icon + ' ' + role.name;
+      }
+    }
+
+    // ================= UTILIDADES =================
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    function closeAllModals() {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+
+    function focusSearch() {
+      switchView('historial');
+      setTimeout(() => document.getElementById('historySearchInput').focus(), 150);
+    }
+
+    function downloadCSV(csv, filename) {
+      // Prefijo BOM UTF-8 (\uFEFF) para garantizar que Excel en Windows interprete tildes y eñes correctamente
+      const bom = '\uFEFF';
+      const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+  </script>
+</body>
+</html>

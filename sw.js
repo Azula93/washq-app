@@ -3,21 +3,23 @@
  * Permite que el sistema opere en PC, Tablets y Celulares sin conexión a internet.
  */
 
-const CACHE_NAME = 'washq-cache-v3';
+const CACHE_NAME = 'washq-cache-v6';
 const CORE_ASSETS = [
   '/',
   '/index.html',
+  '/dashboard.html',
   '/manifest.json',
   '/assets/icon.svg',
   '/assets/icon-192.png',
-  '/assets/icon-512.png'
+  '/assets/icon-512.png',
+  '/assets/xlsx.full.min.js'
 ];
 
 // Instalación: Cachear recursos indispensables
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('⚡ [WashQ PWA] Precargando núcleo offline v3...');
+      console.log('⚡ [WashQ PWA] Precargando núcleo offline v6...');
       return cache.addAll(CORE_ASSETS);
     }).then(() => self.skipWaiting())
   );

@@ -1037,7 +1037,8 @@ function exportCajaReportToCSV() {
     });
   }
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const bom = '\uFEFF';
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
@@ -1377,7 +1378,8 @@ function exportDataToCSV() {
     csv += `"${o.ticketNumber}","${dateStr}","${timeStr}","${o.plate}","${o.vehicleType}","${o.serviceName}","${o.washerName || ''}","${o.price}","${o.commission}","${o.paymentMethod || 'Pendiente'}","${o.status}"\n`;
   });
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const bom = '\uFEFF';
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
