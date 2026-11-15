@@ -10,9 +10,11 @@ const CORE_ASSETS = [
   '/index.html',
   '/dashboard.html',
   '/manifest.json',
-  '/assets/icon.svg',
   '/assets/icon-192.png',
   '/assets/icon-512.png',
+  '/assets/icon-maskable-192.png',
+  '/assets/icon-maskable-512.png',
+  '/assets/apple-touch-icon.png',
   '/assets/xlsx.full.min.js'
 ];
 
