@@ -22,7 +22,7 @@
     if ('caches' in window) {
       caches.keys().then(function(names) {
         for (var i = 0; i < names.length; i++) {
-          if (names[i] !== 'washq-v4.2.0-s26') {
+          if (names[i] !== 'washq-v4.3.0-s26') {
             caches.delete(names[i]);
           }
         }
@@ -2834,7 +2834,7 @@
               <div>
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                   <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--text-title); margin: 0;">Versión del Sistema WashQ</h3>
-                  <span class="badge-status-pwa" style="background: var(--accent-primary); color: #fff; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.76rem; font-weight: 800; font-family: var(--font-mono);">v4.2.0</span>
+                  <span class="badge-status-pwa" style="background: var(--accent-primary); color: #fff; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.76rem; font-weight: 800; font-family: var(--font-mono);">v4.3.0</span>
                 </div>
                 <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">Compilación Oficial PWA &bull; Optimizado para Samsung Galaxy S26 Ultra</p>
               </div>
@@ -2848,11 +2848,11 @@
           <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; font-size: 0.78rem;">
             <div>
               <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Versión Actual</span>
-              <strong style="color: var(--text-title); font-family: var(--font-mono); font-size: 0.88rem;">v4.2.0 (14-Nov-2026)</strong>
+              <strong style="color: var(--text-title); font-family: var(--font-mono); font-size: 0.88rem;">v4.3.0 (14-Nov-2026)</strong>
             </div>
             <div>
               <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Caché PWA Activa</span>
-              <strong style="color: var(--accent-primary); font-family: var(--font-mono); font-size: 0.88rem;" id="lblActiveCacheVersion">washq-v4.2.0-s26</strong>
+              <strong style="color: var(--accent-primary); font-family: var(--font-mono); font-size: 0.88rem;" id="lblActiveCacheVersion">washq-v4.3.0-s26</strong>
             </div>
             <div>
               <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Estado del Motor</span>
@@ -2877,6 +2877,14 @@
             <div class="form-group">
               <label class="form-label">Nombre del Negocio</label>
               <input type="text" id="configBizName" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Especialidad del Autolavado</label>
+              <select id="configWashType" class="form-select">
+                <option value="mixto">Mixto (Carros y Motos)</option>
+                <option value="solo_motos">Exclusivo Motos (Solo Motocicletas)</option>
+              </select>
+              <small style="color: var(--text-muted); font-size: 0.72rem; display: block; margin-top: 4px;">En sedes exclusivas de motos el ingreso oculta selectores de carros y fija automáticamente tarifas de moto.</small>
             </div>
             <div class="form-group">
               <label class="form-label">Dirección / Sede</label>
@@ -3002,7 +3010,7 @@
 
       <!-- Footer con Versión para Control -->
       <footer style="padding: 24px 16px 12px 16px; text-align: center; font-size: 0.74rem; color: var(--text-muted); font-family: var(--font-mono); border-top: 1px solid var(--border-subtle); margin-top: 20px;">
-        WashQ &bull; Versión <strong>v4.2.0</strong> (Build 2026.11.14 Móvil S26) &bull; 100% Offline
+        WashQ &bull; Versión <strong>v4.3.0</strong> (Build 2026.11.14 Móvil S26) &bull; 100% Offline
       </footer>
 
     </main>
@@ -3037,6 +3045,14 @@
       </div>
 
       <div class="form-group">
+        <label class="form-label">Especialidad de la Sede</label>
+        <select id="newTenantWashType" class="form-select">
+          <option value="mixto">Mixto (Carros y Motos)</option>
+          <option value="solo_motos">Exclusivo Motos (Solo Motocicletas)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label class="form-label">Dirección</label>
         <input type="text" id="newTenantAddress" class="form-input" placeholder="Ej: Calle 5 # 34-12">
       </div>
@@ -3058,16 +3074,19 @@
 
       <div class="form-group">
         <label class="form-label">Tipo de Vehículo</label>
-        <div class="vehicle-type-selector">
-          <button type="button" class="vtype-btn active" onclick="selectVehicleType('carro', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14m-12 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0m-14-5l2-5h10l2 5m-15 0h16a2 2 0 0 1 2 2v3H2v-3a2 2 0 0 1 2-2z"></path></svg> Carro</button>
-          <button type="button" class="vtype-btn" onclick="selectVehicleType('moto', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="16" r="3"></circle><circle cx="19" cy="16" r="3"></circle><path d="M12 16h3l3-7h-5l-2 4H9l-2-4H3"></path></svg> Moto</button>
-          <button type="button" class="vtype-btn" onclick="selectVehicleType('suv', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="11" width="20" height="6" rx="1"></rect><path d="M5 11l2-6h10l3 6M4 17a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0"></path></svg> SUV / 4x4</button>
-          <button type="button" class="vtype-btn" onclick="selectVehicleType('taxi', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4v3h-4zM5 17h14m-12 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0m-14-5l2-4h10l2 4m-15 0h16a2 2 0 0 1 2 2v3H2v-3a2 2 0 0 1 2-2z"></path></svg> Taxi</button>
+        <div class="vehicle-type-selector" id="orderVehicleTypeSelector">
+          <button type="button" class="vtype-btn active" data-vtype="carro" onclick="selectVehicleType('carro', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14m-12 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0m-14-5l2-5h10l2 5m-15 0h16a2 2 0 0 1 2 2v3H2v-3a2 2 0 0 1 2-2z"></path></svg> Carro</button>
+          <button type="button" class="vtype-btn" data-vtype="moto" onclick="selectVehicleType('moto', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="16" r="3"></circle><circle cx="19" cy="16" r="3"></circle><path d="M12 16h3l3-7h-5l-2 4H9l-2-4H3"></path></svg> Moto</button>
+          <button type="button" class="vtype-btn" data-vtype="suv" onclick="selectVehicleType('suv', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="11" width="20" height="6" rx="1"></rect><path d="M5 11l2-6h10l3 6M4 17a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0"></path></svg> SUV / 4x4</button>
+          <button type="button" class="vtype-btn" data-vtype="taxi" onclick="selectVehicleType('taxi', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4v3h-4zM5 17h14m-12 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0m-14-5l2-4h10l2 4m-15 0h16a2 2 0 0 1 2 2v3H2v-3a2 2 0 0 1 2-2z"></path></svg> Taxi</button>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Placa del Vehículo</label>
+        <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Placa del Vehículo</span>
+          <span id="orderPlateDetectedBadge" style="display: none; font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;"></span>
+        </label>
         <input type="text" id="orderPlateInput" class="form-input input-plate-stylized" placeholder="ABC-123" maxlength="8" autocomplete="off">
       </div>
 
@@ -3464,7 +3483,8 @@
         ownerPhone: '315 555 1234',
         active: true,
         adminPin: '1234',
-        cajeroPin: '0000'
+        cajeroPin: '0000',
+        washType: 'mixto'
       },
       {
         id: 'medellin-detail',
@@ -3476,7 +3496,8 @@
         ownerPhone: '310 987 6543',
         active: true,
         adminPin: '1234',
-        cajeroPin: '0000'
+        cajeroPin: '0000',
+        washType: 'mixto'
       },
       {
         id: 'bogota-ecowash',
@@ -3488,7 +3509,8 @@
         ownerPhone: '320 123 4567',
         active: true,
         adminPin: '1234',
-        cajeroPin: '0000'
+        cajeroPin: '0000',
+        washType: 'mixto'
       }
     ];
 
@@ -3986,11 +4008,16 @@
         const isCurrent = activeTenant && activeTenant.id === t.id;
         const item = document.createElement('div');
         item.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-surface-subtle); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);';
+        const typeBadge = t.washType === 'solo_motos'
+          ? '<span style="font-size: 0.7rem; color: #D97706; background: #FEF3C7; padding: 2px 6px; border-radius: 4px; font-weight: 700;">Solo Motos</span>'
+          : '<span style="font-size: 0.7rem; color: #2563EB; background: #EFF6FF; padding: 2px 6px; border-radius: 4px; font-weight: 700;">Mixto</span>';
+
         item.innerHTML = `
           <div>
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <strong style="font-size: 0.88rem; color: var(--text-title);">${t.name}</strong>
               <span style="font-family: var(--font-mono); font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: var(--bg-canvas); border: 1px solid var(--border-subtle); font-weight: 700;">${t.code}</span>
+              ${typeBadge}
               ${isCurrent ? '<span style="font-size: 0.7rem; color: #059669; font-weight: 700; background: #ECFDF5; padding: 2px 6px; border-radius: 4px;">Sede Actual</span>' : ''}
             </div>
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 3px;">${t.address || t.city || 'Colombia'}</p>
@@ -4185,6 +4212,8 @@
       document.getElementById('newTenantAddress').value = '';
       document.getElementById('newTenantCode').value = '';
       document.getElementById('newTenantPin').value = '1234';
+      const wtSel = document.getElementById('newTenantWashType');
+      if (wtSel) wtSel.value = 'mixto';
       openModal('modalCreateTenant');
     }
 
@@ -4194,6 +4223,7 @@
       const address = document.getElementById('newTenantAddress').value.trim();
       const code = document.getElementById('newTenantCode').value.trim().toUpperCase();
       const pin = document.getElementById('newTenantPin').value.trim() || '1234';
+      const washType = (document.getElementById('newTenantWashType') ? document.getElementById('newTenantWashType').value : 'mixto') || 'mixto';
 
       if (!name || !code) {
         alert('Por favor ingresa el nombre del autolavado y un código único (ej: CALI-02).');
@@ -4215,14 +4245,15 @@
         ownerPhone: '',
         active: true,
         adminPin: pin,
-        cajeroPin: '0000'
+        cajeroPin: '0000',
+        washType: washType
       };
 
       tenantsRegistry.push(newTenant);
       localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
 
       closeModal('modalCreateTenant');
-      alert('Sede "' + name + '" registrada con éxito.\nCódigo de ingreso: ' + code);
+      alert('Sede "' + name + '" registrada con éxito.\nCódigo de ingreso: ' + code + '\nEspecialidad: ' + (washType === 'solo_motos' ? 'Exclusivo Motos' : 'Mixto'));
 
       chooseTenantForLogin(newTenant.id);
     }
@@ -4232,7 +4263,9 @@
       address: 'Calle 5 # 38-20, Cali - Valle',
       phone: '317 015 4654',
       ownerPhone: '315 555 1234',
-      footerText: '¡Gracias por su visita! Cuidamos su vehículo.'
+      footerText: '¡Gracias por su visita! Cuidamos su vehículo.',
+      lockTimeoutMinutes: 5,
+      washType: 'mixto'
     };
 
     const DEFAULT_SERVICES = [
@@ -4541,11 +4574,67 @@
       const plateInput = document.getElementById('orderPlateInput');
       if (plateInput) {
         plateInput.addEventListener('input', (e) => {
-          let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-          if (val.length > 3) {
-            val = val.slice(0, 3) + '-' + val.slice(3, 6);
+          let raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+          let formatted = raw;
+          if (raw.length > 3) {
+            formatted = raw.slice(0, 3) + '-' + raw.slice(3, 6);
           }
-          e.target.value = val;
+          e.target.value = formatted;
+
+          const badge = document.getElementById('orderPlateDetectedBadge');
+
+          // Si la sede actual es exclusiva de motos, siempre permanece en moto
+          if (typeof isSedeSoloMotos === 'function' && isSedeSoloMotos()) {
+            if (appState.selectedVehicleType !== 'moto') {
+              selectVehicleType('moto');
+            }
+            if (badge) {
+              badge.textContent = 'Exclusivo Motos';
+              badge.style.display = 'inline-block';
+              badge.style.background = '#FEF3C7';
+              badge.style.color = '#D97706';
+            }
+            return;
+          }
+
+          // Auto-detección por formato de placa en Colombia:
+          // Placa de Moto: 3 letras + 2 números + 1 letra (ej: ABC-12D, KTF-89F, WXQ-45E).
+          // En Colombia ningún carro particular ni público termina en letra.
+          // Por tanto, si tiene 5 o más caracteres, contiene números y el último caracter es una letra: es 100% MOTO.
+          const isMotoPlate = raw.length >= 5 && /[0-9]+[A-Z]$/.test(raw);
+          const isCarPlate = raw.length === 6 && /^[A-Z]{3}[0-9]{3}$/.test(raw);
+
+          if (isMotoPlate) {
+            if (badge) {
+              badge.textContent = 'Moto detectada';
+              badge.style.display = 'inline-block';
+              badge.style.background = '#FEF3C7';
+              badge.style.color = '#D97706';
+            }
+            if (appState.selectedVehicleType !== 'moto') {
+              selectVehicleType('moto');
+              if (typeof showToast === 'function') {
+                showToast('Tipo detectado: Moto', 'info', 1400);
+              }
+            }
+          } else if (isCarPlate) {
+            if (badge) {
+              badge.textContent = 'Carro detectado';
+              badge.style.display = 'inline-block';
+              badge.style.background = '#EFF6FF';
+              badge.style.color = '#2563EB';
+            }
+            if (appState.selectedVehicleType === 'moto') {
+              selectVehicleType('carro');
+              if (typeof showToast === 'function') {
+                showToast('Tipo detectado: Carro', 'info', 1400);
+              }
+            }
+          } else {
+            if (badge && raw.length < 5) {
+              badge.style.display = 'none';
+            }
+          }
         });
       }
     }
@@ -5087,8 +5176,37 @@
     }
 
     // ================= MODAL INGRESO EXPRESS =================
+    function isSedeSoloMotos() {
+      if (appState && appState.config && appState.config.washType === 'solo_motos') return true;
+      if (typeof activeTenant !== 'undefined' && activeTenant && activeTenant.washType === 'solo_motos') return true;
+      return false;
+    }
+
     function openNewOrderModal() {
-      selectVehicleType('carro');
+      const soloMotos = isSedeSoloMotos();
+      const selector = document.getElementById('orderVehicleTypeSelector');
+      if (selector) {
+        const nonMotoBtns = selector.querySelectorAll('.vtype-btn:not([data-vtype="moto"])');
+        nonMotoBtns.forEach(b => {
+          b.style.display = soloMotos ? 'none' : 'flex';
+        });
+        selector.style.gridTemplateColumns = soloMotos ? '1fr' : '';
+      }
+
+      const badge = document.getElementById('orderPlateDetectedBadge');
+      if (badge) {
+        if (soloMotos) {
+          badge.textContent = 'Exclusivo Motos';
+          badge.style.display = 'inline-block';
+          badge.style.background = '#FEF3C7';
+          badge.style.color = '#D97706';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      const defaultType = soloMotos ? 'moto' : 'carro';
+      selectVehicleType(defaultType);
       populateWashersDropdown();
       document.getElementById('orderPlateInput').value = '';
       document.getElementById('orderPhoneInput').value = '';
@@ -5099,12 +5217,14 @@
 
     function selectVehicleType(type, btn) {
       appState.selectedVehicleType = type;
-      if (btn) {
-        document.querySelectorAll('.vtype-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+      const targetBtn = btn || document.querySelector(`.vtype-btn[data-vtype="${type}"]`);
+      document.querySelectorAll('.vtype-btn').forEach(b => b.classList.remove('active'));
+      if (targetBtn) {
+        targetBtn.classList.add('active');
       }
 
       const grid = document.getElementById('modalServicesGrid');
+      if (!grid) return;
       grid.innerHTML = '';
       const services = appState.services.filter(s => s.type === type);
       services.forEach((s, idx) => {
@@ -6203,6 +6323,10 @@
     // ================= CONFIGURACIÓN DEL NEGOCIO =================
     function renderBusinessConfig() {
       document.getElementById('configBizName').value = appState.config.businessName.replace('&bull;', '•');
+      const washTypeSel = document.getElementById('configWashType');
+      if (washTypeSel) {
+        washTypeSel.value = appState.config.washType || (activeTenant && activeTenant.washType) || 'mixto';
+      }
       document.getElementById('configBizAddress').value = appState.config.address;
       document.getElementById('configBizPhone').value = appState.config.phone;
       const ownerInput = document.getElementById('configBizOwnerPhone');
@@ -6220,6 +6344,19 @@
 
     function saveBusinessConfig() {
       appState.config.businessName = document.getElementById('configBizName').value.trim();
+      const washTypeSel = document.getElementById('configWashType');
+      if (washTypeSel) {
+        const wt = washTypeSel.value;
+        appState.config.washType = wt;
+        if (activeTenant) {
+          activeTenant.washType = wt;
+          const tIdx = tenantsRegistry.findIndex(t => t.id === activeTenant.id);
+          if (tIdx !== -1) {
+            tenantsRegistry[tIdx].washType = wt;
+            localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
+          }
+        }
+      }
       appState.config.address = document.getElementById('configBizAddress').value.trim();
       appState.config.phone = document.getElementById('configBizPhone').value.trim();
       const ownerInput = document.getElementById('configBizOwnerPhone');
@@ -6232,6 +6369,7 @@
       }
 
       saveToStorage();
+      renderAdminSedesList();
       showToast('Configuración guardada exitosamente.', 'success');
     }
 
@@ -6401,7 +6539,7 @@
     }
 
     function forcePwaCacheRefresh() {
-      if (!confirm('¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión móvil v4.2.0.')) return;
+      if (!confirm('¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión móvil v4.3.0.')) return;
       if ('caches' in window) {
         caches.keys().then(function(names) {
           return Promise.all(names.map(name => caches.delete(name)));
