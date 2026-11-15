@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover, interactive-widget=resizes-content">
   <title>WashQ : Control Operativo, Cuadre de Caja y Liquidación</title>
   <meta name="description" content="Software de control de zona de lavado, cuadre de caja, liquidación de operarios y gestión en tiempo real para autolavados en Colombia.">
 
@@ -17,21 +17,14 @@
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
   <link rel="icon" type="image/png" href="assets/icon-192.png">
 
-  <!-- Limpieza de Caché y Service Workers Obsoletos -->
+  <!-- Limpieza de Caché y Sincronización PWA -->
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (var i = 0; i < registrations.length; i++) {
-          if (registrations[i].active && !registrations[i].active.scriptURL.includes('washq-cache-v3')) {
-            registrations[i].unregister();
-          }
-        }
-      });
-    }
     if ('caches' in window) {
       caches.keys().then(function(names) {
         for (var i = 0; i < names.length; i++) {
-          if (names[i] !== 'washq-cache-v5') caches.delete(names[i]);
+          if (names[i] !== 'washq-v4.2.0-s26') {
+            caches.delete(names[i]);
+          }
         }
       });
     }
@@ -982,25 +975,32 @@
     .washer-treemap-container {
       display: grid;
       grid-template-columns: 1.3fr 1fr;
-      grid-template-rows: 85px 85px;
-      gap: 8px;
-      margin-top: 6px;
+      grid-template-rows: auto auto;
+      gap: 10px;
+      margin-top: 8px;
     }
     .treemap-tile {
       border-radius: var(--radius-md);
-      padding: 12px 14px;
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
+      min-height: 85px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .treemap-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
     }
     .tile-lead { grid-row: span 2; background: var(--color-obsidian); color: var(--text-white); }
-    .tile-second { background: var(--accent-subtle); border: 1px solid var(--accent-border); }
-    .tile-third { background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); }
-    .treemap-name { font-size: 0.8rem; font-weight: 700; }
-    .treemap-count { font-size: 0.7rem; opacity: 0.8; }
-    .treemap-val { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; }
-    .tile-lead .treemap-val { color: var(--accent-primary); }
+    .tile-second { background: var(--accent-subtle); border: 1px solid var(--accent-border); color: var(--text-title); }
+    .tile-third { background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); color: var(--text-title); }
+    .treemap-name { font-size: 0.88rem; font-weight: 700; }
+    .treemap-count { font-size: 0.72rem; opacity: 0.8; margin-top: 2px; }
+    .treemap-val { font-family: var(--font-mono); font-size: 1.15rem; font-weight: 800; color: var(--text-title); margin-top: 6px; }
+    .tile-lead .treemap-val { color: #FDBA74; }
+    .tile-second .treemap-val { color: var(--accent-primary); }
 
     /* KANBAN BOARD */
     .kanban-board-wrapper {
@@ -1849,22 +1849,62 @@
       }
 
       .caja-columns-split {
-        grid-template-columns: 1fr;
-        gap: 14px;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+      }
+
+      .caja-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        padding: 16px 14px !important;
+        border-radius: var(--radius-lg);
+      }
+
+      .bento-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        padding: 16px 14px !important;
+        border-radius: var(--radius-lg);
+      }
+
+      .table-responsive {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        box-sizing: border-box !important;
+        display: block !important;
+      }
+
+      .btn-card-action {
+        white-space: normal !important;
+        word-break: break-word !important;
+        max-width: 100% !important;
       }
 
       /* Treemap Móvil - Diseño de Tarjetas Limpias para Lavadores */
       .washer-treemap-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        grid-template-columns: unset;
-        grid-template-rows: unset;
-        margin-top: 8px;
-        width: 100%;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        grid-template-columns: unset !important;
+        grid-template-rows: unset !important;
+        margin-top: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
       }
 
       .treemap-tile {
@@ -1872,38 +1912,36 @@
         flex-direction: row !important;
         align-items: center !important;
         justify-content: space-between !important;
-        padding: 14px 16px !important;
+        padding: 12px 14px !important;
         min-height: auto !important;
-        gap: 12px;
-        border-radius: var(--radius-md);
+        gap: 10px !important;
+        border-radius: var(--radius-md) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
       }
 
       .tile-lead {
         grid-row: auto !important;
       }
 
-      .treemap-tile > div:first-child {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-        text-align: left;
-      }
-
       .treemap-name {
-        font-size: 0.95rem !important;
+        font-size: 0.9rem !important;
         font-weight: 700 !important;
       }
 
       .treemap-count {
-        font-size: 0.76rem !important;
+        font-size: 0.74rem !important;
         opacity: 0.85;
       }
 
       .treemap-val {
-        font-size: 1.15rem !important;
+        font-size: 1.05rem !important;
         font-weight: 800 !important;
         white-space: nowrap !important;
-        text-align: right;
+        text-align: right !important;
+        flex-shrink: 0 !important;
+        margin-top: 0 !important;
       }
 
       .kanban-board-wrapper {
@@ -2788,6 +2826,48 @@
 
       <!-- VISTA 6: CONFIGURACIÓN & ADMINISTRACIÓN TOTAL -->
       <div class="view-container" id="view-config">
+        <!-- Control y Versión PWA (Visible inmediatamente en primer plano) -->
+        <div class="caja-panel" style="margin-bottom: 18px; border: 1.5px solid var(--accent-primary); background: linear-gradient(135deg, rgba(234, 88, 12, 0.05) 0%, rgba(37, 39, 54, 0.02) 100%);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem; flex-shrink: 0;">⚡</div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--text-title); margin: 0;">Versión del Sistema WashQ</h3>
+                  <span class="badge-status-pwa" style="background: var(--accent-primary); color: #fff; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.76rem; font-weight: 800; font-family: var(--font-mono);">v4.2.0</span>
+                </div>
+                <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">Compilación Oficial PWA &bull; Optimizado para Samsung Galaxy S26 Ultra</p>
+              </div>
+            </div>
+            <span style="font-size: 0.74rem; font-weight: 700; color: var(--status-success); background: var(--status-success-bg); border: 1px solid var(--status-success); padding: 4px 10px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 5px;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--status-success); display: inline-block;"></span>
+              App Sincronizada
+            </span>
+          </div>
+
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; font-size: 0.78rem;">
+            <div>
+              <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Versión Actual</span>
+              <strong style="color: var(--text-title); font-family: var(--font-mono); font-size: 0.88rem;">v4.2.0 (14-Nov-2026)</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Caché PWA Activa</span>
+              <strong style="color: var(--accent-primary); font-family: var(--font-mono); font-size: 0.88rem;" id="lblActiveCacheVersion">washq-v4.2.0-s26</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Estado del Motor</span>
+              <strong style="color: var(--status-success); font-size: 0.85rem;" id="lblPwaEngineStatus">⚡ 100% Offline Soberana</strong>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px;">
+            <button type="button" class="btn-card-action" style="width: 100%; min-height: 42px; font-weight: 700; background: var(--accent-subtle); color: var(--accent-primary); border: 1px solid var(--accent-border); cursor: pointer; border-radius: var(--radius-md); font-size: 0.84rem; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="forcePwaCacheRefresh()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              <span>Forzar Actualización Inmediata y Limpiar Caché</span>
+            </button>
+          </div>
+        </div>
+
         <div class="caja-columns-split">
           <!-- Datos del Negocio & Categorías de Gasto -->
           <div class="caja-panel">
@@ -2867,38 +2947,7 @@
               </div>
             </div>
 
-            <!-- Control de Versión y Estado PWA -->
-            <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                <div>
-                  <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-title);">Versión del Sistema &amp; Control PWA</h4>
-                  <p class="card-subtitle">Seguimiento de compilación y sincronización offline</p>
-                </div>
-                <span class="badge-status-pwa" style="background: var(--status-success-bg); color: var(--status-success); border: 1px solid var(--status-success); padding: 3px 10px; border-radius: var(--radius-pill); font-size: 0.74rem; font-weight: 800; font-family: var(--font-mono);">v4.2.0</span>
-              </div>
-              
-              <div style="background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="color: var(--text-muted);">Compilación (Build):</span>
-                  <span style="font-family: var(--font-mono); font-weight: 700; color: var(--text-title);">2026.11.14 &bull; Móvil Ready S26</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="color: var(--text-muted);">Núcleo de Caché:</span>
-                  <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-primary);" id="lblActiveCacheVersion">washq-cache-v4</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="color: var(--text-muted);">Estado del Motor:</span>
-                  <span style="font-weight: 700; color: var(--status-success);" id="lblPwaEngineStatus">⚡ PWA Soberana Offline Activa</span>
-                </div>
-              </div>
 
-              <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
-                <button type="button" class="btn-card-action" style="width: 100%; min-height: 40px; font-weight: 700; background: var(--accent-subtle); color: var(--accent-primary); border-color: var(--accent-border); cursor: pointer;" onclick="forcePwaCacheRefresh()">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                  Forzar Actualización / Limpiar Caché
-                </button>
-              </div>
-            </div>
           </div>
 
           <!-- Tarifas y Catálogo de Servicios -->
@@ -4690,24 +4739,52 @@
         miniQueue.appendChild(item);
       });
 
-      // Treemap
+      // Treemap de Comisiones por Operario
       const treemap = document.getElementById('overviewTreemapContainer');
       treemap.innerHTML = '';
-      appState.washers.slice(0, 3).forEach((w, idx) => {
+
+      const washerStats = (appState.washers || []).map(w => {
         const washerOrders = todayOrders.filter(o => o.washerId === w.id);
         const washerTotal = washerOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
-        const tile = document.createElement('div');
-        tile.className = `treemap-tile ${idx === 0 ? 'tile-lead' : idx === 1 ? 'tile-second' : 'tile-third'}`;
-        tile.onclick = () => switchView('comisiones');
-        tile.innerHTML = `
-          <div>
-            <div class="treemap-name">${w.name}</div>
-            <div class="treemap-count">${washerOrders.length} servicios lavados</div>
-          </div>
-          <div class="treemap-val">${formatCOP(washerTotal)}</div>
-        `;
-        treemap.appendChild(tile);
+        return {
+          id: w.id,
+          name: w.name || 'Operario',
+          count: washerOrders.length,
+          total: washerTotal
+        };
       });
+
+      // Ordenar por comisión de mayor a menor para destacar al líder
+      washerStats.sort((a, b) => b.total - a.total);
+
+      if (washerStats.length === 0) {
+        treemap.innerHTML = `
+          <div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.82rem; background: var(--bg-surface-subtle); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle); width: 100%;">
+            No hay operarios registrados aún.<br>
+            <button onclick="switchView('comisiones')" style="margin-top: 6px; background: none; border: none; color: var(--accent-primary); font-weight: 700; cursor: pointer; text-decoration: underline;">Registrar operarios en Liquidación &rarr;</button>
+          </div>
+        `;
+      } else {
+        const topWashers = washerStats.slice(0, 3);
+        topWashers.forEach((w, idx) => {
+          const tile = document.createElement('div');
+          const isLead = idx === 0;
+          tile.className = `treemap-tile ${isLead ? 'tile-lead' : idx === 1 ? 'tile-second' : 'tile-third'}`;
+          tile.onclick = () => switchView('comisiones');
+          tile.title = 'Clic para ver detalle de comisiones en Liquidación';
+          tile.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+              <span class="treemap-rank-badge" style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: var(--radius-pill); background: ${isLead ? 'var(--accent-primary)' : 'rgba(116, 116, 132, 0.15)'}; color: ${isLead ? '#fff' : 'inherit'}; flex-shrink: 0;">#${idx + 1}</span>
+              <div style="min-width: 0; overflow: hidden;">
+                <div class="treemap-name" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${w.name}</div>
+                <div class="treemap-count">${w.count} ${w.count === 1 ? 'servicio' : 'servicios'}</div>
+              </div>
+            </div>
+            <div class="treemap-val">${formatCOP(w.total)}</div>
+          `;
+          treemap.appendChild(tile);
+        });
+      }
 
       // Métodos de pago
       const pmList = document.getElementById('overviewPaymentsBreakdownList');
@@ -6324,7 +6401,7 @@
     }
 
     function forcePwaCacheRefresh() {
-      if (!confirm('¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión móvil.')) return;
+      if (!confirm('¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión móvil v4.2.0.')) return;
       if ('caches' in window) {
         caches.keys().then(function(names) {
           return Promise.all(names.map(name => caches.delete(name)));
@@ -6333,16 +6410,16 @@
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
               return Promise.all(registrations.map(r => r.unregister()));
             }).then(function() {
-              window.location.reload(true);
+              window.location.href = window.location.pathname + '?v=' + Date.now();
             });
           } else {
-            window.location.reload(true);
+            window.location.href = window.location.pathname + '?v=' + Date.now();
           }
         }).catch(function() {
-          window.location.reload(true);
+          window.location.href = window.location.pathname + '?v=' + Date.now();
         });
       } else {
-        window.location.reload(true);
+        window.location.href = window.location.pathname + '?v=' + Date.now();
       }
     }
 

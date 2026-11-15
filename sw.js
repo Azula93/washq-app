@@ -1,9 +1,10 @@
 /**
  * WashQ — Service Worker para funcionamiento 100% Offline
  * Permite que el sistema opere en PC, Tablets y Celulares sin conexión a internet.
+ * Optimizado para PWA en Android (Samsung Galaxy S26 Ultra) y Chrome.
  */
 
-const CACHE_NAME = 'washq-cache-v6';
+const CACHE_NAME = 'washq-v4.2.0-s26';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -19,13 +20,13 @@ const CORE_ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('⚡ [WashQ PWA] Precargando núcleo offline v6...');
+      console.log('⚡ [WashQ PWA] Precargando núcleo offline ' + CACHE_NAME);
       return cache.addAll(CORE_ASSETS);
     }).then(() => self.skipWaiting())
   );
 });
 
-// Activación: Limpieza de versiones viejas de caché
+// Activación: Limpieza inmediata de versiones viejas de caché
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -41,13 +42,36 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Estrategia de respuesta: Cache-First con Network Fallback y Cache Dinámico
+// Estrategia de respuesta:
+// - Para navegación (HTML): Network-First con fallback a Caché (garantiza ver cambios online sin perder soporte offline)
+// - Para recursos estáticos (imágenes, scripts, fonts): Cache-First con Network Fallback
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
   // Solo peticiones GET
   if (req.method !== 'GET') return;
 
+  // Navegación (HTML principal)
+  if (req.mode === 'navigate' || req.destination === 'document') {
+    event.respondWith(
+      fetch(req)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(req).then((cached) => {
+            return cached || caches.match('/index.html') || caches.match('/');
+          });
+        })
+    );
+    return;
+  }
+
+  // Recursos estáticos: Cache-First con actualización silenciosa en segundo plano
   event.respondWith(
     caches.match(req).then((cachedResponse) => {
       if (cachedResponse) {
@@ -77,9 +101,7 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       }).catch(() => {
         // Fallback offline universal para navegación
-        if (req.mode === 'navigate') {
-          return caches.match('/') || caches.match('/index.html') || caches.match('./index.html');
-        }
+        return caches.match('/') || caches.match('/index.html');
       });
     })
   );
