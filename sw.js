@@ -4,7 +4,7 @@
  * Optimizado para PWA en Android (Samsung Galaxy S26 Ultra) y Chrome.
  */
 
-const CACHE_NAME = 'washq-v4.6.0-master';
+const CACHE_NAME = 'washq-v5.0.0-prod';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -18,7 +18,7 @@ const CORE_ASSETS = [
   '/assets/xlsx.full.min.js'
 ];
 
-// Instalación: Cachear recursos indispensables
+// Instalación: Cachear recursos indispensables y tomar control inmediato
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -35,7 +35,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('🧹 [WashQ PWA] Eliminando caché anterior:', key);
+            console.log('🧹 [WashQ PWA] Eliminando caché obsoleta:', key);
             return caches.delete(key);
           }
         })
@@ -45,15 +45,15 @@ self.addEventListener('activate', (event) => {
 });
 
 // Estrategia de respuesta:
-// - Para navegación (HTML): Network-First con fallback a Caché (garantiza ver cambios online sin perder soporte offline)
-// - Para recursos estáticos (imágenes, scripts, fonts): Cache-First con Network Fallback
+// - Para navegación (HTML): Network-First con fallback a Caché (garantiza ver cambios de inmediato en producción)
+// - Para recursos estáticos (imágenes, scripts, fonts): Cache-First con actualización silenciosa en red
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
   // Solo peticiones GET y NUNCA interceptar rutas API
   if (req.method !== 'GET' || req.url.includes('/api/')) return;
 
-  // Navegación (HTML principal)
+  // Navegación (HTML principal): Network-First
   if (req.mode === 'navigate' || req.destination === 'document') {
     event.respondWith(
       fetch(req)
@@ -73,21 +73,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Recursos estáticos: Cache-First con actualización silenciosa en segundo plano
+  // Recursos estáticos: Cache-First con revalidación en segundo plano
   event.respondWith(
     caches.match(req).then((cachedResponse) => {
       if (cachedResponse) {
-        // En segundo plano revalida si hay red
         fetch(req).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => cache.put(req, networkResponse));
           }
-        }).catch(() => {/* Silencioso si no hay red */});
+        }).catch(() => {/* Modo offline silencioso */});
 
         return cachedResponse;
       }
 
-      // Si no está en caché, buscar en red y guardar copia
+      // Si no está en caché, traer de la red y guardar copia
       return fetch(req).then((networkResponse) => {
         if (!networkResponse || networkResponse.status !== 200 || networkResponse.type === 'opaque') {
           return networkResponse;
@@ -102,7 +101,6 @@ self.addEventListener('fetch', (event) => {
 
         return networkResponse;
       }).catch(() => {
-        // Fallback offline universal para navegación
         return caches.match('/') || caches.match('/index.html');
       });
     })
