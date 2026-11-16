@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover, interactive-widget=resizes-content">
   <title>WashQ : Control Operativo, Cuadre de Caja y Liquidación</title>
-  <meta name="description"
-    content="Software de control de zona de lavado, cuadre de caja, liquidación de operarios y gestión en tiempo real para autolavados en Colombia.">
+  <meta name="description" content="Software de control de zona de lavado, cuadre de caja, liquidación de operarios y gestión en tiempo real para autolavados en Colombia.">
 
   <!-- PWA & Mobile Web App Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -23,9 +20,9 @@
   <!-- Limpieza de Caché y Sincronización PWA -->
   <script>
     if ('caches' in window) {
-      caches.keys().then(function (names) {
+      caches.keys().then(function(names) {
         for (var i = 0; i < names.length; i++) {
-          if (names[i] !== 'washq-v4.4.0-s26') {
+          if (names[i] !== 'washq-v4.5.0-s26') {
             caches.delete(names[i]);
           }
         }
@@ -36,9 +33,7 @@
   <!-- Tipografías Oficiales Solicitadas -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================================================
@@ -99,9 +94,7 @@
       --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -134,7 +127,7 @@
       padding: 16px;
     }
 
-
+    
     /* ==========================================================================
        PANTALLA DE ACCESO POR CÓDIGO DE SEDE (AUTH SCREEN)
        ========================================================================== */
@@ -374,9 +367,7 @@
       color: var(--text-title);
     }
 
-    .brand-title span {
-      color: var(--accent-primary);
-    }
+    .brand-title span { color: var(--accent-primary); }
 
     .nav-section-label {
       font-size: 0.68rem;
@@ -440,9 +431,7 @@
       box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
     }
 
-    .nav-item.active button svg {
-      stroke: var(--accent-primary);
-    }
+    .nav-item.active button svg { stroke: var(--accent-primary); }
 
     .nav-badge {
       font-family: var(--font-mono);
@@ -455,9 +444,7 @@
       border: 1px solid var(--accent-border);
     }
 
-    .sidebar-spacer {
-      flex: 1;
-    }
+    .sidebar-spacer { flex: 1; }
 
     .patio-runway-widget {
       background: var(--bg-canvas);
@@ -474,12 +461,7 @@
       margin-bottom: 6px;
     }
 
-    .runway-label {
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
+    .runway-label { font-size: 0.74rem; font-weight: 600; color: var(--text-muted); }
     .runway-badge {
       display: flex;
       align-items: center;
@@ -506,11 +488,7 @@
       margin-bottom: 8px;
     }
 
-    .runway-value small {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--text-muted);
-    }
+    .runway-value small { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
 
     .segmented-meter {
       display: flex;
@@ -524,14 +502,8 @@
       border-radius: 3px;
       background: rgba(116, 116, 132, 0.2);
     }
-
-    .meter-pip.filled {
-      background: var(--accent-primary);
-    }
-
-    .meter-pip.amber-deep {
-      background: var(--accent-deep);
-    }
+    .meter-pip.filled { background: var(--accent-primary); }
+    .meter-pip.amber-deep { background: var(--accent-deep); }
 
     /* CANVAS PRINCIPAL */
     .main-canvas {
@@ -560,11 +532,7 @@
       letter-spacing: -0.03em;
     }
 
-    .header-titles p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+    .header-titles p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
     .header-actions {
       display: flex;
@@ -602,10 +570,7 @@
       transition: all 0.2s var(--ease-apple);
     }
 
-    .btn-quick-new:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-    }
+    .btn-quick-new:hover { background: var(--accent-hover); transform: translateY(-1px); }
 
     .search-pill-btn {
       display: flex;
@@ -621,10 +586,7 @@
       transition: all 0.2s var(--ease-apple);
     }
 
-    .search-pill-btn:hover {
-      border-color: var(--border-strong);
-      color: var(--text-title);
-    }
+    .search-pill-btn:hover { border-color: var(--border-strong); color: var(--text-title); }
 
     .kbd-shortcut {
       font-family: var(--font-mono);
@@ -668,16 +630,8 @@
       text-align: left;
     }
 
-    .role-text-name {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-title);
-    }
-
-    .role-text-sub {
-      font-size: 0.66rem;
-      color: var(--text-muted);
-    }
+    .role-text-name { font-size: 0.78rem; font-weight: 700; color: var(--text-title); }
+    .role-text-sub { font-size: 0.66rem; color: var(--text-muted); }
 
     /* CONTENEDORES DE VISTAS */
     .view-container {
@@ -686,20 +640,11 @@
       animation: viewFadeIn 0.22s var(--ease-apple);
     }
 
-    .view-container.active {
-      display: block;
-    }
+    .view-container.active { display: block; }
 
     @keyframes viewFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(4px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* HERO METRIC */
@@ -722,10 +667,10 @@
       width: 55%;
       pointer-events: none;
       opacity: 0.05;
-      background-image:
+      background-image: 
         radial-gradient(circle at 100% 0%, #252736 0%, transparent 60%),
-        linear-gradient(135deg, rgba(37, 39, 54, 0.4) 25%, transparent 25%),
-        linear-gradient(225deg, rgba(37, 39, 54, 0.4) 25%, transparent 25%);
+        linear-gradient(135deg, rgba(37,39,54,0.4) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(37,39,54,0.4) 25%, transparent 25%);
       background-size: 100% 100%, 36px 36px, 36px 36px;
       mask-image: linear-gradient(to right, transparent, black 40%);
       -webkit-mask-image: linear-gradient(to right, transparent, black 40%);
@@ -738,11 +683,7 @@
       margin-bottom: 6px;
     }
 
-    .metric-eyebrow {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
+    .metric-eyebrow { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
 
     .time-segmented-control {
       display: inline-flex;
@@ -801,19 +742,16 @@
       border: 1px solid var(--accent-border);
       transition: all 0.2s var(--ease-apple);
     }
-
     .giant-badge-trend.positive {
       background: #ECFDF5;
       color: #059669;
       border-color: rgba(5, 150, 105, 0.25);
     }
-
     .giant-badge-trend.negative {
       background: #FEF2F2;
       color: #DC2626;
       border-color: rgba(220, 38, 38, 0.25);
     }
-
     .giant-badge-trend.neutral {
       background: var(--bg-surface-subtle);
       color: var(--text-muted);
@@ -828,18 +766,13 @@
       border-top: 1px solid var(--border-subtle);
     }
 
-    .submetric-col {
-      display: flex;
-      flex-direction: column;
-    }
-
+    .submetric-col { display: flex; flex-direction: column; }
     .submetric-val {
       font-family: var(--font-mono);
       font-size: 1.15rem;
       font-weight: 700;
       color: var(--text-title);
     }
-
     .submetric-title {
       font-size: 0.76rem;
       color: var(--text-muted);
@@ -849,23 +782,10 @@
       gap: 6px;
     }
 
-    .dot-indicator {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-    }
-
-    .dot-amber {
-      background: var(--accent-primary);
-    }
-
-    .dot-terracotta {
-      background: var(--accent-deep);
-    }
-
-    .dot-obsidian {
-      background: var(--color-obsidian);
-    }
+    .dot-indicator { width: 7px; height: 7px; border-radius: 50%; }
+    .dot-amber { background: var(--accent-primary); }
+    .dot-terracotta { background: var(--accent-deep); }
+    .dot-obsidian { background: var(--color-obsidian); }
 
     /* BENTO GRID */
     .bento-grid {
@@ -900,11 +820,7 @@
       letter-spacing: -0.02em;
     }
 
-    .card-subtitle {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+    .card-subtitle { font-size: 0.76rem; color: var(--text-muted); margin-top: 2px; }
 
     .card-action-icon {
       color: var(--text-muted);
@@ -913,10 +829,7 @@
       border: none;
       transition: color 0.18s ease;
     }
-
-    .card-action-icon:hover {
-      color: var(--accent-primary);
-    }
+    .card-action-icon:hover { color: var(--accent-primary); }
 
     .payments-meter-bar {
       display: flex;
@@ -928,25 +841,10 @@
       box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
-    .pm-seg-cash {
-      width: 48%;
-      background: var(--color-obsidian);
-    }
-
-    .pm-seg-nequi {
-      width: 30%;
-      background: var(--accent-primary);
-    }
-
-    .pm-seg-davi {
-      width: 14%;
-      background: var(--accent-deep);
-    }
-
-    .pm-seg-banco {
-      width: 8%;
-      background: var(--color-slate);
-    }
+    .pm-seg-cash { width: 48%; background: var(--color-obsidian); }
+    .pm-seg-nequi { width: 30%; background: var(--accent-primary); }
+    .pm-seg-davi { width: 14%; background: var(--accent-deep); }
+    .pm-seg-banco { width: 8%; background: var(--color-slate); }
 
     .payments-breakdown-list {
       display: flex;
@@ -983,22 +881,11 @@
       box-shadow: var(--shadow-dark-card);
     }
 
-    .bento-card-dark .card-title {
-      color: var(--text-white);
-    }
+    .bento-card-dark .card-title { color: var(--text-white); }
+    .bento-card-dark .card-subtitle { color: var(--color-mist); }
+    .bento-card-dark .card-action-icon { color: var(--color-mist); }
 
-    .bento-card-dark .card-subtitle {
-      color: var(--color-mist);
-    }
-
-    .bento-card-dark .card-action-icon {
-      color: var(--color-mist);
-    }
-
-    .dark-metric-headline {
-      margin-bottom: 18px;
-    }
-
+    .dark-metric-headline { margin-bottom: 18px; }
     .dark-metric-number {
       font-family: var(--font-display);
       font-size: 1.8rem;
@@ -1006,11 +893,7 @@
       letter-spacing: -0.03em;
       color: var(--text-white);
     }
-
-    .dark-metric-note {
-      font-size: 0.78rem;
-      color: var(--color-mist);
-    }
+    .dark-metric-note { font-size: 0.78rem; color: var(--color-mist); }
 
     .bay-matrix-chart {
       display: flex;
@@ -1033,11 +916,7 @@
       border-radius: 2px;
       background: rgba(255, 255, 255, 0.12);
     }
-
-    .matrix-block.active {
-      background: rgba(255, 255, 255, 0.45);
-    }
-
+    .matrix-block.active { background: rgba(255, 255, 255, 0.45); }
     .matrix-block.peak {
       background: var(--accent-primary);
       box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
@@ -1055,12 +934,7 @@
     }
 
     /* MINI QUEUE */
-    .live-queue-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    .live-queue-list { display: flex; flex-direction: column; gap: 8px; }
     .queue-item {
       display: flex;
       align-items: center;
@@ -1083,57 +957,20 @@
       letter-spacing: 0.04em;
     }
 
-    .vehicle-details {
-      display: flex;
-      flex-direction: column;
-      margin-left: 10px;
-    }
-
-    .vehicle-service {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-title);
-    }
-
-    .vehicle-washer {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    .queue-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 2px;
-    }
-
-    .queue-price {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      font-weight: 700;
-    }
-
+    .vehicle-details { display: flex; flex-direction: column; margin-left: 10px; }
+    .vehicle-service { font-size: 0.82rem; font-weight: 600; color: var(--text-title); }
+    .vehicle-washer { font-size: 0.72rem; color: var(--text-muted); }
+    .queue-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+    .queue-price { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; }
     .queue-status-tag {
       font-size: 0.68rem;
       font-weight: 700;
       padding: 1px 7px;
       border-radius: var(--radius-pill);
     }
-
-    .tag-washing {
-      background: var(--accent-subtle);
-      color: var(--accent-primary);
-    }
-
-    .tag-ready {
-      background: var(--status-success-bg);
-      color: var(--status-success);
-    }
-
-    .tag-waiting {
-      background: #F1F5F9;
-      color: #475569;
-    }
+    .tag-washing { background: var(--accent-subtle); color: var(--accent-primary); }
+    .tag-ready { background: var(--status-success-bg); color: var(--status-success); }
+    .tag-waiting { background: #F1F5F9; color: #475569; }
 
     /* TREEMAP */
     .washer-treemap-container {
@@ -1143,7 +980,6 @@
       gap: 10px;
       margin-top: 8px;
     }
-
     .treemap-tile {
       border-radius: var(--radius-md);
       padding: 14px 16px;
@@ -1154,56 +990,18 @@
       min-height: 85px;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-
     .treemap-tile:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-card);
     }
-
-    .tile-lead {
-      grid-row: span 2;
-      background: var(--color-obsidian);
-      color: var(--text-white);
-    }
-
-    .tile-second {
-      background: var(--accent-subtle);
-      border: 1px solid var(--accent-border);
-      color: var(--text-title);
-    }
-
-    .tile-third {
-      background: var(--bg-surface-subtle);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-title);
-    }
-
-    .treemap-name {
-      font-size: 0.88rem;
-      font-weight: 700;
-    }
-
-    .treemap-count {
-      font-size: 0.72rem;
-      opacity: 0.8;
-      margin-top: 2px;
-    }
-
-    .treemap-val {
-      font-family: var(--font-mono);
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-title);
-      margin-top: 6px;
-    }
-
-    .tile-lead .treemap-val {
-      color: #FDBA74;
-    }
-
-    .tile-second .treemap-val {
-      color: var(--accent-primary);
-    }
+    .tile-lead { grid-row: span 2; background: var(--color-obsidian); color: var(--text-white); }
+    .tile-second { background: var(--accent-subtle); border: 1px solid var(--accent-border); color: var(--text-title); }
+    .tile-third { background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); color: var(--text-title); }
+    .treemap-name { font-size: 0.88rem; font-weight: 700; }
+    .treemap-count { font-size: 0.72rem; opacity: 0.8; margin-top: 2px; }
+    .treemap-val { font-family: var(--font-mono); font-size: 1.15rem; font-weight: 800; color: var(--text-title); margin-top: 6px; }
+    .tile-lead .treemap-val { color: #FDBA74; }
+    .tile-second .treemap-val { color: var(--accent-primary); }
 
     /* KANBAN BOARD */
     .kanban-board-wrapper {
@@ -1238,27 +1036,11 @@
       gap: 8px;
     }
 
-    .col-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-
-    .col-dot-espera {
-      background: #94A3B8;
-    }
-
-    .col-dot-lavando {
-      background: var(--accent-primary);
-    }
-
-    .col-dot-listo {
-      background: var(--status-success);
-    }
-
-    .col-dot-entregado {
-      background: var(--color-obsidian);
-    }
+    .col-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .col-dot-espera { background: #94A3B8; }
+    .col-dot-lavando { background: var(--accent-primary); }
+    .col-dot-listo { background: var(--status-success); }
+    .col-dot-entregado { background: var(--color-obsidian); }
 
     .col-title {
       font-family: var(--font-display);
@@ -1422,7 +1204,6 @@
       color: var(--text-white);
       border: none;
     }
-
     .btn-card-primary:hover {
       background: var(--accent-hover);
       color: var(--text-white);
@@ -1433,10 +1214,7 @@
       color: #FFFFFF;
       border: none;
     }
-
-    .btn-whatsapp-action:hover {
-      background: #20BD5A;
-    }
+    .btn-whatsapp-action:hover { background: #20BD5A; }
 
     /* CUADRE DE CAJA */
     .caja-summary-grid {
@@ -1473,14 +1251,8 @@
       background: var(--color-obsidian);
       color: var(--text-white);
     }
-
-    .caja-stat-net .caja-stat-label {
-      color: var(--color-mist);
-    }
-
-    .caja-stat-net .caja-stat-val {
-      color: var(--accent-primary);
-    }
+    .caja-stat-net .caja-stat-label { color: var(--color-mist); }
+    .caja-stat-net .caja-stat-val { color: var(--accent-primary); }
 
     .caja-columns-split {
       display: grid;
@@ -1522,13 +1294,8 @@
       color: var(--text-body);
     }
 
-    .ui-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .ui-table tr:hover td {
-      background: var(--bg-surface-hover);
-    }
+    .ui-table tr:last-child td { border-bottom: none; }
+    .ui-table tr:hover td { background: var(--bg-surface-hover); }
 
     .table-num {
       font-family: var(--font-mono);
@@ -1611,9 +1378,7 @@
       padding: 20px;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-sheet {
       background: var(--bg-surface);
@@ -1630,15 +1395,8 @@
     }
 
     @keyframes modalSlideUp {
-      from {
-        opacity: 0;
-        transform: scale(0.96) translateY(12px);
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     .modal-close-btn {
@@ -1658,11 +1416,7 @@
       font-size: 1.1rem;
       transition: all 0.18s ease;
     }
-
-    .modal-close-btn:hover {
-      color: var(--text-title);
-      background: #E2E8F0;
-    }
+    .modal-close-btn:hover { color: var(--text-title); background: #E2E8F0; }
 
     .modal-title {
       font-family: var(--font-display);
@@ -1696,9 +1450,7 @@
       align-items: center;
     }
 
-    .form-input,
-    .form-select,
-    .form-textarea {
+    .form-input, .form-select, .form-textarea {
       background: var(--bg-canvas);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
@@ -1710,9 +1462,7 @@
       transition: border 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
       border-color: var(--accent-primary);
       box-shadow: 0 0 0 3px var(--accent-glow);
       background: #FFFFFF;
@@ -1779,21 +1529,13 @@
       transition: all 0.18s ease;
     }
 
-    .service-select-card:hover {
-      border-color: var(--border-strong);
-    }
-
+    .service-select-card:hover { border-color: var(--border-strong); }
     .service-select-card.active {
       border-color: var(--accent-primary);
       background: var(--accent-subtle);
     }
 
-    .svc-card-name {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--text-title);
-    }
-
+    .svc-card-name { font-size: 0.82rem; font-weight: 700; color: var(--text-title); }
     .svc-card-price {
       font-family: var(--font-mono);
       font-size: 0.85rem;
@@ -1817,19 +1559,13 @@
       transition: all 0.2s var(--ease-apple);
       margin-top: 8px;
     }
-
-    .modal-btn-primary:hover {
-      background: var(--accent-hover);
-    }
+    .modal-btn-primary:hover { background: var(--accent-hover); }
 
     .modal-btn-danger {
       background: var(--status-danger);
       box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
     }
-
-    .modal-btn-danger:hover {
-      background: #B91C1C;
-    }
+    .modal-btn-danger:hover { background: #B91C1C; }
 
     /* TICKET IMPRESIÓN */
     .thermal-ticket-view {
@@ -1845,16 +1581,8 @@
       text-align: center;
     }
 
-    .ticket-header-biz {
-      font-size: 0.95rem;
-      font-weight: 800;
-    }
-
-    .ticket-divider {
-      border-top: 1px dashed #000000;
-      margin: 10px 0;
-    }
-
+    .ticket-header-biz { font-size: 0.95rem; font-weight: 800; }
+    .ticket-divider { border-top: 1px dashed #000000; margin: 10px 0; }
     .ticket-plate-box {
       font-size: 1.4rem;
       font-weight: 800;
@@ -1869,15 +1597,10 @@
         margin: 0;
         size: auto;
       }
-
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         box-sizing: border-box;
       }
-
-      html,
-      body {
+      html, body {
         background: #FFFFFF !important;
         color: #000000 !important;
         margin: 0 !important;
@@ -1887,11 +1610,9 @@
         min-height: 0 !important;
         overflow: visible !important;
       }
-
-      body> :not(#modalTicket) {
+      body > :not(#modalTicket) {
         display: none !important;
       }
-
       #modalTicket {
         display: block !important;
         position: static !important;
@@ -1906,7 +1627,6 @@
         min-height: 0 !important;
         overflow: visible !important;
       }
-
       #modalTicket .modal-sheet {
         display: block !important;
         position: static !important;
@@ -1922,12 +1642,10 @@
         animation: none !important;
         transform: none !important;
       }
-
       #modalTicket .modal-close-btn,
       #modalTicket .modal-btn-primary {
         display: none !important;
       }
-
       #printableTicketArea {
         display: block !important;
         visibility: visible !important;
@@ -1942,17 +1660,14 @@
         page-break-inside: avoid;
         break-inside: avoid;
       }
-
       #printableTicketArea * {
         visibility: visible !important;
         color: #000000 !important;
       }
-
       .ticket-plate-box {
         border: 2px solid #000000 !important;
         color: #000000 !important;
       }
-
       .ticket-divider {
         border-top: 1px dashed #000000 !important;
       }
@@ -1973,7 +1688,6 @@
       cursor: pointer;
       transition: all 0.2s var(--ease-apple);
     }
-
     .header-install-pwa-btn:hover {
       background: var(--accent-primary);
       color: #FFFFFF;
@@ -1995,7 +1709,6 @@
       border-radius: var(--radius-md);
       scrollbar-width: thin;
     }
-
     .table-responsive .ui-table {
       min-width: 620px;
       margin-top: 0;
@@ -2003,25 +1716,11 @@
 
     /* RESPONSIVE */
     @media (max-width: 1100px) {
-      .kanban-board-wrapper {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .bento-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .caja-summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .caja-columns-split {
-        grid-template-columns: 1fr;
-      }
-
-      .washers-cards-grid {
-        grid-template-columns: 1fr;
-      }
+      .kanban-board-wrapper { grid-template-columns: repeat(2, 1fr); }
+      .bento-grid { grid-template-columns: 1fr; }
+      .caja-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .caja-columns-split { grid-template-columns: 1fr; }
+      .washers-cards-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 860px) {
@@ -2047,9 +1746,7 @@
         min-height: 100dvh;
       }
 
-      .sidebar {
-        display: none;
-      }
+      .sidebar { display: none; }
 
       .main-canvas {
         width: 100%;
@@ -2265,11 +1962,11 @@
         gap: 10px;
       }
 
-      .card-top-bar>div:first-child {
+      .card-top-bar > div:first-child {
         width: 100%;
       }
 
-      .card-top-bar>div:last-child {
+      .card-top-bar > div:last-child {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
@@ -2294,12 +1991,7 @@
       }
 
       /* Inputs sin Auto-zoom en Celulares */
-      .form-input,
-      .form-select,
-      .form-textarea,
-      input,
-      select,
-      textarea {
+      .form-input, .form-select, .form-textarea, input, select, textarea {
         font-size: 16px !important;
       }
 
@@ -2355,7 +2047,7 @@
         font-weight: 800;
       }
     }
-
+  
     /* ==========================================================================
        SISTEMA DE NOTIFICACIONES Y MODAL DE CONFIRMACIÓN WASHQ (ESTILO APPLE/SONNER)
        ========================================================================== */
@@ -2473,7 +2165,6 @@
     #modalConfirmDialog {
       z-index: 10001;
     }
-
     #modalConfirmDialog .modal-sheet {
       max-width: 440px;
       text-align: center;
@@ -2482,7 +2173,6 @@
       border: 1px solid var(--border-card);
       box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
     }
-
     .confirm-dialog-icon-box {
       width: 56px;
       height: 56px;
@@ -2493,7 +2183,6 @@
       justify-content: center;
       transition: all 0.2s var(--ease-apple);
     }
-
     .confirm-dialog-title {
       font-family: var(--font-heading);
       font-size: 1.18rem;
@@ -2502,20 +2191,17 @@
       margin-bottom: 8px;
       letter-spacing: -0.01em;
     }
-
     .confirm-dialog-desc {
       font-size: 0.88rem;
       color: var(--text-muted);
       line-height: 1.45;
       margin-bottom: 24px;
     }
-
     .confirm-dialog-actions {
       display: flex;
       gap: 10px;
       justify-content: center;
     }
-
     .confirm-dialog-cancel-btn {
       flex: 1;
       padding: 12px 16px;
@@ -2528,11 +2214,9 @@
       cursor: pointer;
       transition: all 0.15s var(--ease-apple);
     }
-
     .confirm-dialog-cancel-btn:hover {
       background: var(--border-subtle);
     }
-
     .confirm-dialog-action-btn {
       flex: 1;
       padding: 12px 16px;
@@ -2545,7 +2229,7 @@
       transition: all 0.15s var(--ease-apple);
     }
 
-
+  
     /* Pantalla de Bloqueo por Inactividad */
     .lock-screen-overlay {
       position: fixed;
@@ -2562,7 +2246,6 @@
       justify-content: center;
       padding: 20px;
     }
-
     .lock-screen-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-card);
@@ -2574,7 +2257,6 @@
       text-align: center;
       animation: modalSlideUp 0.28s var(--ease-apple);
     }
-
     .lock-icon-circle {
       width: 56px;
       height: 56px;
@@ -2586,7 +2268,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .lock-title {
       font-family: var(--font-heading);
       font-size: 1.25rem;
@@ -2595,14 +2276,12 @@
       margin-bottom: 4px;
       letter-spacing: -0.01em;
     }
-
     .lock-subtitle {
       font-size: 0.84rem;
       color: var(--text-muted);
       line-height: 1.45;
       margin-bottom: 14px;
     }
-
     .lock-user-pill {
       display: inline-flex;
       align-items: center;
@@ -2615,9 +2294,9 @@
       color: var(--text-title);
       margin-bottom: 12px;
     }
+
   </style>
 </head>
-
 <body>
 
   <!-- ==========================================================================
@@ -2625,44 +2304,31 @@
        ========================================================================== -->
   <div class="auth-viewport" id="authScreen" style="display: flex;">
     <div class="auth-card">
-
+      
       <!-- Paso 1: Ingreso por Código Único de Sede (Sin exposición de competidores) -->
       <div id="authStepTenant" style="display: block;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
-          <div class="auth-brand-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" style="margin-right: 4px;">
-              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
-            </svg>WashQ by Kodiquett</div>
+          <div class="auth-brand-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>WashQ by Kodiquett</div>
           <!-- <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Multi-Sede</span> -->
         </div>
         <h2 class="auth-title ">Iniciar Sesión</h2>
         <p class="auth-subtitle">Digita el código único asignado a tu sede para acceder.</p>
 
         <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label"
-            style="justify-content: center; font-size: 0.82rem; font-weight: 700; color: var(--text-title); margin-bottom: 8px;">Código
-            de Sede</label>
-          <input type="text" id="tenantCodeInput" class="form-input" placeholder="Ej: CALI-01"
-            style="text-align: center; font-family: var(--font-mono); font-size: 1.3rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px;"
-            autocomplete="off" autofocus onkeydown="if(event.key==='Enter') submitTenantCode()">
-          <p id="tenantCodeError"
-            style="color: var(--status-danger); font-size: 0.78rem; text-align: center; display: none; margin-top: 8px; font-weight: 600;">
-            Código no encontrado o inactivo. Contacta a la administración.</p>
+          <label class="form-label" style="justify-content: center; font-size: 0.82rem; font-weight: 700; color: var(--text-title); margin-bottom: 8px;">Código de Sede</label>
+          <input type="text" id="tenantCodeInput" class="form-input" placeholder="Ej: CALI-01" style="text-align: center; font-family: var(--font-mono); font-size: 1.3rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px;" autocomplete="off" autofocus onkeydown="if(event.key==='Enter') submitTenantCode()">
+          <p id="tenantCodeError" style="color: var(--status-danger); font-size: 0.78rem; text-align: center; display: none; margin-top: 8px; font-weight: 600;">Código no encontrado o inactivo. Contacta a la administración.</p>
         </div>
 
-        <div id="authLastTenantBox"
-          style="display: none; margin-bottom: 16px; background: var(--bg-canvas); padding: 10px 14px; border-radius: var(--radius-md); border: 1px dashed var(--border-strong); text-align: center;">
-          <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Datos recientes en este equipo:
-          </p>
-          <button type="button" id="btnQuickLastTenant" class="btn-card-action"
-            style="font-weight: 700; color: var(--accent-primary); border-color: var(--accent-border); background: var(--accent-subtle); padding: 6px 14px; font-size: 0.8rem; cursor: pointer;">
+        <div id="authLastTenantBox" style="display: none; margin-bottom: 16px; background: var(--bg-canvas); padding: 10px 14px; border-radius: var(--radius-md); border: 1px dashed var(--border-strong); text-align: center;">
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Datos recientes en este equipo:</p>
+          <button type="button" id="btnQuickLastTenant" class="btn-card-action" style="font-weight: 700; color: var(--accent-primary); border-color: var(--accent-border); background: var(--accent-subtle); padding: 6px 14px; font-size: 0.8rem; cursor: pointer;">
             Usar sede anterior
           </button>
         </div>
 
         <div style="margin-top: 18px;">
-          <button type="button" class="modal-btn-primary" onclick="submitTenantCode()"
-            style="width: 100%; padding: 12px; margin-top: 0;">Ingresar &rarr;</button>
+          <button type="button" class="modal-btn-primary" onclick="submitTenantCode()" style="width: 100%; padding: 12px; margin-top: 0;">Ingresar &rarr;</button>
         </div>
       </div>
 
@@ -2670,23 +2336,13 @@
       <div id="authStepProfile" style="display: none;">
         <div class="active-tenant-header-strip">
           <div class="active-tenant-summary">
-            <span
-              style="display: flex; align-items: center; justify-content: center; color: var(--accent-primary);"><svg
-                width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg></span>
+            <span style="display: flex; align-items: center; justify-content: center; color: var(--accent-primary);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
             <div>
-              <strong style="font-size: 0.9rem; color: var(--text-title);" id="authActiveTenantName">Autolavado Cali
-                Express</strong>
-              <p style="font-size: 0.72rem; color: var(--text-muted);" id="authActiveTenantLocation">Cali &bull; CALI-01
-              </p>
+              <strong style="font-size: 0.9rem; color: var(--text-title);" id="authActiveTenantName">Autolavado Cali Express</strong>
+              <p style="font-size: 0.72rem; color: var(--text-muted);" id="authActiveTenantLocation">Cali &bull; CALI-01</p>
             </div>
           </div>
-          <a href="javascript:void(0)" onclick="backToTenantStep()"
-            style="font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; text-decoration: none;">&larr;
-            Cambiar código</a>
+          <a href="javascript:void(0)" onclick="backToTenantStep()" style="font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; text-decoration: none;">&larr; Cambiar código</a>
         </div>
 
         <h3 class="auth-title" style="font-size: 1.35rem;">¿Quién está ingresando?</h3>
@@ -2695,46 +2351,29 @@
         <!-- Selector de Perfil -->
         <div class="roles-selection-grid">
           <div class="role-login-card selected" id="authRoleCard-admin" onclick="selectLoginRole('admin')">
-            <span class="role-card-icon" style="color: var(--accent-primary);"><svg width="22" height="22"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg></span>
+            <span class="role-card-icon" style="color: var(--accent-primary);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span>
             <div class="role-card-title">Administrador</div>
             <!-- <div class="role-card-desc">Control total y finanzas</div> -->
           </div>
 
           <div class="role-login-card" id="authRoleCard-cajero" onclick="selectLoginRole('cajero')">
-            <span class="role-card-icon" style="color: #2563EB;"><svg width="22" height="22" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                <line x1="2" y1="10" x2="22" y2="10"></line>
-              </svg></span>
+            <span class="role-card-icon" style="color: #2563EB;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg></span>
             <div class="role-card-title">Cajero</div>
             <!-- <div class="role-card-desc">Ingresos y cuadre de caja</div> -->
           </div>
 
           <div class="role-login-card" id="authRoleCard-operario" onclick="selectLoginRole('operario')">
-            <span class="role-card-icon" style="color: #059669;"><svg width="22" height="22" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg></span>
+            <span class="role-card-icon" style="color: #059669;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
             <div class="role-card-title">Operario</div>
             <!-- <div class="role-card-desc">Zona de lavado y ganancias</div> -->
           </div>
         </div>
 
         <!-- Selector específico para Operario -->
-        <div id="authOperarioPickerGroup"
-          style="display: none; margin-bottom: 14px; background: var(--bg-canvas); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
-          <label class="form-label"
-            style="font-size: 0.82rem; font-weight: 700; color: var(--text-title); margin-bottom: 6px;">Selecciona tu
-            nombre</label>
-          <select id="authWasherSelect" class="form-select" style="font-weight: 600; padding: 10px;"
-            onchange="onAuthWasherSelectChange()"></select>
-          <p style="font-size: 0.73rem; color: var(--text-muted); margin-top: 6px;">Ingresa tu PIN personal de 4
-            dígitos.</p>
+        <div id="authOperarioPickerGroup" style="display: none; margin-bottom: 14px; background: var(--bg-canvas); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+          <label class="form-label" style="font-size: 0.82rem; font-weight: 700; color: var(--text-title); margin-bottom: 6px;">Selecciona tu nombre</label>
+          <select id="authWasherSelect" class="form-select" style="font-weight: 600; padding: 10px;" onchange="onAuthWasherSelectChange()"></select>
+          <p style="font-size: 0.73rem; color: var(--text-muted); margin-top: 6px;">Ingresa tu PIN personal de 4 dígitos.</p>
         </div>
 
         <!-- Entrada de PIN (Para Admin y Cajero) -->
@@ -2742,11 +2381,8 @@
           <label class="form-label" style="justify-content: center; font-size: 0.8rem; font-weight: 600;">
             <span>Ingresa el PIN de seguridad</span>
           </label>
-          <input type="password" id="authPinInput" class="pin-input-field" maxlength="4" placeholder="••••"
-            autocomplete="off" onkeydown="if(event.key==='Enter') submitAuthLogin()">
-          <p id="authPinError"
-            style="color: var(--status-danger); font-size: 0.78rem; text-align: center; display: none; font-weight: 600;">
-            PIN incorrecto. Intenta nuevamente.</p>
+          <input type="password" id="authPinInput" class="pin-input-field" maxlength="4" placeholder="••••" autocomplete="off" onkeydown="if(event.key==='Enter') submitAuthLogin()">
+          <p id="authPinError" style="color: var(--status-danger); font-size: 0.78rem; text-align: center; display: none; font-weight: 600;">PIN incorrecto. Intenta nuevamente.</p>
 
           <div class="numeric-keypad">
             <button type="button" class="keypad-btn" onclick="pressPinKey('1')">1</button>
@@ -2764,16 +2400,14 @@
           </div>
 
           <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
-            <label
-              style="display: flex; align-items: center; gap: 6px; font-size: 0.76rem; color: var(--text-muted); cursor: pointer;">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.76rem; color: var(--text-muted); cursor: pointer;">
               <input type="checkbox" id="rememberSessionCheck" checked>
               <span>Recordar sesión en este equipo</span>
             </label>
             <!-- <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);" id="pinHintText">PIN Demo: 1234</span> -->
           </div>
 
-          <button type="button" class="modal-btn-primary" onclick="submitAuthLogin()"
-            style="padding: 12px; margin-top: 12px;">Ingresar &rarr;</button>
+          <button type="button" class="modal-btn-primary" onclick="submitAuthLogin()" style="padding: 12px; margin-top: 12px;">Ingresar &rarr;</button>
         </div>
       </div>
 
@@ -2787,9 +2421,7 @@
     <aside class="sidebar">
       <a href="#" class="brand-mark">
         <div class="brand-logo-icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-          </svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
         </div>
         <div class="brand-title">Wash<span>Q</span></div>
       </a>
@@ -2799,12 +2431,7 @@
         <li class="nav-item active" id="nav-overview">
           <button onclick="switchView('overview')">
             <div class="nav-left">
-              <svg viewBox="0 0 24 24">
-                <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-                <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-                <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
-                <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
-              </svg>
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
               <span>Resumen</span>
             </div>
           </button>
@@ -2812,10 +2439,7 @@
         <li class="nav-item" id="nav-patio">
           <button onclick="switchView('patio')">
             <div class="nav-left">
-              <svg viewBox="0 0 24 24">
-                <rect x="1" y="4" width="22" height="16" rx="2"></rect>
-                <line x1="1" y1="10" x2="23" y2="10"></line>
-              </svg>
+              <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
               <span>Zona de Lavado</span>
             </div>
             <span class="nav-badge" id="badgeActivePatio">0</span>
@@ -2824,10 +2448,7 @@
         <li class="nav-item" id="nav-caja">
           <button onclick="switchView('caja')">
             <div class="nav-left">
-              <svg viewBox="0 0 24 24">
-                <line x1="12" y1="1" x2="12" y2="23"></line>
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
               <span>Cuadre de Caja</span>
             </div>
           </button>
@@ -2835,12 +2456,7 @@
         <li class="nav-item" id="nav-comisiones">
           <button onclick="switchView('comisiones')">
             <div class="nav-left">
-              <svg viewBox="0 0 24 24">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
               <span>Comisiones</span>
             </div>
           </button>
@@ -2848,10 +2464,7 @@
         <li class="nav-item" id="nav-historial">
           <button onclick="switchView('historial')">
             <div class="nav-left">
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
               <span>Historial</span>
             </div>
           </button>
@@ -2859,12 +2472,7 @@
         <li class="nav-item" id="nav-config">
           <button onclick="switchView('config')">
             <div class="nav-left">
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path
-                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                </path>
-              </svg>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
               <span>Tarifas y Ajustes</span>
             </div>
           </button>
@@ -2902,65 +2510,39 @@
         <div class="header-titles">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <h1 id="viewMainHeading">Resumen General</h1>
-            <span class="admin-pill-status" id="adminControlBadge"><svg width="13" height="13" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2.4" style="margin-right: 4px;">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg>Admin</span>
-            <span class="admin-pill-status" id="headerTenantBadge"
-              style="cursor: pointer; background: var(--bg-surface-subtle); color: var(--text-title); border-color: var(--border-subtle);"
-              onclick="logoutTenant()" title="Clic para salir o cambiar de sede"><svg width="13" height="13"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                stroke-linejoin="round" style="margin-right: 4px;">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg><strong id="headerTenantName">Autolavado Cali Express</strong> &bull; <span id="headerTenantCode"
-                style="font-family: var(--font-mono);">CALI-01</span></span>
+            <span class="admin-pill-status" id="adminControlBadge"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="margin-right: 4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Administrador</span>
+            <span class="admin-pill-status" id="headerTenantBadge" style="cursor: pointer; background: var(--bg-surface-subtle); color: var(--text-title); border-color: var(--border-subtle);" onclick="logoutTenant()" title="Clic para salir o cambiar de sede"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><strong id="headerTenantName">Autolavado Cali Express</strong> &bull; <span id="headerTenantCode" style="font-family: var(--font-mono);">CALI-01</span></span>
           </div>
           <p id="currentLiveDate">Cali, Colombia &bull; Sede CALI-01</p>
         </div>
 
         <div class="header-actions">
           <button class="header-install-pwa-btn" id="btnPwaInstall" onclick="installPWA()" style="display: none;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
             <span>Instalar App</span>
           </button>
 
           <button class="btn-quick-new" onclick="openNewOrderModal()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             <span>Ingresar Vehículo</span>
             <span class="kbd-shortcut" style="background: rgba(255,255,255,0.25); color: #fff;">F2</span>
           </button>
 
           <button class="search-pill-btn" onclick="focusSearch()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             <span>Buscar placa</span>
           </button>
 
-          <!-- <div class="role-badge-btn" onclick="openRolePinModal()">
+          <div class="role-badge-btn" onclick="openRolePinModal()">
             <div class="role-avatar" id="headerRoleIcon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
             <div class="role-text-wrap">
               <span class="role-text-name" id="headerRoleName">Super Admin</span>
               <span class="role-text-sub">Acceso total</span>
             </div>
-          </div> -->
+          </div>
 
-          <button class="search-pill-btn" onclick="logoutTenant()" title="Cerrar sesión de esta sede"
-            style="color: var(--status-danger); border-color: rgba(220, 38, 38, 0.2); background: #FEF2F2;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
+          <button class="search-pill-btn" onclick="logoutTenant()" title="Cerrar sesión de esta sede" style="color: var(--status-danger); border-color: rgba(220, 38, 38, 0.2); background: #FEF2F2;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             <span>Salir</span>
           </button>
         </div>
@@ -2971,7 +2553,7 @@
         <section class="hero-metric-stage">
           <div class="hero-art-backdrop"></div>
           <div class="hero-metric-header">
-            <span class="metric-eyebrow" id="overviewEyebrow">&bull; Ingresos totales hoy </span>
+            <span class="metric-eyebrow" id="overviewEyebrow">Ingresos totales hoy &bull; Moneda COP</span>
             <div class="time-segmented-control">
               <button class="time-tab active" onclick="switchPeriod(this, 'hoy')">Hoy</button>
               <button class="time-tab" onclick="switchPeriod(this, 'semana')">Semana</button>
@@ -2982,10 +2564,7 @@
           <div class="hero-metric-giant">
             <div class="giant-number" id="overviewGiantTotal">$ 0</div>
             <div class="giant-badge-trend positive" id="overviewTrendBadge">
-              <svg id="overviewTrendIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="3">
-                <polyline points="18 15 12 9 6 15"></polyline>
-              </svg>
+              <svg id="overviewTrendIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
               <span id="overviewTrendText">+0.0% vs ayer</span>
             </div>
           </div>
@@ -3008,35 +2587,28 @@
 
         <!-- Bento Grid -->
         <div class="bento-grid">
-
           <div class="bento-card">
             <div class="card-top-bar">
               <div>
-                <h2 class="card-title">Turnos en Zona de Lavado</h2>
-                <p class="card-subtitle">Vehículos activos</p>
+                <h2 class="card-title">Ingresos por Forma de Pago</h2>
+                <p class="card-subtitle">Cobros registrados hoy en caja y bancos</p>
               </div>
-              <button class="card-action-icon" onclick="switchView('patio')">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+              <button class="card-action-icon" onclick="switchView('caja')" title="Ver arqueo en Caja">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
               </button>
             </div>
-            <div class="live-queue-list" id="overviewMiniQueueList"></div>
+            <div class="payments-meter-bar" id="overviewPaymentMeterBar"></div>
+            <div class="payments-breakdown-list" id="overviewPaymentsBreakdownList"></div>
           </div>
-
 
           <div class="bento-card bento-card-dark">
             <div class="card-top-bar">
               <div>
-                <h2 class="card-title">Rendimiento de Zonas de lavado</h2>
+                <h2 class="card-title">Rendimiento de Bahías</h2>
                 <p class="card-subtitle">Monitoreo de flujo y tiempos</p>
               </div>
               <button class="card-action-icon" onclick="switchView('patio')">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
               </button>
             </div>
             <div class="dark-metric-headline">
@@ -3044,48 +2616,12 @@
               <div class="dark-metric-note">Tiempo promedio de lavado: 25 minutos</div>
             </div>
             <div class="bay-matrix-chart">
-              <div class="matrix-column">
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block"></div>
-                <div class="matrix-block"></div>
-                <div class="matrix-block"></div>
-              </div>
-              <div class="matrix-column">
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block"></div>
-                <div class="matrix-block"></div>
-              </div>
-              <div class="matrix-column">
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block"></div>
-              </div>
-              <div class="matrix-column">
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-              </div>
-              <div class="matrix-column">
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block peak"></div>
-              </div>
-              <div class="matrix-column">
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block active"></div>
-                <div class="matrix-block"></div>
-              </div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block"></div><div class="matrix-block"></div><div class="matrix-block"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block"></div><div class="matrix-block"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block peak"></div></div>
+              <div class="matrix-column"><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block active"></div><div class="matrix-block"></div></div>
             </div>
             <div class="matrix-labels">
               <span>8:00 AM</span>
@@ -3098,18 +2634,14 @@
           <div class="bento-card">
             <div class="card-top-bar">
               <div>
-                <h2 class="card-title">Ingresos por Forma de Pago</h2>
-                <p class="card-subtitle">Cobros registrados hoy en caja y bancos</p>
+                <h2 class="card-title">Turnos en Zona de Lavado</h2>
+                <p class="card-subtitle">Vehículos activos</p>
               </div>
-              <button class="card-action-icon" onclick="switchView('caja')" title="Ver arqueo en Caja">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+              <button class="card-action-icon" onclick="switchView('patio')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
               </button>
             </div>
-            <div class="payments-meter-bar" id="overviewPaymentMeterBar"></div>
-            <div class="payments-breakdown-list" id="overviewPaymentsBreakdownList"></div>
+            <div class="live-queue-list" id="overviewMiniQueueList"></div>
           </div>
 
           <div class="bento-card">
@@ -3119,10 +2651,7 @@
                 <p class="card-subtitle">Liquidación automática acumulada</p>
               </div>
               <button class="card-action-icon" onclick="switchView('comisiones')">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
               </button>
             </div>
             <div class="washer-treemap-container" id="overviewTreemapContainer"></div>
@@ -3209,17 +2738,10 @@
                 <p class="card-subtitle">Efectivo y transferencias en tiempo real</p>
               </div>
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn-card-action"
-                  style="background: #25D366; color: #FFFFFF; font-weight: 700; border: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(37,211,102,0.25);"
-                  onclick="sendCajaReportWhatsApp()">
-                  <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
-                      <line x1="22" y1="2" x2="11" y2="13"></line>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>Enviar Cuadre al Dueño</span>
+                <button class="btn-card-action" style="background: #25D366; color: #FFFFFF; font-weight: 700; border: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(37,211,102,0.25);" onclick="sendCajaReportWhatsApp()">
+                  <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>Enviar Cuadre al Dueño</span>
                 </button>
-                <button class="btn-card-action" onclick="exportCajaReportExcel()"
-                  title="Descargar reporte en formato Excel con filtros y formato">📊 Exportar a Excel (.xlsx)</button>
+                <button class="btn-card-action" onclick="exportCajaReportExcel()" title="Descargar reporte en formato Excel con filtros y formato">📊 Exportar a Excel (.xlsx)</button>
               </div>
             </div>
             <div class="payments-breakdown-list" id="cajaPaymentMethodsBreakdown"></div>
@@ -3233,16 +2755,8 @@
                 <p class="card-subtitle">Control de egresos e insumos</p>
               </div>
               <div style="display: flex; gap: 8px;">
-                <button class="btn-card-action" style="font-size: 0.75rem;" onclick="openCategoryManagerModal()"><svg
-                    width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path
-                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                    </path>
-                  </svg>Categorías</button>
-                <button class="btn-quick-new" style="padding: 5px 12px; font-size: 0.78rem;"
-                  onclick="openExpenseModal()">+ Nuevo Gasto</button>
+                <button class="btn-card-action" style="font-size: 0.75rem;" onclick="openCategoryManagerModal()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>Categorías</button>
+                <button class="btn-quick-new" style="padding: 5px 12px; font-size: 0.78rem;" onclick="openExpenseModal()">+ Nuevo Gasto</button>
               </div>
             </div>
             <div class="table-responsive">
@@ -3267,8 +2781,7 @@
         <div class="card-top-bar" style="margin-bottom: 20px;">
           <div>
             <h2 class="card-title" id="washersViewTitle" style="font-size: 1.3rem;">Liquidación de Operarios</h2>
-            <p class="card-subtitle" id="washersViewSubtitle">Registra operarios, actualiza datos o retira personal del
-              turno.</p>
+            <p class="card-subtitle" id="washersViewSubtitle">Registra operarios, actualiza datos o retira personal del turno.</p>
           </div>
           <button class="btn-quick-new" id="btnAddNewWasher" onclick="openNewWasherModal()">+ Nuevo Operario</button>
         </div>
@@ -3280,13 +2793,9 @@
       <div class="view-container" id="view-historial">
         <div class="card-top-bar" style="margin-bottom: 16px;">
           <div style="display: flex; gap: 12px; align-items: center; width: 100%; max-width: 380px;">
-            <input type="text" id="historySearchInput" class="form-input"
-              placeholder="Buscar por placa, servicio, operario..." style="width: 100%; max-width: 320px;"
-              oninput="filterHistory()">
+            <input type="text" id="historySearchInput" class="form-input" placeholder="Buscar por placa, servicio, operario..." style="width: 100%; max-width: 320px;" oninput="filterHistory()">
           </div>
-          <button class="btn-card-action" onclick="exportHistoryExcel()"
-            title="Descargar auditoría completa en Excel nativo con filtros de búsqueda">📊 Exportar a Excel
-            (.xlsx)</button>
+          <button class="btn-card-action" onclick="exportHistoryExcel()" title="Descargar auditoría completa en Excel nativo con filtros de búsqueda">📊 Exportar a Excel (.xlsx)</button>
         </div>
 
         <div class="bento-card" style="padding: 16px;">
@@ -3314,65 +2823,42 @@
       <!-- VISTA 6: CONFIGURACIÓN & ADMINISTRACIÓN TOTAL -->
       <div class="view-container" id="view-config">
         <!-- Control y Versión PWA (Visible inmediatamente en primer plano) -->
-        <div class="caja-panel"
-          style="margin-bottom: 18px; border: 1.5px solid var(--accent-primary); background: linear-gradient(135deg, rgba(234, 88, 12, 0.05) 0%, rgba(37, 39, 54, 0.02) 100%);">
-          <div
-            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+        <div class="caja-panel" style="margin-bottom: 18px; border: 1.5px solid var(--accent-primary); background: linear-gradient(135deg, rgba(234, 88, 12, 0.05) 0%, rgba(37, 39, 54, 0.02) 100%);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div
-                style="width: 38px; height: 38px; border-radius: 10px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem; flex-shrink: 0;">
-                ⚡</div>
+              <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem; flex-shrink: 0;">⚡</div>
               <div>
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                  <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--text-title); margin: 0;">Versión del
-                    Sistema WashQ</h3>
-                  <span class="badge-status-pwa"
-                    style="background: var(--accent-primary); color: #fff; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.76rem; font-weight: 800; font-family: var(--font-mono);">v4.4.0</span>
+                  <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--text-title); margin: 0;">Versión del Sistema WashQ</h3>
+                  <span class="badge-status-pwa" style="background: var(--accent-primary); color: #fff; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.76rem; font-weight: 800; font-family: var(--font-mono);">v4.5.0</span>
                 </div>
-                <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">Compilación Oficial PWA
-                  &bull; Optimizado para Samsung Galaxy S26 Ultra</p>
+                <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">Compilación Oficial PWA &bull; Optimizado para Samsung Galaxy S26 Ultra</p>
               </div>
             </div>
-            <span
-              style="font-size: 0.74rem; font-weight: 700; color: var(--status-success); background: var(--status-success-bg); border: 1px solid var(--status-success); padding: 4px 10px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 5px;">
-              <span
-                style="width: 7px; height: 7px; border-radius: 50%; background: var(--status-success); display: inline-block;"></span>
+            <span style="font-size: 0.74rem; font-weight: 700; color: var(--status-success); background: var(--status-success-bg); border: 1px solid var(--status-success); padding: 4px 10px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 5px;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--status-success); display: inline-block;"></span>
               App Sincronizada
             </span>
           </div>
 
-          <div
-            style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; font-size: 0.78rem;">
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; font-size: 0.78rem;">
             <div>
-              <span
-                style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Versión
-                Actual</span>
-              <strong style="color: var(--text-title); font-family: var(--font-mono); font-size: 0.88rem;">v4.4.0
-                (14-Nov-2026)</strong>
+              <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Versión Actual</span>
+              <strong style="color: var(--text-title); font-family: var(--font-mono); font-size: 0.88rem;">v4.5.0 (14-Nov-2026)</strong>
             </div>
             <div>
-              <span
-                style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Caché
-                PWA Activa</span>
-              <strong style="color: var(--accent-primary); font-family: var(--font-mono); font-size: 0.88rem;"
-                id="lblActiveCacheVersion">washq-v4.4.0-s26</strong>
+              <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Caché PWA Activa</span>
+              <strong style="color: var(--accent-primary); font-family: var(--font-mono); font-size: 0.88rem;" id="lblActiveCacheVersion">washq-v4.5.0-s26</strong>
             </div>
             <div>
-              <span
-                style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Estado
-                del Motor</span>
-              <strong style="color: var(--status-success); font-size: 0.85rem;" id="lblPwaEngineStatus">⚡ 100% Offline
-                Soberana</strong>
+              <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Estado del Motor</span>
+              <strong style="color: var(--status-success); font-size: 0.85rem;" id="lblPwaEngineStatus">⚡ 100% Offline Soberana</strong>
             </div>
           </div>
 
           <div style="margin-top: 12px;">
-            <button type="button" class="btn-card-action"
-              style="width: 100%; min-height: 42px; font-weight: 700; background: var(--accent-subtle); color: var(--accent-primary); border: 1px solid var(--accent-border); cursor: pointer; border-radius: var(--radius-md); font-size: 0.84rem; display: flex; align-items: center; justify-content: center; gap: 8px;"
-              onclick="forcePwaCacheRefresh()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-              </svg>
+            <button type="button" class="btn-card-action" style="width: 100%; min-height: 42px; font-weight: 700; background: var(--accent-subtle); color: var(--accent-primary); border: 1px solid var(--accent-border); cursor: pointer; border-radius: var(--radius-md); font-size: 0.84rem; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="forcePwaCacheRefresh()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
               <span>Forzar Actualización Inmediata y Limpiar Caché</span>
             </button>
           </div>
@@ -3394,9 +2880,7 @@
                 <option value="mixto">Mixto (Carros y Motos)</option>
                 <option value="solo_motos">Exclusivo Motos (Solo Motocicletas)</option>
               </select>
-              <small style="color: var(--text-muted); font-size: 0.72rem; display: block; margin-top: 4px;">En sedes
-                exclusivas de motos el ingreso oculta selectores de carros y fija automáticamente tarifas de
-                moto.</small>
+              <small style="color: var(--text-muted); font-size: 0.72rem; display: block; margin-top: 4px;">En sedes exclusivas de motos el ingreso oculta selectores de carros y fija automáticamente tarifas de moto.</small>
             </div>
             <div class="form-group">
               <label class="form-label">Dirección / Sede</label>
@@ -3424,25 +2908,19 @@
                 <option value="15">Bloquear tras 15 minutos de inactividad</option>
                 <option value="0">Desactivar bloqueo automático</option>
               </select>
-              <p style="font-size: 0.73rem; color: var(--text-muted); margin-top: 4px;">Protege el terminal de caja con
-                PIN si el personal se aleja del mostrador.</p>
+              <p style="font-size: 0.73rem; color: var(--text-muted); margin-top: 4px;">Protege el terminal de caja con PIN si el personal se aleja del mostrador.</p>
             </div>
 
             <button class="modal-btn-primary" onclick="saveBusinessConfig()">Guardar Información</button>
 
-            <!-- Sección Gestión de Sedes (Multi-Sede según Plan) -->
-            <div id="adminSedesSection"
-              style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
+            <!-- Sección Multi-Sede (Exclusivo Administrador) -->
+            <div id="adminSedesSection" style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
               <div class="card-top-bar" style="margin-bottom: 12px;">
                 <div>
-                  <h4
-                    style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 800; color: var(--text-title); margin-bottom: 2px;">
-                    Gestión de Sedes</h4>
-                  <p id="sedesSectionSubtitle" style="font-size: 0.78rem; color: var(--text-muted);">Solo el administrador puede registrar y
-                    supervisar sedes</p>
+                  <h4 style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 800; color: var(--text-title); margin-bottom: 2px;">Gestión de Sedes (Multi-Sede)</h4>
+                  <p style="font-size: 0.78rem; color: var(--text-muted);">Solo el administrador puede registrar y supervisar sedes</p>
                 </div>
-                <button type="button" id="btnNuevaSede" class="btn-card-action btn-card-primary" onclick="openCreateTenantModal()"
-                  style="font-size: 0.8rem; padding: 6px 12px; display: none;">+ Nueva Sede</button>
+                <button type="button" class="btn-card-action btn-card-primary" onclick="openCreateTenantModal()" style="font-size: 0.8rem; padding: 6px 12px;">+ Nueva Sede</button>
               </div>
               <div id="adminSedesList" style="display: flex; flex-direction: column; gap: 8px;">
                 <!-- Lista dinámica de sedes -->
@@ -3456,51 +2934,20 @@
                   <h4 style="font-size: 0.95rem; font-weight: 700;">Tipos de Gasto Configurados</h4>
                   <p class="card-subtitle">Añade o elimina tipos de salida de dinero</p>
                 </div>
-                <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptNewCategory()">+ Añadir
-                  Tipo</button>
+                <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptNewCategory()">+ Añadir Tipo</button>
               </div>
               <div id="configCategoriesList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;"></div>
-            </div>
-
-            <!-- Licencia del Sistema y Plan Activo -->
-            <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
-              <div class="card-top-bar" style="margin-bottom: 10px;">
-                <div>
-                  <h4 style="font-size: 0.95rem; font-weight: 700;">Licencia del Sistema</h4>
-                  <p class="card-subtitle" id="licensePlanDescription">Plan Élite Vitalicio (Todo Incluido)</p>
-                </div>
-                <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptActivateLicense()">Cambiar / Activar Licencia</button>
-              </div>
-              <div id="licenseBadgeContainer" style="display: flex; gap: 8px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
-                <span id="licensePlanBadge" style="font-size: 0.75rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.2);">Plan Élite Activo</span>
-                <span id="licenseClientBadge" style="font-size: 0.75rem; color: var(--text-muted);">Licencia Vitalicia</span>
-              </div>
             </div>
 
             <!-- Copia de Seguridad -->
             <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
               <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 8px;">Copia de Seguridad Local</h4>
-              <p class="card-subtitle" style="margin-bottom: 12px;">Descarga un archivo con toda tu información o
-                restaura una copia en otro equipo.</p>
+              <p class="card-subtitle" style="margin-bottom: 12px;">Descarga un archivo con toda tu información o restaura una copia en otro equipo.</p>
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn-card-action" onclick="exportBackupJSON()"><svg width="14" height="14"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                    stroke-linejoin="round" style="margin-right: 5px;">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>Descargar Copia de Seguridad</button>
-                <input type="file" id="importBackupFileInput" accept=".json" style="display: none;"
-                  onchange="importBackupJSON(event)">
-                <button class="btn-card-action" onclick="document.getElementById('importBackupFileInput').click()"><svg
-                    width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                  </svg>Restaurar Copia</button>
-                <button class="btn-card-action" style="color: var(--status-danger);"
-                  onclick="resetDemoData()">Restablecer Demos</button>
+                <button class="btn-card-action" onclick="exportBackupJSON()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Descargar Copia de Seguridad</button>
+                <input type="file" id="importBackupFileInput" accept=".json" style="display: none;" onchange="importBackupJSON(event)">
+                <button class="btn-card-action" onclick="document.getElementById('importBackupFileInput').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>Restaurar Copia</button>
+                <button class="btn-card-action" style="color: var(--status-danger);" onclick="resetDemoData()">Restablecer Demos</button>
               </div>
             </div>
 
@@ -3514,8 +2961,7 @@
                 <h3 class="card-title">Servicios y Tarifas</h3>
                 <p class="card-subtitle">Precios en pesos colombianos, tiempos de lavado y comisiones</p>
               </div>
-              <button class="btn-quick-new" style="padding: 5px 12px; font-size: 0.78rem;"
-                onclick="openNewServiceModal()">+ Añadir Tarifa</button>
+              <button class="btn-quick-new" style="padding: 5px 12px; font-size: 0.78rem;" onclick="openNewServiceModal()">+ Añadir Tarifa</button>
             </div>
             <div class="table-responsive">
               <table class="ui-table">
@@ -3539,8 +2985,7 @@
                   <h4 style="font-size: 0.95rem; font-weight: 700;">Métodos de Pago Habilitados</h4>
                   <p class="card-subtitle">Administra los canales de recaudo</p>
                 </div>
-                <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptNewPaymentMethod()">+ Añadir
-                  Método</button>
+                <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptNewPaymentMethod()">+ Añadir Método</button>
               </div>
               <div class="table-responsive">
                 <table class="ui-table">
@@ -3560,9 +3005,8 @@
       </div>
 
       <!-- Footer con Versión para Control -->
-      <footer
-        style="padding: 24px 16px 12px 16px; text-align: center; font-size: 0.74rem; color: var(--text-muted); font-family: var(--font-mono); border-top: 1px solid var(--border-subtle); margin-top: 20px;">
-        WashQ &bull; Versión <strong>v4.4.0</strong> (Build 2026.11.14 Móvil S26) &bull; 100% Offline
+      <footer style="padding: 24px 16px 12px 16px; text-align: center; font-size: 0.74rem; color: var(--text-muted); font-family: var(--font-mono); border-top: 1px solid var(--border-subtle); margin-top: 20px;">
+        WashQ &bull; Versión <strong>v4.5.0</strong> (Build 2026.11.14 Móvil S26) &bull; 100% Offline
       </footer>
 
     </main>
@@ -3592,8 +3036,7 @@
         </div>
         <div style="flex:1;">
           <label class="form-label">Código Único</label>
-          <input type="text" id="newTenantCode" class="form-input" placeholder="Ej: CALI-02"
-            style="font-family: var(--font-mono); font-weight: 800; text-transform: uppercase;">
+          <input type="text" id="newTenantCode" class="form-input" placeholder="Ej: CALI-02" style="font-family: var(--font-mono); font-weight: 800; text-transform: uppercase;">
         </div>
       </div>
 
@@ -3612,12 +3055,10 @@
 
       <div class="form-group">
         <label class="form-label">PIN Administrador (4 dígitos)</label>
-        <input type="password" id="newTenantPin" class="form-input" placeholder="1234" maxlength="4" value="1234"
-          style="font-family: var(--font-mono); text-align: center; letter-spacing: 0.2em;">
+        <input type="password" id="newTenantPin" class="form-input" placeholder="1234" maxlength="4" value="1234" style="font-family: var(--font-mono); text-align: center; letter-spacing: 0.2em;">
       </div>
 
-      <button type="button" class="modal-btn-primary" onclick="saveNewTenant()"
-        style="padding: 12px; margin-top: 10px;">Crear Sede e Ingresar &rarr;</button>
+      <button type="button" class="modal-btn-primary" onclick="saveNewTenant()" style="padding: 12px; margin-top: 10px;">Crear Sede e Ingresar &rarr;</button>
     </div>
   </div>
 
@@ -3630,44 +3071,19 @@
       <div class="form-group">
         <label class="form-label">Tipo de Vehículo</label>
         <div class="vehicle-type-selector" id="orderVehicleTypeSelector">
-          <button type="button" class="vtype-btn active" data-vtype="carro"
-            onclick="selectVehicleType('carro', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path
-                d="M5 17h14m-12 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0m-14-5l2-5h10l2 5m-15 0h16a2 2 0 0 1 2 2v3H2v-3a2 2 0 0 1 2-2z">
-              </path>
-            </svg> Carro</button>
-          <button type="button" class="vtype-btn" data-vtype="moto" onclick="selectVehicleType('moto', this)"><svg
-              width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="5" cy="16" r="3"></circle>
-              <circle cx="19" cy="16" r="3"></circle>
-              <path d="M12 16h3l3-7h-5l-2 4H9l-2-4H3"></path>
-            </svg> Moto</button>
-          <button type="button" class="vtype-btn" data-vtype="suv" onclick="selectVehicleType('suv', this)"><svg
-              width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="11" width="20" height="6" rx="1"></rect>
-              <path d="M5 11l2-6h10l3 6M4 17a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0"></path>
-            </svg> SUV / 4x4</button>
-          <button type="button" class="vtype-btn" data-vtype="taxi" onclick="selectVehicleType('taxi', this)"><svg
-              width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path
-                d="M10 3h4v3h-4zM5 17h14m-12 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0m-14-5l2-4h10l2 4m-15 0h16a2 2 0 0 1 2 2v3H2v-3a2 2 0 0 1 2-2z">
-              </path>
-            </svg> Taxi</button>
+          <button type="button" class="vtype-btn active" data-vtype="carro" onclick="selectVehicleType('carro', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14m-12 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0m-14-5l2-5h10l2 5m-15 0h16a2 2 0 0 1 2 2v3H2v-3a2 2 0 0 1 2-2z"></path></svg> Carro</button>
+          <button type="button" class="vtype-btn" data-vtype="moto" onclick="selectVehicleType('moto', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="16" r="3"></circle><circle cx="19" cy="16" r="3"></circle><path d="M12 16h3l3-7h-5l-2 4H9l-2-4H3"></path></svg> Moto</button>
+          <button type="button" class="vtype-btn" data-vtype="suv" onclick="selectVehicleType('suv', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="11" width="20" height="6" rx="1"></rect><path d="M5 11l2-6h10l3 6M4 17a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0"></path></svg> SUV / 4x4</button>
+          <button type="button" class="vtype-btn" data-vtype="taxi" onclick="selectVehicleType('taxi', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4v3h-4zM5 17h14m-12 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0m-14-5l2-4h10l2 4m-15 0h16a2 2 0 0 1 2 2v3H2v-3a2 2 0 0 1 2-2z"></path></svg> Taxi</button>
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
           <span>Placa del Vehículo</span>
-          <span id="orderPlateDetectedBadge"
-            style="display: none; font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;"></span>
+          <span id="orderPlateDetectedBadge" style="display: none; font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;"></span>
         </label>
-        <input type="text" id="orderPlateInput" class="form-input input-plate-stylized" placeholder="ABC-123"
-          maxlength="8" autocomplete="off">
+        <input type="text" id="orderPlateInput" class="form-input input-plate-stylized" placeholder="ABC-123" maxlength="8" autocomplete="off">
       </div>
 
       <div class="form-group">
@@ -3690,8 +3106,7 @@
         <input type="text" id="orderNotesInput" class="form-input" placeholder="Ej: Dejó llaves y casco en recepción">
       </div>
 
-      <button type="button" class="modal-btn-primary" onclick="submitNewOrder()">Registrar Turno e Imprimir
-        Ticket</button>
+      <button type="button" class="modal-btn-primary" onclick="submitNewOrder()">Registrar Turno e Imprimir Ticket</button>
     </div>
   </div>
 
@@ -3759,8 +3174,7 @@
 
       <div style="display: flex; gap: 10px;">
         <button type="button" class="modal-btn-primary" onclick="saveOrderEdits()">Guardar Cambios</button>
-        <button type="button" class="modal-btn-primary modal-btn-danger" style="width: 140px;"
-          onclick="deleteCurrentOrder()">Eliminar</button>
+        <button type="button" class="modal-btn-primary modal-btn-danger" style="width: 140px;" onclick="deleteCurrentOrder()">Eliminar</button>
       </div>
     </div>
   </div>
@@ -3783,9 +3197,7 @@
       <div class="form-group">
         <label class="form-label">
           <span>Tipo / Categoría de Gasto</span>
-          <a href="javascript:void(0)" onclick="promptNewCategory()"
-            style="font-size: 0.72rem; color: var(--accent-primary); font-weight: 700; text-decoration: none;">+ Crear
-            Tipo</a>
+          <a href="javascript:void(0)" onclick="promptNewCategory()" style="font-size: 0.72rem; color: var(--accent-primary); font-weight: 700; text-decoration: none;">+ Crear Tipo</a>
         </label>
         <select id="expenseCategory" class="form-select"></select>
       </div>
@@ -3797,8 +3209,7 @@
 
       <div style="display: flex; gap: 10px;">
         <button type="button" class="modal-btn-primary" onclick="saveExpense()">Guardar Gasto</button>
-        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteExpenseInModal"
-          style="display: none; width: 130px;" onclick="deleteExpenseFromModal()">Eliminar</button>
+        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteExpenseInModal" style="display: none; width: 130px;" onclick="deleteExpenseFromModal()">Eliminar</button>
       </div>
     </div>
   </div>
@@ -3813,8 +3224,7 @@
       <p class="modal-subtitle">Agrega, renombra o elimina categorías de salida de dinero</p>
 
       <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-        <input type="text" id="newCategoryInputName" class="form-input" placeholder="Nombre de nuevo tipo de gasto..."
-          style="flex: 1;">
+        <input type="text" id="newCategoryInputName" class="form-input" placeholder="Nombre de nuevo tipo de gasto..." style="flex: 1;">
         <button class="btn-quick-new" onclick="addExpenseCategoryFromInput()">Añadir</button>
       </div>
 
@@ -3841,14 +3251,10 @@
       <h3 class="modal-title">Cobro y Entrega de Vehículo</h3>
       <p class="modal-subtitle">Confirmar método de pago para registrar en caja</p>
 
-      <div
-        style="background: var(--bg-canvas); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; text-align: center;">
-        <div class="colombian-plate" id="checkoutPlateDisplay"
-          style="font-size: 1.25rem; display: inline-block; margin-bottom: 8px;">ABC-123</div>
+      <div style="background: var(--bg-canvas); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; text-align: center;">
+        <div class="colombian-plate" id="checkoutPlateDisplay" style="font-size: 1.25rem; display: inline-block; margin-bottom: 8px;">ABC-123</div>
         <div id="checkoutServiceDisplay" style="font-weight: 600; font-size: 0.9rem;">Lavado General</div>
-        <div id="checkoutPriceDisplay"
-          style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: var(--accent-primary); margin-top: 6px;">
-          $ 26.000 COP</div>
+        <div id="checkoutPriceDisplay" style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: var(--accent-primary); margin-top: 6px;">$ 26.000 COP</div>
       </div>
 
       <div class="form-group">
@@ -3883,10 +3289,8 @@
 
       <div class="form-group">
         <label class="form-label">PIN Personal de Acceso (4 dígitos)</label>
-        <input type="password" id="washerPinInput" class="form-input" placeholder="Ej: 1111" maxlength="4"
-          style="font-family: var(--font-mono); text-align: center; letter-spacing: 0.25em;">
-        <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">PIN de 4 dígitos para que el operario
-          consulte su liquidación.</p>
+        <input type="password" id="washerPinInput" class="form-input" placeholder="Ej: 1111" maxlength="4" style="font-family: var(--font-mono); text-align: center; letter-spacing: 0.25em;">
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">PIN de 4 dígitos para que el operario consulte su liquidación.</p>
       </div>
 
       <div class="form-group">
@@ -3899,8 +3303,7 @@
 
       <div style="display: flex; gap: 10px;">
         <button type="button" class="modal-btn-primary" onclick="saveWasher()">Guardar Operario</button>
-        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteWasherInModal"
-          style="display: none; width: 130px;" onclick="deleteWasherFromModal()">Eliminar</button>
+        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteWasherInModal" style="display: none; width: 130px;" onclick="deleteWasherFromModal()">Eliminar</button>
       </div>
     </div>
   </div>
@@ -3955,8 +3358,7 @@
 
       <div style="display: flex; gap: 10px;">
         <button type="button" class="modal-btn-primary" onclick="saveServiceConfig()">Guardar Tarifa</button>
-        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteServiceInModal"
-          style="display: none; width: 130px;" onclick="deleteServiceFromModal()">Eliminar</button>
+        <button type="button" class="modal-btn-primary modal-btn-danger" id="btnDeleteServiceInModal" style="display: none; width: 130px;" onclick="deleteServiceFromModal()">Eliminar</button>
       </div>
     </div>
   </div>
@@ -3968,13 +3370,7 @@
     <div class="modal-sheet" style="max-width: 360px;">
       <button class="modal-close-btn" onclick="closeModal('modalTicket')">&times;</button>
       <div id="printableTicketArea" class="thermal-ticket-view"></div>
-      <button type="button" class="modal-btn-primary" style="margin-top: 14px;" onclick="window.print()"><svg width="14"
-          height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-          stroke-linejoin="round" style="margin-right: 5px;">
-          <polyline points="6 9 6 2 18 2 18 9"></polyline>
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-          <rect x="6" y="14" width="12" height="8"></rect>
-        </svg>Imprimir Ticket POS</button>
+      <button type="button" class="modal-btn-primary" style="margin-top: 14px;" onclick="window.print()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Imprimir Ticket POS</button>
     </div>
   </div>
 
@@ -3986,36 +3382,18 @@
       <button class="modal-close-btn" onclick="closeModal('modalRolePin')">&times;</button>
       <h3 class="modal-title">Cambio de Rol de Acceso</h3>
       <p class="modal-subtitle" id="pinPromptText">Selecciona el rol con el que vas a operar</p>
-
+      
       <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;">
-        <button class="btn-card-action" onclick="requestSwitchRole('admin')"><svg width="22" height="22"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg> Admin</button>
-        <button class="btn-card-action" onclick="requestSwitchRole('cajero')"><svg width="22" height="22"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round">
-            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-            <line x1="2" y1="10" x2="22" y2="10"></line>
-          </svg> Cajero</button>
-        <button class="btn-card-action" onclick="requestSwitchRole('operario')"><svg width="22" height="22"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg> Operario</button>
+        <button class="btn-card-action" onclick="requestSwitchRole('admin')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Admin</button>
+        <button class="btn-card-action" onclick="requestSwitchRole('cajero')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg> Cajero</button>
+        <button class="btn-card-action" onclick="requestSwitchRole('operario')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Operario</button>
       </div>
 
       <div class="form-group" id="pinInputGroup" style="display: none;">
         <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">Ingresa el PIN de seguridad</label>
-        <input type="password" id="rolePinInput" class="form-input"
-          style="text-align: center; font-size: 1.4rem; letter-spacing: 0.3em;" maxlength="4"
-          onkeydown="if(event.key==='Enter') verifyRolePin()">
-        <p id="pinErrorMsg" style="color: var(--status-danger); font-size: 0.78rem; display: none; margin-top: 4px;">PIN
-          incorrecto. Intenta nuevamente.</p>
-        <button type="button" class="modal-btn-primary" style="margin-top: 10px;" onclick="verifyRolePin()">Confirmar
-          Acceso &rarr;</button>
+        <input type="password" id="rolePinInput" class="form-input" style="text-align: center; font-size: 1.4rem; letter-spacing: 0.3em;" maxlength="4" onkeydown="if(event.key==='Enter') verifyRolePin()">
+        <p id="pinErrorMsg" style="color: var(--status-danger); font-size: 0.78rem; display: none; margin-top: 4px;">PIN incorrecto. Intenta nuevamente.</p>
+        <button type="button" class="modal-btn-primary" style="margin-top: 10px;" onclick="verifyRolePin()">Confirmar Acceso &rarr;</button>
       </div>
 
       <div class="form-group" id="washerSelectGroup" style="display: none; text-align: left;">
@@ -4023,24 +3401,16 @@
           <span>¿Cuál operario está en turno?</span>
           <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Acceso individual</span>
         </label>
-        <select id="roleWasherSelect" class="form-select"
-          style="width: 100%; font-size: 0.9rem; font-weight: 600; margin-bottom: 12px;"
-          onchange="onRoleWasherSelectChange()">
+        <select id="roleWasherSelect" class="form-select" style="width: 100%; font-size: 0.9rem; font-weight: 600; margin-bottom: 12px;" onchange="onRoleWasherSelectChange()">
           <!-- Dinámico -->
         </select>
-        <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">PIN Personal del Operario (4
-          dígitos)</label>
-        <input type="password" id="roleOperarioPinInput" class="form-input"
-          style="text-align: center; font-size: 1.4rem; letter-spacing: 0.3em;" maxlength="4" placeholder="••••"
-          onkeydown="if(event.key==='Enter') confirmSwitchToOperario()">
-        <p id="roleOperarioPinError"
-          style="color: var(--status-danger); font-size: 0.78rem; display: none; margin-top: 4px;">PIN incorrecto para
-          este operario.</p>
+        <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">PIN Personal del Operario (4 dígitos)</label>
+        <input type="password" id="roleOperarioPinInput" class="form-input" style="text-align: center; font-size: 1.4rem; letter-spacing: 0.3em;" maxlength="4" placeholder="••••" onkeydown="if(event.key==='Enter') confirmSwitchToOperario()">
+        <p id="roleOperarioPinError" style="color: var(--status-danger); font-size: 0.78rem; display: none; margin-top: 4px;">PIN incorrecto para este operario.</p>
         <p id="roleOperarioHintText" style="font-size: 0.73rem; color: var(--text-muted); margin-top: 6px;">
           Ingresa tu clave de 4 dígitos asignada.
         </p>
-        <button type="button" class="modal-btn-primary" style="margin-top: 10px;"
-          onclick="confirmSwitchToOperario()">Confirmar e Ingresar a mi Turno &rarr;</button>
+        <button type="button" class="modal-btn-primary" style="margin-top: 10px;" onclick="confirmSwitchToOperario()">Confirmar e Ingresar a mi Turno &rarr;</button>
       </div>
     </div>
   </div>
@@ -4057,12 +3427,10 @@
       <h3 id="confirmDialogTitle" class="confirm-dialog-title">¿Confirmar acción?</h3>
       <p id="confirmDialogMessage" class="confirm-dialog-desc">Esta acción se aplicará de inmediato en el sistema.</p>
       <div class="confirm-dialog-actions">
-        <button type="button" id="confirmDialogCancelBtn" class="confirm-dialog-cancel-btn"
-          onclick="closeConfirmDialog(false)">
+        <button type="button" id="confirmDialogCancelBtn" class="confirm-dialog-cancel-btn" onclick="closeConfirmDialog(false)">
           Cancelar
         </button>
-        <button type="button" id="confirmDialogActionBtn" class="confirm-dialog-action-btn"
-          onclick="closeConfirmDialog(true)">
+        <button type="button" id="confirmDialogActionBtn" class="confirm-dialog-action-btn" onclick="closeConfirmDialog(true)">
           Confirmar
         </button>
       </div>
@@ -4072,42 +3440,23 @@
   <!-- BARRA DE NAVEGACIÓN MÓVIL PWA -->
   <nav class="mobile-bottom-nav" aria-label="Navegación móvil">
     <button class="mob-nav-btn active" id="mob-nav-overview" onclick="switchView('overview')">
-      <svg viewBox="0 0 24 24">
-        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
-        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
-      </svg>
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
       <span>Inicio</span>
     </button>
     <button class="mob-nav-btn" id="mob-nav-patio" onclick="switchView('patio')">
-      <svg viewBox="0 0 24 24">
-        <rect x="1" y="4" width="22" height="16" rx="2"></rect>
-        <line x1="1" y1="10" x2="23" y2="10"></line>
-      </svg>
+      <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
       <span>Zona Lavado</span>
     </button>
     <button class="mob-nav-btn" id="mob-nav-caja" onclick="switchView('caja')">
-      <svg viewBox="0 0 24 24">
-        <line x1="12" y1="1" x2="12" y2="23"></line>
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-      </svg>
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
       <span>Caja</span>
     </button>
     <button class="mob-nav-btn" id="mob-nav-comisiones" onclick="switchView('comisiones')">
-      <svg viewBox="0 0 24 24">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
       <span id="mobLabelComisiones">Operarios</span>
     </button>
     <button class="mob-nav-btn" id="mob-nav-config" onclick="switchView('config')">
-      <svg viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="3"></circle>
-        <path
-          d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-        </path>
-      </svg>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       <span>Ajustes</span>
     </button>
   </nav>
@@ -4132,6 +3481,32 @@
         adminPin: '1234',
         cajeroPin: '0000',
         washType: 'mixto'
+      },
+      {
+        id: 'medellin-detail',
+        code: 'MED-02',
+        name: 'Master Detail Medellín',
+        city: 'Medellín',
+        address: 'Carrera 43A # 18 Sur, Medellín',
+        phone: '300 456 7890',
+        ownerPhone: '310 987 6543',
+        active: true,
+        adminPin: '1234',
+        cajeroPin: '0000',
+        washType: 'mixto'
+      },
+      {
+        id: 'bogota-ecowash',
+        code: 'BOG-03',
+        name: 'EcoWash Bogotá',
+        city: 'Bogotá',
+        address: 'Calle 127 # 15-45, Bogotá',
+        phone: '312 345 6789',
+        ownerPhone: '320 123 4567',
+        active: true,
+        adminPin: '1234',
+        cajeroPin: '0000',
+        washType: 'mixto'
       }
     ];
 
@@ -4148,12 +3523,6 @@
         const saved = localStorage.getItem('washq_tenants_registry');
         if (saved) {
           tenantsRegistry = JSON.parse(saved);
-          // Purga automática y silenciosa de sedes de prueba históricas (Medellín y Bogotá)
-          const cleaned = tenantsRegistry.filter(t => t.id !== 'medellin-detail' && t.id !== 'bogota-ecowash' && t.code !== 'MED-02' && t.code !== 'BOG-03');
-          if (cleaned.length !== tenantsRegistry.length) {
-            tenantsRegistry = cleaned;
-            localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
-          }
         } else {
           tenantsRegistry = [...DEFAULT_TENANTS];
           localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
@@ -4185,7 +3554,7 @@
             executeLoginSuccess(found, sess.role || 'admin', sess.washerId, sess.washerName, true);
             return;
           }
-        } catch (e) { }
+        } catch (e) {}
       }
 
       showAuthScreen();
@@ -4296,7 +3665,7 @@
             tempWashers = parsed.washers;
           }
         }
-      } catch (e) { }
+      } catch (e) {}
 
       const select = document.getElementById('authWasherSelect');
       if (select) {
@@ -4374,7 +3743,7 @@
           const parsed = JSON.parse(saved);
           if (parsed.washers && parsed.washers.length > 0) washers = parsed.washers;
         }
-      } catch (e) { }
+      } catch (e) {}
 
       const found = washers.find(w => w.id === washerId);
       const wName = found ? found.name.split(' ')[0] : 'Operario';
@@ -4400,7 +3769,7 @@
             const parsed = JSON.parse(saved);
             if (parsed.washers && parsed.washers.length > 0) washers = parsed.washers;
           }
-        } catch (e) { }
+        } catch (e) {}
 
         const washer = washers.find(w => w.id === washerId);
         if (!washer) {
@@ -4498,8 +3867,8 @@
       setRole(role, washerId, washerName);
     }
 
-
-
+    
+    
     // ==========================================================================
     // CONTROL DE INACTIVIDAD Y BLOQUEO AUTOMÁTICO DE PANTALLA
     // ==========================================================================
@@ -4625,165 +3994,11 @@
       logoutTenant();
     }
 
-    // ==========================================================================
-    // SISTEMA DE PLANES Y LICENCIAS VERIFICADAS (EXPRESS / PRO / ÉLITE)
-    // ==========================================================================
-    const PLAN_TIERS = {
-      express: {
-        id: 'express',
-        name: 'WashQ Express',
-        badge: 'Plan Express',
-        allowMultiSede: false,
-        maxTenants: 1,
-        maxWashers: 5,
-        allowThermalPrinter: false,
-        allowExcelAudit: false
-      },
-      pro: {
-        id: 'pro',
-        name: 'WashQ Pro',
-        badge: 'Plan Pro',
-        allowMultiSede: false,
-        maxTenants: 1,
-        maxWashers: 999,
-        allowThermalPrinter: false,
-        allowExcelAudit: true
-      },
-      elite: {
-        id: 'elite',
-        name: 'WashQ Élite',
-        badge: 'Plan Élite (Multi-Sede)',
-        allowMultiSede: true,
-        maxTenants: 999,
-        maxWashers: 999,
-        allowThermalPrinter: true,
-        allowExcelAudit: true
-      }
-    };
-
-    function getActivePlan() {
-      try {
-        const lic = localStorage.getItem('washq_license_info');
-        if (lic) {
-          const parsed = JSON.parse(lic);
-          if (parsed && parsed.plan && PLAN_TIERS[parsed.plan]) {
-            return PLAN_TIERS[parsed.plan];
-          }
-        }
-      } catch (e) {}
-      // Por defecto para clientes fundadores / primeros 5 autolavados: Plan Élite completo
-      return PLAN_TIERS['elite'];
-    }
-
-    function isMultiSedeEnabled() {
-      const plan = getActivePlan();
-      return plan.allowMultiSede === true;
-    }
-
-    async function promptActivateLicense() {
-      const code = prompt('Ingresa tu código de licencia Kodiquett (ej: KODI-ELITE-FUNDADOR, WASHQ-EXP-01, WASHQ-PRO-01, WASHQ-ELITE-01):');
-      if (!code || !code.trim()) return;
-
-      showToast('Verificando licencia en Vercel...', 'info');
-      try {
-        const resp = await fetch('/api/activate?code=' + encodeURIComponent(code.trim().toUpperCase()));
-        const data = await resp.json();
-        if (data && data.ok) {
-          localStorage.setItem('washq_license_info', JSON.stringify({
-            code: data.code,
-            plan: data.plan,
-            client: data.client,
-            signature: data.signature,
-            activatedAt: data.activatedAt
-          }));
-          showToast('¡Licencia activada con éxito! Plan: ' + data.plan.toUpperCase(), 'success');
-          renderAllViews();
-        } else {
-          showToast(data.error || 'Código de licencia no válido.', 'error');
-        }
-      } catch (err) {
-        // Modo offline / contingencia local si no hay internet
-        const cleanCode = code.trim().toUpperCase();
-        let fallbackPlan = null;
-        if (cleanCode.includes('EXP')) fallbackPlan = 'express';
-        else if (cleanCode.includes('PRO')) fallbackPlan = 'pro';
-        else if (cleanCode.includes('ELITE') || cleanCode.includes('FUNDADOR')) fallbackPlan = 'elite';
-
-        if (fallbackPlan) {
-          localStorage.setItem('washq_license_info', JSON.stringify({
-            code: cleanCode,
-            plan: fallbackPlan,
-            client: 'Activación Offline',
-            activatedAt: new Date().toISOString()
-          }));
-          showToast('Licencia configurada localmente: ' + fallbackPlan.toUpperCase(), 'info');
-          renderAllViews();
-        } else {
-          showToast('No fue posible contactar el servidor de activación.', 'error');
-        }
-      }
-    }
-
-    function renderLicenseInfo() {
-      const plan = getActivePlan();
-      const planDesc = document.getElementById('licensePlanDescription');
-      const planBadge = document.getElementById('licensePlanBadge');
-      const clientBadge = document.getElementById('licenseClientBadge');
-
-      if (planBadge) {
-        planBadge.textContent = plan.badge;
-        if (plan.id === 'elite') {
-          planBadge.style.background = '#ECFDF5';
-          planBadge.style.color = '#059669';
-          planBadge.style.borderColor = 'rgba(5,150,105,0.2)';
-        } else if (plan.id === 'pro') {
-          planBadge.style.background = '#EFF6FF';
-          planBadge.style.color = '#2563EB';
-          planBadge.style.borderColor = 'rgba(37,99,235,0.2)';
-        } else {
-          planBadge.style.background = '#F3F4F6';
-          planBadge.style.color = '#4B5563';
-          planBadge.style.borderColor = 'rgba(75,85,99,0.2)';
-        }
-      }
-
-      if (planDesc) {
-        planDesc.textContent = plan.id === 'elite'
-          ? 'Plan Élite Vitalicio (Multi-Sede, Operarios Ilimitados, Impresora POS)'
-          : plan.id === 'pro'
-          ? 'Plan Pro Vitalicio (1 Sede, Operarios Ilimitados, Cuadre WhatsApp)'
-          : 'Plan Express Vitalicio (1 Sede, Hasta 5 Operarios, Caja Esencial)';
-      }
-
-      if (clientBadge) {
-        try {
-          const lic = JSON.parse(localStorage.getItem('washq_license_info') || '{}');
-          clientBadge.textContent = lic.client ? `Asignado a: ${lic.client}` : 'Licencia Vitalicia';
-        } catch(e) {
-          clientBadge.textContent = 'Licencia Vitalicia';
-        }
-      }
-    }
-
     // Renderizado de sedes en la sección de administración
     function renderAdminSedesList() {
       const container = document.getElementById('adminSedesList');
       if (!container) return;
       container.innerHTML = '';
-
-      // El botón "+ Nueva Sede" SOLO existe para el Plan Élite
-      const btnNuevaSede = document.getElementById('btnNuevaSede');
-      const multiAllowed = isMultiSedeEnabled();
-      if (btnNuevaSede) {
-        btnNuevaSede.style.display = multiAllowed ? 'inline-block' : 'none';
-      }
-
-      const subTitle = document.getElementById('sedesSectionSubtitle');
-      if (subTitle) {
-        subTitle.textContent = multiAllowed
-          ? 'Administra tus sucursales y registra nuevas sedes'
-          : 'Sede principal configurada (Plan 1 Sede activo)';
-      }
 
       tenantsRegistry.forEach(t => {
         const isCurrent = activeTenant && activeTenant.id === t.id;
@@ -4803,54 +4018,12 @@
             </div>
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 3px;">${t.address || t.city || 'Colombia'}</p>
           </div>
-          <div style="display: flex; gap: 6px; align-items: center;">
-            ${!isCurrent ? `
-              <button type="button" class="btn-card-action" style="font-size: 0.75rem; padding: 4px 10px;" onclick="switchTenantDirect('${t.id}')">Cambiar a esta sede</button>
-              <button type="button" class="btn-card-action" style="font-size: 0.75rem; padding: 5px 8px; color: #DC2626; border-color: rgba(220,38,38,0.3); background: #FEF2F2;" onclick="deleteTenant('${t.id}')" title="Eliminar sede">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-              </button>
-            ` : '<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">En uso</span>'}
+          <div>
+            ${!isCurrent ? `<button type="button" class="btn-card-action" style="font-size: 0.75rem; padding: 4px 10px;" onclick="switchTenantDirect('${t.id}')">Cambiar a esta sede</button>` : '<span style="font-size: 0.75rem; color: var(--text-muted);">En uso</span>'}
           </div>
         `;
         container.appendChild(item);
       });
-    }
-
-    async function deleteTenant(tenantId) {
-      if (appState.currentRole !== 'admin') {
-        showToast('Solo el administrador puede eliminar sedes.', 'error');
-        return;
-      }
-      const target = tenantsRegistry.find(t => t.id === tenantId);
-      if (!target) return;
-      if (activeTenant && activeTenant.id === tenantId) {
-        showToast('No puedes eliminar la sede que está actualmente en uso.', 'warning');
-        return;
-      }
-      if (tenantsRegistry.length <= 1) {
-        showToast('Debe existir al menos una sede principal registrada.', 'warning');
-        return;
-      }
-
-      const confirmed = await showConfirmDialog({
-        title: '¿Eliminar sede ' + target.name + '?',
-        message: 'Se eliminará la sede ' + target.name + ' (' + target.code + ') del listado de este dispositivo. Esta acción no se puede deshacer.',
-        confirmText: 'Sí, Eliminar Sede',
-        cancelText: 'Cancelar',
-        type: 'danger'
-      });
-
-      if (!confirmed) return;
-
-      tenantsRegistry = tenantsRegistry.filter(t => t.id !== tenantId);
-      localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
-      try {
-        localStorage.removeItem(getTenantStorageKey(tenantId));
-      } catch (e) {}
-
-      showToast('Sede eliminada correctamente.', 'success');
-      renderAdminSedesList();
-      renderLicenseInfo();
     }
 
     function switchTenantDirect(targetTenantId) {
@@ -4992,7 +4165,7 @@
     }
 
     // Redirigir llamadas nativas de alert() hacia el sistema Toast para una experiencia fluida
-    window.alert = function (msg) {
+    window.alert = function(msg) {
       if (typeof msg !== 'string') msg = String(msg);
       let type = 'info';
       const lower = msg.toLowerCase();
@@ -5028,10 +4201,6 @@
     function openCreateTenantModal() {
       if (appState.currentRole !== 'admin') {
         showToast('Acceso restringido: solo el administrador puede registrar nuevas sedes.', 'error');
-        return;
-      }
-      if (!isMultiSedeEnabled()) {
-        showToast('Tu plan actual incluye 1 sola sede física. Para habilitar Multi-Sede adquiere la ampliación a Plan Élite.', 'warning');
         return;
       }
       document.getElementById('newTenantName').value = '';
@@ -5667,9 +4836,9 @@
       // Actualizar texto descriptivo superior
       const eyebrowEl = document.getElementById('overviewEyebrow');
       if (eyebrowEl) {
-        if (period === 'hoy') eyebrowEl.innerHTML = '&bull; Ingresos totales hoy ';
-        else if (period === 'semana') eyebrowEl.innerHTML = '&bull; Ingresos totales últimos 7 días';
-        else eyebrowEl.innerHTML = '&bull; Ingresos totales últimos 30 días ';
+        if (period === 'hoy') eyebrowEl.innerHTML = 'Ingresos totales hoy &bull; Moneda COP';
+        else if (period === 'semana') eyebrowEl.innerHTML = 'Ingresos totales últimos 7 días &bull; Moneda COP';
+        else eyebrowEl.innerHTML = 'Ingresos totales últimos 30 días &bull; Moneda COP';
       }
 
       // Actualizar valores numéricos
@@ -6276,7 +5445,9 @@
       saveToStorage();
       closeModal('modalNewOrder');
       renderAllViews();
-      viewOrderTicket(newOrder.id);
+      setTimeout(() => {
+        viewOrderTicket(newOrder.id);
+      }, 50);
     }
 
     // ================= COBRO & CHECKOUT =================
@@ -6406,12 +5577,11 @@
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td><strong>${e.desc}</strong></td>
-            <td><span class="role-badge" style="font-size: 0.72rem;">${e.category}</span></td>
+            <td><span class="queue-status-tag tag-waiting">${e.category}</span></td>
             <td class="table-num" style="color: var(--status-danger); font-weight: 700;">-${formatCOP(e.amount)}</td>
             <td style="text-align: right;">
-              <button class="btn-admin-icon danger" title="Eliminar gasto" onclick="deleteExpense('${e.id}')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-              </button>
+              <button class="btn-admin-icon" title="Editar gasto" onclick="openEditExpenseModal('${e.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+              <button class="btn-admin-icon danger" title="Eliminar gasto" onclick="deleteExpense('${e.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
             </td>
           `;
           expensesBody.appendChild(tr);
@@ -6419,6 +5589,845 @@
       }
     }
 
+    function populateExpenseCategoriesDropdown(selectedCat = '') {
+      const select = document.getElementById('expenseCategory');
+      select.innerHTML = '';
+      appState.expenseCategories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        if (cat === selectedCat) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function openExpenseModal() {
+      document.getElementById('expenseEditId').value = '';
+      document.getElementById('modalExpenseTitle').textContent = 'Registrar Gasto de Caja';
+      document.getElementById('expenseDescription').value = '';
+      document.getElementById('expenseAmount').value = '';
+      document.getElementById('btnDeleteExpenseInModal').style.display = 'none';
+      populateExpenseCategoriesDropdown();
+      openModal('modalExpense');
+    }
+
+    function openEditExpenseModal(expId) {
+      const exp = appState.expenses.find(e => e.id === expId);
+      if (!exp) return;
+
+      document.getElementById('expenseEditId').value = exp.id;
+      document.getElementById('modalExpenseTitle').textContent = 'Editar Gasto de Caja';
+      document.getElementById('expenseDescription').value = exp.desc;
+      document.getElementById('expenseAmount').value = exp.amount;
+      document.getElementById('btnDeleteExpenseInModal').style.display = 'block';
+      populateExpenseCategoriesDropdown(exp.category);
+      openModal('modalExpense');
+    }
+
+    function saveExpense() {
+      const editId = document.getElementById('expenseEditId').value;
+      const desc = document.getElementById('expenseDescription').value.trim();
+      const cat = document.getElementById('expenseCategory').value;
+      const amt = Number(document.getElementById('expenseAmount').value);
+
+      if (!desc || !amt) {
+        alert('Complete la descripción y el monto');
+        return;
+      }
+
+      if (editId) {
+        const exp = appState.expenses.find(e => e.id === editId);
+        if (exp) {
+          exp.desc = desc;
+          exp.category = cat;
+          exp.amount = amt;
+        }
+      } else {
+        appState.expenses.unshift({
+          id: 'exp_' + Date.now(),
+          desc: desc,
+          category: cat,
+          amount: amt,
+          date: Date.now()
+        });
+      }
+
+      saveToStorage();
+      closeModal('modalExpense');
+      renderAllViews();
+    }
+
+    async function deleteExpense(expId) {
+      const confirmed = await showConfirmDialog({
+        title: '¿Eliminar gasto de caja?',
+        message: 'Este gasto se descontará del historial de salidas de caja del día.',
+        confirmText: 'Eliminar Gasto',
+        cancelText: 'Cancelar',
+        type: 'danger'
+      });
+      if (confirmed) {
+        appState.expenses = appState.expenses.filter(e => e.id !== expId);
+        saveToStorage();
+        renderAllViews();
+        showToast('Gasto eliminado de caja.', 'info');
+      }
+    }
+
+    function deleteExpenseFromModal() {
+      const expId = document.getElementById('expenseEditId').value;
+      if (expId) {
+        deleteExpense(expId);
+        closeModal('modalExpense');
+      }
+    }
+
+    // Gestión de Categorías de Gasto
+    function openCategoryManagerModal() {
+      renderCategoriesModalTable();
+      openModal('modalCategories');
+    }
+
+    function renderCategoriesModalTable() {
+      const tbody = document.getElementById('categoriesModalTableBody');
+      tbody.innerHTML = '';
+      appState.expenseCategories.forEach(cat => {
+        const count = appState.expenses.filter(e => e.category === cat).length;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${cat}</strong> <small style="color:var(--text-muted);">(${count} gastos asociados)</small></td>
+          <td style="text-align: right;">
+            <button class="btn-admin-icon" onclick="promptEditCategory('${cat}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+            <button class="btn-admin-icon danger" onclick="deleteCategory('${cat}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function promptNewCategory() {
+      const name = prompt('Escribe el nombre del nuevo tipo de gasto (ej: Seguro, Arriendo, Nómina, etc.):');
+      if (name && name.trim()) {
+        const clean = name.trim();
+        if (!appState.expenseCategories.includes(clean)) {
+          appState.expenseCategories.push(clean);
+          saveToStorage();
+          populateExpenseCategoriesDropdown(clean);
+          renderCategoriesModalTable();
+          renderExpenseCategoriesConfig();
+        }
+      }
+    }
+
+    function addExpenseCategoryFromInput() {
+      const input = document.getElementById('newCategoryInputName');
+      const val = input.value.trim();
+      if (!val) return;
+      if (!appState.expenseCategories.includes(val)) {
+        appState.expenseCategories.push(val);
+        input.value = '';
+        saveToStorage();
+        renderCategoriesModalTable();
+        renderExpenseCategoriesConfig();
+        populateExpenseCategoriesDropdown();
+      }
+    }
+
+    function promptEditCategory(oldCat) {
+      const newCat = prompt(`Editar nombre de la categoría "${oldCat}":`, oldCat);
+      if (newCat && newCat.trim() && newCat !== oldCat) {
+        const clean = newCat.trim();
+        const idx = appState.expenseCategories.indexOf(oldCat);
+        if (idx !== -1) {
+          appState.expenseCategories[idx] = clean;
+          appState.expenses.forEach(e => {
+            if (e.category === oldCat) e.category = clean;
+          });
+          saveToStorage();
+          renderCategoriesModalTable();
+          renderExpenseCategoriesConfig();
+          renderAllViews();
+        }
+      }
+    }
+
+    async function deleteCategory(cat) {
+      const confirmed = await showConfirmDialog({
+        title: '¿Eliminar categoría?',
+        message: '¿Estás seguro de eliminar la categoría "' + cat + '" de los gastos?',
+        confirmText: 'Eliminar Categoría',
+        cancelText: 'Cancelar',
+        type: 'danger'
+      });
+      if (confirmed) {
+        appState.expenseCategories = appState.expenseCategories.filter(c => c !== cat);
+        saveToStorage();
+        renderCategoriesModalTable();
+        renderExpenseCategoriesConfig();
+        renderAllViews();
+        showToast('Categoría eliminada.', 'info');
+      }
+    }
+
+    function renderExpenseCategoriesConfig() {
+      const container = document.getElementById('configCategoriesList');
+      if (!container) return;
+      container.innerHTML = '';
+      appState.expenseCategories.forEach(cat => {
+        const pill = document.createElement('span');
+        pill.className = 'queue-status-tag tag-waiting';
+        pill.style.display = 'inline-flex';
+        pill.style.alignItems = 'center';
+        pill.style.gap = '6px';
+        pill.style.padding = '4px 8px';
+        pill.innerHTML = `
+          <span>${cat}</span>
+          <button style="border:none;background:transparent;cursor:pointer;color:var(--text-muted);" onclick="deleteCategory('${cat}')">&times;</button>
+        `;
+        container.appendChild(pill);
+      });
+    }
+
+    function exportCajaReportExcel() {
+      if (typeof XLSX !== 'undefined') {
+        const fechaHoy = new Date().toISOString().slice(0, 10);
+
+        // 1. Hoja de Ingresos por Servicios
+        const ingresosRows = appState.orders.map(o => {
+          const d = o.createdAt ? new Date(o.createdAt) : new Date();
+          return {
+            'Ticket': o.ticketNumber || '',
+            'Fecha': d.toLocaleDateString('es-CO'),
+            'Hora': d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }),
+            'Placa': (o.plate || '').toUpperCase(),
+            'Servicio': o.serviceName || '',
+            'Operario': o.washerName || 'Sin asignar',
+            'Monto (COP)': Number(o.price) || 0,
+            'Comisión (COP)': Number(o.commission) || 0,
+            'Método de Pago': o.paymentMethod || 'Pendiente'
+          };
+        });
+
+        // 2. Hoja de Gastos
+        const gastosRows = (appState.expenses || []).map(e => ({
+          'Concepto': e.desc || e.concept || '',
+          'Categoría': e.category || 'General',
+          'Monto (COP)': Number(e.amount) || 0
+        }));
+
+        // 3. Resumen Ejecutivo de Caja
+        const totalIngresos = appState.orders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
+        const totalComisiones = appState.orders.reduce((sum, o) => sum + (Number(o.commission) || 0), 0);
+        const totalGastos = (appState.expenses || []).reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+        const balanceNeto = totalIngresos - totalComisiones - totalGastos;
+
+        const resumenRows = [
+          { 'Concepto': 'TOTAL INGRESOS (VENTAS)', 'Valor (COP)': totalIngresos },
+          { 'Concepto': 'TOTAL COMISIONES OPERARIOS', 'Valor (COP)': totalComisiones },
+          { 'Concepto': 'TOTAL GASTOS DE OPERACIÓN', 'Valor (COP)': totalGastos },
+          { 'Concepto': 'BALANCE NETO DISPONIBLE', 'Valor (COP)': balanceNeto }
+        ];
+
+        const wb = XLSX.utils.book_new();
+
+        const wsIngresos = XLSX.utils.json_to_sheet(ingresosRows.length ? ingresosRows : [{ Info: 'Sin ingresos registrados' }]);
+        wsIngresos['!cols'] = [{ wch: 8 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 32 }, { wch: 22 }, { wch: 15 }, { wch: 15 }, { wch: 16 }];
+        if (ingresosRows.length) {
+          wsIngresos['!autofilter'] = { ref: wsIngresos['!ref'] };
+          const range = XLSX.utils.decode_range(wsIngresos['!ref']);
+          for (let R = 1; R <= range.e.r; ++R) {
+            [6, 7].forEach(C => {
+              const cell = wsIngresos[XLSX.utils.encode_cell({ r: R, c: C })];
+              if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+            });
+          }
+        }
+        XLSX.utils.book_append_sheet(wb, wsIngresos, 'Ingresos');
+
+        const wsGastos = XLSX.utils.json_to_sheet(gastosRows.length ? gastosRows : [{ Info: 'Sin gastos registrados' }]);
+        wsGastos['!cols'] = [{ wch: 32 }, { wch: 18 }, { wch: 15 }];
+        if (gastosRows.length) {
+          wsGastos['!autofilter'] = { ref: wsGastos['!ref'] };
+          const range = XLSX.utils.decode_range(wsGastos['!ref']);
+          for (let R = 1; R <= range.e.r; ++R) {
+            const cell = wsGastos[XLSX.utils.encode_cell({ r: R, c: 2 })];
+            if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+          }
+        }
+        XLSX.utils.book_append_sheet(wb, wsGastos, 'Gastos');
+
+        const wsResumen = XLSX.utils.json_to_sheet(resumenRows);
+        wsResumen['!cols'] = [{ wch: 35 }, { wch: 18 }];
+        const rangeRes = XLSX.utils.decode_range(wsResumen['!ref']);
+        for (let R = 1; R <= rangeRes.e.r; ++R) {
+          const cell = wsResumen[XLSX.utils.encode_cell({ r: R, c: 1 })];
+          if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+        }
+        XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen de Caja');
+
+        XLSX.writeFile(wb, `WashQ_Cuadre_Caja_${fechaHoy}.xlsx`);
+        return;
+      }
+
+      exportCajaReportCSVFallback();
+    }
+
+    function exportCajaReportCSVFallback() {
+      let csv = 'Tipo;Concepto / Placa;Monto COP;Metodo / Categoria\n';
+      appState.orders.forEach(o => {
+        csv += `Ingreso;"${o.plate} - ${o.serviceName}";${o.price};${o.paymentMethod || 'Pendiente'}\n`;
+      });
+      (appState.expenses || []).forEach(e => {
+        csv += `Gasto;"${e.desc || e.concept || ''}";-${e.amount};${e.category}\n`;
+      });
+      downloadCSV(csv, 'Cuadre_Caja_WashQ.csv');
+    }
+
+    function exportCajaReportCSV() {
+      exportCajaReportExcel();
+    }
+
+    // ================= OPERARIOS (CONTROL TOTAL: CREAR, EDITAR, ELIMINAR) =================
+    function renderWashers() {
+      const grid = document.getElementById('washersCardsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const isOperario = appState.currentRole === 'operario' || appState.currentRole === 'lavador';
+      const myWasherId = appState.currentWasherId;
+
+      const viewTitle = document.getElementById('washersViewTitle');
+      const viewSubtitle = document.getElementById('washersViewSubtitle');
+      const btnNewWasher = document.getElementById('btnAddNewWasher');
+
+      // =========================================================================
+      // MODO PRIVADO DE OPERARIO: Solo ve su propia liquidación, jamás la de otros
+      // =========================================================================
+      if (isOperario) {
+        if (viewTitle) viewTitle.textContent = 'Mis Ganancias del Día';
+        if (viewSubtitle) viewSubtitle.textContent = `Hola, ${appState.currentWasherName || 'Operario'}. Resumen de tus vehículos atendidos y comisiones acumuladas hoy.`;
+        if (btnNewWasher) btnNewWasher.style.display = 'none';
+
+        // Buscar estrictamente su propio perfil
+        const myProfile = appState.washers.find(w => w.id === myWasherId) || appState.washers[0];
+        if (!myProfile) {
+          grid.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--text-muted);">No se encontró el perfil de operario.</div>';
+          return;
+        }
+
+        const myDeliveredOrders = appState.orders.filter(o => o.washerId === myProfile.id && o.status === 'entregado');
+        const myActiveOrders = appState.orders.filter(o => o.washerId === myProfile.id && (o.status === 'lavando' || o.status === 'espera'));
+        const myTotalCommission = myDeliveredOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
+
+        const card = document.createElement('div');
+        card.className = 'washer-profile-card';
+        card.style.gridColumn = '1 / -1';
+        card.style.border = '2px solid var(--accent-border)';
+        card.style.background = '#FFFFFF';
+        card.style.boxShadow = 'var(--shadow-card)';
+
+        card.innerHTML = `
+          <div class="washer-card-top" style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px;">
+            <div style="display:flex; align-items:center; gap:14px;">
+              <div class="washer-avatar-large" style="width: 52px; height: 52px; font-size: 1.3rem; background: var(--accent-primary); color: #fff;">${myProfile.name.charAt(0)}</div>
+              <div>
+                <strong style="font-size: 1.15rem; color: var(--text-title);">${myProfile.name}</strong>
+                <p style="font-size: 0.78rem; color: var(--text-muted);">${myProfile.phone || 'Operario en Turno'}</p>
+              </div>
+            </div>
+            <span class="washer-status-pill" style="background: var(--status-success-bg); color: var(--status-success); font-weight: 700;">Turno Activo</span>
+          </div>
+
+          <div class="washer-stats-row" style="margin: 18px 0; background: var(--bg-canvas); padding: 16px; border-radius: var(--radius-md); display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px;">
+            <div>
+              <span class="caja-stat-label">Vehículos Entregados</span>
+              <strong class="caja-stat-value" style="font-size: 1.45rem; color: var(--text-title);">${myDeliveredOrders.length}</strong>
+            </div>
+            <div>
+              <span class="caja-stat-label">En Bahía / Espera</span>
+              <strong class="caja-stat-value" style="font-size: 1.45rem; color: var(--status-warning);">${myActiveOrders.length}</strong>
+            </div>
+            <div>
+              <span class="caja-stat-label">Tus Ganancias Acumuladas</span>
+              <strong class="caja-stat-value" style="font-size: 1.45rem; color: var(--accent-primary); font-family: var(--font-mono);">${formatCOP(myTotalCommission)}</strong>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-title); margin-bottom: 10px;">Detalle de tus Servicios de Hoy</h4>
+            ${myDeliveredOrders.length === 0 ? `
+              <p style="font-size: 0.8rem; color: var(--text-muted); padding: 14px 0; text-align: center; background: var(--bg-canvas); border-radius: var(--radius-sm);">No tienes vehículos entregados hoy. Conforme finalices lavados en tu turno, verás tus comisiones aquí.</p>
+            ` : `
+              <div style="overflow-x: auto;">
+                <table class="ui-table" style="font-size: 0.84rem;">
+                  <thead>
+                    <tr>
+                      <th>Placa</th>
+                      <th>Servicio Realizado</th>
+                      <th>Tipo</th>
+                      <th style="text-align: right;">Tu Comisión</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${myDeliveredOrders.map(o => `
+                      <tr>
+                        <td><span class="colombian-plate" style="font-size:0.75rem; padding: 2px 6px;">${o.plate}</span></td>
+                        <td style="font-weight: 600;">${o.serviceName}</td>
+                        <td><span style="font-size:0.75rem; text-transform:capitalize;">${o.vehicleType}</span></td>
+                        <td style="text-align: right; font-family: var(--font-mono); font-weight: 700; color: var(--accent-primary);">${formatCOP(o.commission || 0)}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            `}
+          </div>
+
+          <div style="margin-top: 18px; padding: 10px 14px; background: var(--accent-subtle); border: 1px solid var(--accent-border); border-radius: var(--radius-sm); font-size: 0.74rem; color: var(--text-muted); text-align: center;">
+            Los ingresos de tus compañeros y los totales del autolavado son privados.
+          </div>
+        `;
+
+        grid.appendChild(card);
+        return;
+      }
+
+      // =========================================================================
+      // MODO ADMIN / CAJERO: Liquidación de todos los operarios
+      // =========================================================================
+      if (viewTitle) viewTitle.textContent = 'Liquidación de Operarios';
+      if (viewSubtitle) viewSubtitle.textContent = 'Cálculo automático de comisiones y control del equipo de trabajo.';
+      if (btnNewWasher) btnNewWasher.style.display = appState.currentRole === 'admin' ? 'inline-flex' : 'none';
+
+      appState.washers.forEach(w => {
+        const washerOrders = appState.orders.filter(o => o.washerId === w.id);
+        const totalComm = washerOrders.reduce((sum, o) => sum + (o.commission || 0), 0);
+
+        const card = document.createElement('div');
+        card.className = 'washer-profile-card';
+        card.innerHTML = `
+          <div class="washer-card-top">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="washer-avatar-large">${w.name.charAt(0)}</div>
+              <div>
+                <strong style="font-size: 0.95rem;">${w.name}</strong>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">${w.phone || 'Sin celular'}</p>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="washer-status-pill" style="${w.active ? '' : 'background:#F1F5F9; color:#64748B;'}">${w.active ? 'Activo' : 'Inactivo'}</span>
+              ${appState.currentRole === 'admin' ? `
+                <button class="btn-admin-icon" title="Editar Operario" onclick="openEditWasherModal('${w.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                <button class="btn-admin-icon danger" title="Eliminar Operario" onclick="deleteWasher('${w.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+              ` : ''}
+            </div>
+          </div>
+          <div class="washer-stats-row">
+            <div>
+              <span class="caja-stat-label">Autos Lavados</span>
+              <div class="table-num">${washerOrders.length}</div>
+            </div>
+            <div>
+              <span class="caja-stat-label">Comisión Total</span>
+              <div class="table-num" style="color: var(--accent-primary);">${formatCOP(totalComm)}</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-card-action" style="flex: 1;" onclick="settleWasherCommission('${w.id}', '${w.name}', ${totalComm})">
+              Pagar Liquidación
+            </button>
+            ${appState.currentRole === 'admin' ? `
+              <button class="btn-card-action" onclick="toggleWasherActive('${w.id}')">
+                ${w.active ? 'Pausar' : 'Reactivar'}
+              </button>
+            ` : ''}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function openNewWasherModal() {
+      if (appState.currentRole === 'operario' || appState.currentRole === 'lavador') {
+        alert('Acceso restringido: solo el administrador puede registrar operarios.');
+        return;
+      }
+      document.getElementById('washerEditId').value = '';
+      document.getElementById('modalWasherTitle').textContent = 'Nuevo Operario';
+      document.getElementById('washerNameInput').value = '';
+      document.getElementById('washerPhoneInput').value = '';
+      document.getElementById('washerPinInput').value = '1111';
+      document.getElementById('washerActiveStatusSelect').value = 'true';
+      document.getElementById('btnDeleteWasherInModal').style.display = 'none';
+      openModal('modalWasher');
+    }
+
+    function openEditWasherModal(wId) {
+      if (appState.currentRole === 'operario' || appState.currentRole === 'lavador') {
+        alert('Acceso restringido: no tienes permisos para editar operarios.');
+        return;
+      }
+      const washer = appState.washers.find(w => w.id === wId);
+      if (!washer) return;
+
+      document.getElementById('washerEditId').value = washer.id;
+      document.getElementById('modalWasherTitle').textContent = 'Editar Operario';
+      document.getElementById('washerNameInput').value = washer.name;
+      document.getElementById('washerPhoneInput').value = washer.phone || '';
+      document.getElementById('washerPinInput').value = washer.pin || '1111';
+      document.getElementById('washerActiveStatusSelect').value = String(washer.active !== false);
+      document.getElementById('btnDeleteWasherInModal').style.display = 'block';
+      openModal('modalWasher');
+    }
+
+    function saveWasher() {
+      if (appState.currentRole === 'operario' || appState.currentRole === 'lavador') {
+        alert('Acceso restringido: no tienes permisos para crear o modificar operarios.');
+        return;
+      }
+      const editId = document.getElementById('washerEditId').value;
+      const name = document.getElementById('washerNameInput').value.trim();
+      const phone = document.getElementById('washerPhoneInput').value.trim();
+      const pin = document.getElementById('washerPinInput').value.trim() || '1111';
+      const active = document.getElementById('washerActiveStatusSelect').value === 'true';
+
+      if (!name) {
+        alert('Ingrese el nombre del operario');
+        return;
+      }
+
+      if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+        alert('El PIN personal debe ser de exactamente 4 dígitos numéricos.');
+        return;
+      }
+
+      if (editId) {
+        const washer = appState.washers.find(w => w.id === editId);
+        if (washer) {
+          washer.name = name;
+          washer.phone = phone;
+          washer.pin = pin;
+          washer.active = active;
+        }
+      } else {
+        appState.washers.push({
+          id: 'w_' + Date.now(),
+          name: name,
+          phone: phone,
+          pin: pin,
+          active: active
+        });
+      }
+
+      saveToStorage();
+      closeModal('modalWasher');
+      renderAllViews();
+    }
+
+    async function deleteWasher(wId) {
+      if (appState.currentRole === 'operario' || appState.currentRole === 'lavador') {
+        showToast('Acceso restringido: no tienes permisos para eliminar operarios.', 'error');
+        return;
+      }
+      const washer = appState.washers.find(w => w.id === wId);
+      if (!washer) return;
+      const confirmed = await showConfirmDialog({
+        title: '¿Eliminar a ' + washer.name + '?',
+        message: 'El operario será retirado de la lista activa del autolavado.',
+        confirmText: 'Eliminar Operario',
+        cancelText: 'Cancelar',
+        type: 'danger'
+      });
+      if (confirmed) {
+        appState.washers = appState.washers.filter(w => w.id !== wId);
+        saveToStorage();
+        renderAllViews();
+        showToast('Operario ' + washer.name + ' eliminado.', 'info');
+      }
+    }
+
+    function deleteWasherFromModal() {
+      if (appState.currentRole === 'operario' || appState.currentRole === 'lavador') return;
+      const wId = document.getElementById('washerEditId').value;
+      if (wId) {
+        deleteWasher(wId);
+        closeModal('modalWasher');
+      }
+    }
+
+    function toggleWasherActive(wId) {
+      if (appState.currentRole === 'operario' || appState.currentRole === 'lavador') return;
+      const washer = appState.washers.find(w => w.id === wId);
+      if (washer) {
+        washer.active = !washer.active;
+        saveToStorage();
+        renderAllViews();
+      }
+    }
+
+    async function settleWasherCommission(wId, name, amount) {
+      if (appState.currentRole === 'operario' || appState.currentRole === 'lavador') {
+        showToast('Acceso restringido: solo el administrador o cajero puede liquidar pagos.', 'error');
+        return;
+      }
+      if (amount <= 0) {
+        showToast(name + ' no tiene comisiones acumuladas hoy.', 'warning');
+        return;
+      }
+      const confirmed = await showConfirmDialog({
+        title: '¿Confirmar liquidación?',
+        message: 'Se registrará el desembolso de ' + formatCOP(amount) + ' a ' + name + ' como pago completado.',
+        confirmText: 'Confirmar Liquidación',
+        cancelText: 'Cancelar',
+        type: 'primary'
+      });
+      if (confirmed) {
+        showToast('Liquidación de ' + formatCOP(amount) + ' pagada exitosamente a ' + name + '.', 'success');
+      }
+    }
+
+    // ================= HISTORIAL DE SERVICIOS =================
+    function renderHistory(filterText = '') {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+      const filter = filterText.toLowerCase();
+
+      appState.orders.filter(o => {
+        return o.plate.toLowerCase().includes(filter) ||
+               o.serviceName.toLowerCase().includes(filter) ||
+               (o.washerName && o.washerName.toLowerCase().includes(filter));
+      }).forEach(o => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>#${o.ticketNumber}</strong></td>
+          <td><span class="colombian-plate">${o.plate}</span></td>
+          <td style="text-transform: capitalize;">${o.vehicleType}</td>
+          <td>${o.serviceName}</td>
+          <td>${o.washerName || 'Por asignar'}</td>
+          <td class="table-num">${formatCOP(o.price)}</td>
+          <td>${o.paymentMethod || 'Pendiente'}</td>
+          <td><span class="queue-status-tag ${o.status === 'entregado' ? 'tag-ready' : 'tag-washing'}">${o.status}</span></td>
+          <td style="text-align: right;">
+            <button class="btn-admin-icon" title="Editar orden" onclick="openEditOrderModal('${o.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+            <button class="btn-admin-icon danger" title="Eliminar orden" onclick="deleteOrderById('${o.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+            <button class="btn-card-action" style="padding: 2px 7px;" onclick="viewOrderTicket('${o.id}')">Ticket</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterHistory() {
+      const txt = document.getElementById('historySearchInput').value;
+      renderHistory(txt);
+    }
+
+    function exportHistoryExcel() {
+      if (!appState.orders || appState.orders.length === 0) {
+        alert('No hay órdenes registradas para exportar.');
+        return;
+      }
+
+      if (typeof XLSX !== 'undefined') {
+        const rows = appState.orders.map(o => {
+          const d = o.createdAt ? new Date(o.createdAt) : new Date();
+          const fechaStr = d.toLocaleDateString('es-CO', { year: 'numeric', month: '2-digit', day: '2-digit' });
+          const horaStr = d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+          const precio = Number(o.price) || 0;
+          const comision = Number(o.commission) || 0;
+          const ganancia = precio - comision;
+
+          return {
+            'Ticket': o.ticketNumber || '',
+            'Fecha': fechaStr,
+            'Hora': horaStr,
+            'Placa': (o.plate || '').toUpperCase(),
+            'Tipo Vehículo': (o.vehicleType || '').toUpperCase(),
+            'Servicio': o.serviceName || '',
+            'Operario': o.washerName || 'Sin asignar',
+            'Precio (COP)': precio,
+            'Comisión (COP)': comision,
+            'Ganancia Neta (COP)': ganancia,
+            'Método Pago': o.paymentMethod || 'Pendiente',
+            'Estado': (o.status || '').toUpperCase(),
+            'Teléfono': o.phone || '',
+            'Observaciones': o.notes || ''
+          };
+        });
+
+        const ws = XLSX.utils.json_to_sheet(rows);
+
+        // Anchos de columna óptimos para visualización inmediata en Excel
+        ws['!cols'] = [
+          { wch: 8 },  // Ticket
+          { wch: 12 }, // Fecha
+          { wch: 10 }, // Hora
+          { wch: 12 }, // Placa
+          { wch: 14 }, // Tipo Vehículo
+          { wch: 34 }, // Servicio
+          { wch: 22 }, // Operario
+          { wch: 15 }, // Precio COP
+          { wch: 15 }, // Comisión COP
+          { wch: 18 }, // Ganancia Neta COP
+          { wch: 16 }, // Método Pago
+          { wch: 12 }, // Estado
+          { wch: 14 }, // Teléfono
+          { wch: 28 }  // Observaciones
+        ];
+
+        // Formato contable/moneda para columnas numéricas
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let R = 1; R <= range.e.r; ++R) {
+          [7, 8, 9].forEach(C => {
+            const cell = ws[XLSX.utils.encode_cell({ r: R, c: C })];
+            if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+          });
+        }
+
+        // Activar filtros automáticos en encabezados para buscar y filtrar en Excel
+        ws['!autofilter'] = { ref: ws['!ref'] };
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Historial_Servicios');
+
+        const fechaHoy = new Date().toISOString().slice(0, 10);
+        XLSX.writeFile(wb, `WashQ_Historial_${fechaHoy}.xlsx`);
+        return;
+      }
+
+      exportHistoryCSVFallback();
+    }
+
+    function exportHistoryCSVFallback() {
+      let csv = 'Ticket;Fecha;Hora;Placa;Tipo;Servicio;Operario;Precio COP;Comision COP;Ganancia COP;Metodo;Estado;Telefono;Notas\n';
+      appState.orders.forEach(o => {
+        const d = o.createdAt ? new Date(o.createdAt) : new Date();
+        const fStr = d.toLocaleDateString('es-CO');
+        const hStr = d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+        const precio = Number(o.price) || 0;
+        const comision = Number(o.commission) || 0;
+        const ganancia = precio - comision;
+        const srv = (o.serviceName || '').replace(/;/g, ' ');
+        const op = (o.washerName || 'Sin asignar').replace(/;/g, ' ');
+        const notas = (o.notes || '').replace(/;/g, ' ');
+        csv += `${o.ticketNumber};${fStr};${hStr};${(o.plate || '').toUpperCase()};${o.vehicleType};"${srv}";"${op}";${precio};${comision};${ganancia};${o.paymentMethod || 'Pendiente'};${o.status};${o.phone || ''};"${notas}"\n`;
+      });
+      downloadCSV(csv, 'Historial_WashQ.csv');
+    }
+
+    function exportHistoryCSV() {
+      exportHistoryExcel();
+    }
+
+    // ================= SERVICIOS Y TARIFAS (CONTROL TOTAL) =================
+    function renderServicesConfig() {
+      const tbody = document.getElementById('servicesConfigTableBody');
+      tbody.innerHTML = '';
+      appState.services.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-transform: capitalize;">${s.type}</td>
+          <td><strong>${s.name}</strong></td>
+          <td class="table-num">${formatCOP(s.price)}</td>
+          <td>${s.duration} min</td>
+          <td style="text-align: right;">
+            <button class="btn-admin-icon" title="Editar servicio" onclick="openEditServiceModal('${s.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+            <button class="btn-admin-icon danger" title="Eliminar servicio" onclick="deleteService('${s.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openNewServiceModal() {
+      document.getElementById('serviceEditId').value = '';
+      document.getElementById('modalServiceTitle').textContent = 'Nueva Tarifa de Servicio';
+      document.getElementById('serviceNameInput').value = '';
+      document.getElementById('servicePriceInput').value = '';
+      document.getElementById('serviceDurationInput').value = '30';
+      document.getElementById('serviceCommissionVal').value = '40';
+      document.getElementById('btnDeleteServiceInModal').style.display = 'none';
+      openModal('modalService');
+    }
+
+    function openEditServiceModal(sId) {
+      const service = appState.services.find(s => s.id === sId);
+      if (!service) return;
+
+      document.getElementById('serviceEditId').value = service.id;
+      document.getElementById('modalServiceTitle').textContent = 'Editar Tarifa de Servicio';
+      document.getElementById('serviceTypeSelect').value = service.type;
+      document.getElementById('serviceNameInput').value = service.name;
+      document.getElementById('servicePriceInput').value = service.price;
+      document.getElementById('serviceDurationInput').value = service.duration;
+      document.getElementById('serviceCommissionType').value = service.commType;
+      document.getElementById('serviceCommissionVal').value = service.commVal;
+      document.getElementById('btnDeleteServiceInModal').style.display = 'block';
+      openModal('modalService');
+    }
+
+    function saveServiceConfig() {
+      const editId = document.getElementById('serviceEditId').value;
+      const type = document.getElementById('serviceTypeSelect').value;
+      const name = document.getElementById('serviceNameInput').value.trim();
+      const price = Number(document.getElementById('servicePriceInput').value);
+      const duration = Number(document.getElementById('serviceDurationInput').value);
+      const commType = document.getElementById('serviceCommissionType').value;
+      const commVal = Number(document.getElementById('serviceCommissionVal').value);
+
+      if (!name || !price) {
+        alert('Complete el nombre y el precio');
+        return;
+      }
+
+      if (editId) {
+        const service = appState.services.find(s => s.id === editId);
+        if (service) {
+          service.type = type;
+          service.name = name;
+          service.price = price;
+          service.duration = duration;
+          service.commType = commType;
+          service.commVal = commVal;
+        }
+      } else {
+        appState.services.push({
+          id: 's_' + Date.now(),
+          type, name, price, duration, commType, commVal
+        });
+      }
+
+      saveToStorage();
+      closeModal('modalService');
+      renderAllViews();
+    }
+
+    async function deleteService(sId) {
+      const service = appState.services.find(s => s.id === sId);
+      if (!service) return;
+      const confirmed = await showConfirmDialog({
+        title: '¿Eliminar servicio?',
+        message: '¿Estás seguro de retirar "' + service.name + '" del catálogo de servicios?',
+        confirmText: 'Eliminar Servicio',
+        cancelText: 'Cancelar',
+        type: 'danger'
+      });
+      if (confirmed) {
+        appState.services = appState.services.filter(s => s.id !== sId);
+        saveToStorage();
+        renderAllViews();
+        showToast('Servicio eliminado.', 'info');
+      }
+    }
+
+    function deleteServiceFromModal() {
+      const sId = document.getElementById('serviceEditId').value;
+      if (sId) {
+        deleteService(sId);
+        closeModal('modalService');
+      }
+    }
+
+    // ================= MÉTODOS DE PAGO (CONTROL TOTAL) =================
     function renderPaymentMethodsConfig() {
       const tbody = document.getElementById('configPaymentMethodsTableBody');
       if (!tbody) return;
@@ -6502,7 +6511,6 @@
       }
 
       renderAdminSedesList();
-      renderLicenseInfo();
     }
 
     function saveBusinessConfig() {
@@ -6550,7 +6558,7 @@
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = async function (e) {
+      reader.onload = async function(e) {
         try {
           const parsed = JSON.parse(e.target.result);
           if (parsed && Array.isArray(parsed.services) && Array.isArray(parsed.orders)) {
@@ -6643,11 +6651,11 @@
 
       const cleanBizName = biz.businessName.replace(/&bull;/g, '•');
 
-      const msg =
-        `*REPORTE DIARIO DE CAJA - ${cleanBizName.toUpperCase()}*\nFecha: ${todayStr} | ${timeStr}\n----------------------------------------\n*Vehículos Atendidos:* ${totalVehiculos}\n*Total Facturado:* ${formatCOP(totalIngresos)}\n\n*RECAUDO POR CANALES:*\n${pmBreakdown}\n*LIQUIDACIÓN DE OPERARIOS:*\n${washersBreakdown}\n*SALIDAS Y GASTOS DE CAJA:*\n${expensesBreakdown}\n----------------------------------------\n*EFECTIVO EN CAJÓN:* *${formatCOP(efectivoFisicoCajon)}*\n*BALANCE NETO DEL DÍA:* *${formatCOP(netoEnCaja)}*\n\n_Sistema WashQ - kodiquett.com/washq_`;
+      const msg = 
+`*REPORTE DIARIO DE CAJA - ${cleanBizName.toUpperCase()}*\nFecha: ${todayStr} | ${timeStr}\n----------------------------------------\n*Vehículos Atendidos:* ${totalVehiculos}\n*Total Facturado:* ${formatCOP(totalIngresos)}\n\n*RECAUDO POR CANALES:*\n${pmBreakdown}\n*LIQUIDACIÓN DE OPERARIOS:*\n${washersBreakdown}\n*SALIDAS Y GASTOS DE CAJA:*\n${expensesBreakdown}\n----------------------------------------\n*EFECTIVO EN CAJÓN:* *${formatCOP(efectivoFisicoCajon)}*\n*BALANCE NETO DEL DÍA:* *${formatCOP(netoEnCaja)}*\n\n_Sistema WashQ - kodiquett.com/washq_`;
 
       const targetPhone = ownerPhone ? (ownerPhone.startsWith('57') ? ownerPhone : '57' + ownerPhone) : '';
-      const url = targetPhone
+      const url = targetPhone 
         ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`
         : `https://wa.me/?text=${encodeURIComponent(msg)}`;
 
@@ -6702,21 +6710,21 @@
     }
 
     function forcePwaCacheRefresh() {
-      if (!confirm('¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión móvil v4.4.0.')) return;
+      if (!confirm('¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión móvil v4.5.0.')) return;
       if ('caches' in window) {
-        caches.keys().then(function (names) {
+        caches.keys().then(function(names) {
           return Promise.all(names.map(name => caches.delete(name)));
-        }).then(function () {
+        }).then(function() {
           if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
               return Promise.all(registrations.map(r => r.unregister()));
-            }).then(function () {
+            }).then(function() {
               window.location.href = window.location.pathname + '?v=' + Date.now();
             });
           } else {
             window.location.href = window.location.pathname + '?v=' + Date.now();
           }
-        }).catch(function () {
+        }).catch(function() {
           window.location.href = window.location.pathname + '?v=' + Date.now();
         });
       } else {
@@ -7015,8 +7023,7 @@
   <div id="lockScreenOverlay" class="lock-screen-overlay" style="display: none;">
     <div class="lock-screen-card">
       <div class="lock-icon-circle">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-          stroke-linecap="round" stroke-linejoin="round">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
@@ -7032,15 +7039,10 @@
       </div>
 
       <div style="margin-top: 14px;">
-        <label class="form-label" style="font-size: 0.78rem; font-weight: 700; margin-bottom: 6px;">PIN de
-          Desbloqueo</label>
-        <input type="password" id="lockPinInput" class="form-input" maxlength="4" placeholder="••••"
-          style="text-align: center; font-size: 1.5rem; letter-spacing: 0.3em; width: 100%; max-width: 210px; margin: 0 auto;"
-          onkeydown="if(event.key==='Enter') submitUnlockPin()">
-        <p id="lockPinError"
-          style="color: var(--status-danger); font-size: 0.78rem; display: none; margin-top: 6px; text-align: center;">
-          PIN incorrecto. Intenta nuevamente.</p>
-
+        <label class="form-label" style="font-size: 0.78rem; font-weight: 700; margin-bottom: 6px;">PIN de Desbloqueo</label>
+        <input type="password" id="lockPinInput" class="form-input" maxlength="4" placeholder="••••" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.3em; width: 100%; max-width: 210px; margin: 0 auto;" onkeydown="if(event.key==='Enter') submitUnlockPin()">
+        <p id="lockPinError" style="color: var(--status-danger); font-size: 0.78rem; display: none; margin-top: 6px; text-align: center;">PIN incorrecto. Intenta nuevamente.</p>
+        
         <div class="pin-keypad" style="max-width: 220px; margin: 12px auto 0;">
           <button type="button" class="pin-key" onclick="pressLockPinKey('1')">1</button>
           <button type="button" class="pin-key" onclick="pressLockPinKey('2')">2</button>
@@ -7056,17 +7058,14 @@
           <button type="button" class="pin-key action" onclick="backspaceLockPinKey()">&larr;</button>
         </div>
 
-        <button type="button" class="modal-btn-primary" style="margin-top: 14px; width: 100%; max-width: 220px;"
-          onclick="submitUnlockPin()">Desbloquear</button>
-
+        <button type="button" class="modal-btn-primary" style="margin-top: 14px; width: 100%; max-width: 220px;" onclick="submitUnlockPin()">Desbloquear</button>
+        
         <div style="margin-top: 14px;">
-          <button type="button" class="btn-card-action" style="font-size: 0.78rem; color: var(--text-muted);"
-            onclick="unlockAndSwitchSession()">Cambiar de usuario o sede &rarr;</button>
+          <button type="button" class="btn-card-action" style="font-size: 0.78rem; color: var(--text-muted);" onclick="unlockAndSwitchSession()">Cambiar de usuario o sede &rarr;</button>
         </div>
       </div>
     </div>
   </div>
 
 </body>
-
 </html>
