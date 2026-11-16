@@ -216,6 +216,60 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true, tenant });
     }
 
+    // C) EDITAR DATOS DEL AUTOLAVADO (CORREGIR ERRORES)
+    if (action === 'editTenant') {
+      const code = String(body.code || '').trim().toUpperCase();
+      const tenant = store.tenants[code];
+      if (!tenant) {
+        return res.status(404).json({ ok: false, error: `El autolavado "${code}" no existe en el registro` });
+      }
+
+      const newName = body.name ? String(body.name).trim() : tenant.name;
+      const newCity = body.city ? String(body.city).trim() : tenant.city;
+      const newPhone = body.ownerPhone !== undefined ? String(body.ownerPhone).trim() : tenant.ownerPhone;
+      const newStatus = body.status ? body.status : (tenant.status || 'active');
+      const newPlan = body.plan && ['express', 'pro', 'elite'].includes(body.plan) ? body.plan : tenant.plan;
+      const newCode = body.newCode ? String(body.newCode).trim().toUpperCase() : null;
+
+      tenant.name = newName;
+      tenant.city = newCity;
+      tenant.ownerPhone = newPhone;
+      tenant.status = newStatus;
+      tenant.plan = newPlan;
+
+      if (!Array.isArray(tenant.history)) tenant.history = [];
+      tenant.history.unshift({
+        date: new Date().toISOString(),
+        action: 'edited',
+        note: body.note || 'Datos corregidos en Consola Master'
+      });
+
+      // Si se solicitó renombrar el código de la sede
+      if (newCode && newCode !== code) {
+        if (store.tenants[newCode]) {
+          return res.status(400).json({ ok: false, error: `El código "${newCode}" ya está en uso por otro autolavado` });
+        }
+        tenant.code = newCode;
+        store.tenants[newCode] = tenant;
+        delete store.tenants[code];
+      }
+
+      saveStore(store);
+      return res.status(200).json({ ok: true, tenant });
+    }
+
+    // D) ELIMINAR AUTOLAVADO
+    if (action === 'deleteTenant') {
+      const code = String(body.code || '').trim().toUpperCase();
+      if (!store.tenants[code]) {
+        return res.status(404).json({ ok: false, error: `El autolavado "${code}" no existe` });
+      }
+
+      delete store.tenants[code];
+      saveStore(store);
+      return res.status(200).json({ ok: true, message: `Autolavado ${code} eliminado con éxito` });
+    }
+
     return res.status(400).json({ ok: false, error: 'Acción no reconocida' });
   }
 

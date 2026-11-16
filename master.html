@@ -488,6 +488,69 @@
     </div>
   </div>
 
+  <!-- MODAL EDITAR AUTOLAVADO -->
+  <div class="modal-overlay" id="modalEditTenant">
+    <div class="modal-sheet">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+        <h3 class="modal-title">✏️ Editar Datos del Autolavado</h3>
+        <span class="badge-code" id="editTenantCodeDisplay">CALI-01</span>
+      </div>
+      <p class="modal-desc">Modifica el nombre, ciudad, teléfono o código para corregir cualquier error.</p>
+
+      <input type="hidden" id="editOriginalCode">
+
+      <div class="form-group">
+        <label class="form-label">Código de Sede (Identificador)</label>
+        <input type="text" id="editTenantCode" class="form-input" style="font-family: var(--font-mono); text-transform: uppercase;">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nombre del Negocio</label>
+        <input type="text" id="editTenantName" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ciudad</label>
+        <input type="text" id="editTenantCity" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Celular del Dueño</label>
+        <input type="tel" id="editTenantPhone" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Plan del Software</label>
+        <select id="editTenantPlan" class="form-select">
+          <option value="elite">Plan Élite ($590.000 COP / Multi-Sede / Con Impresora)</option>
+          <option value="pro">Plan Pro ($350.000 COP / 1 Sede / Operarios Ilimitados)</option>
+          <option value="express">Plan Express ($210.000 COP / 1 Sede / Hasta 5 Operarios)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Estado del Cliente</label>
+        <select id="editTenantStatus" class="form-select">
+          <option value="active">Activo (Habilitado)</option>
+          <option value="inactive">Inactivo / Pausado</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Motivo o Nota de la Corrección</label>
+        <input type="text" id="editTenantNote" class="form-input" placeholder="Ej: Corrección de nombre comercial">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px; align-items: center; justify-content: space-between;">
+        <button class="btn btn-secondary" style="color: #EF4444; border-color: rgba(239,68,68,0.3);" onclick="deleteTenantFromModal()">🗑️ Eliminar</button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="closeModal('modalEditTenant')">Cancelar</button>
+          <button class="btn btn-primary" onclick="submitEditTenant()">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     let activeMasterKey = sessionStorage.getItem('washq_master_key') || '';
     let tenantsData = {};
@@ -566,13 +629,14 @@
               <span class="badge-plan badge-${t.plan}">${t.plan.toUpperCase()}</span>
             </td>
             <td>
-              <div style="display: flex; gap: 6px; align-items: center;">
+              <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
                 <select id="selPlan_${t.code}" class="plan-select">
                   <option value="express" ${t.plan === 'express' ? 'selected' : ''}>Express (1 Sede / 5 Operarios)</option>
                   <option value="pro" ${t.plan === 'pro' ? 'selected' : ''}>Pro (1 Sede / Ilimitado)</option>
                   <option value="elite" ${t.plan === 'elite' ? 'selected' : ''}>Élite (Multi-Sede / Todo Incluido)</option>
                 </select>
-                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.76rem;" onclick="savePlanChange('${t.code}')">Actualizar</button>
+                <button class="btn btn-secondary" style="padding: 5px 8px; font-size: 0.76rem;" onclick="savePlanChange('${t.code}')">Actualizar Plan</button>
+                <button class="btn btn-secondary" style="padding: 5px 9px; font-size: 0.76rem; color: #EA580C; border-color: rgba(234,88,12,0.3);" onclick="openEditTenantModal('${t.code}')" title="Editar todos los datos de este autolavado">✏️ Editar</button>
               </div>
             </td>
             <td style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4;">${historyText}</td>
@@ -658,6 +722,91 @@
           loadMasterData();
         } else {
           alert(res.error || 'Error al registrar autolavado');
+        }
+      });
+    }
+
+    function openEditTenantModal(code) {
+      const t = tenantsData[code];
+      if (!t) return;
+      document.getElementById('editOriginalCode').value = t.code;
+      document.getElementById('editTenantCodeDisplay').textContent = t.code;
+      document.getElementById('editTenantCode').value = t.code;
+      document.getElementById('editTenantName').value = t.name || '';
+      document.getElementById('editTenantCity').value = t.city || 'Cali';
+      document.getElementById('editTenantPhone').value = t.ownerPhone || '';
+      document.getElementById('editTenantPlan').value = t.plan || 'elite';
+      document.getElementById('editTenantStatus').value = t.status || 'active';
+      document.getElementById('editTenantNote').value = '';
+      document.getElementById('modalEditTenant').classList.add('active');
+    }
+
+    function submitEditTenant() {
+      const origCode = document.getElementById('editOriginalCode').value;
+      const newCode = document.getElementById('editTenantCode').value.trim().toUpperCase();
+      const name = document.getElementById('editTenantName').value.trim();
+      const city = document.getElementById('editTenantCity').value.trim();
+      const ownerPhone = document.getElementById('editTenantPhone').value.trim();
+      const plan = document.getElementById('editTenantPlan').value;
+      const status = document.getElementById('editTenantStatus').value;
+      const note = document.getElementById('editTenantNote').value.trim() || 'Datos corregidos en Consola Master';
+
+      if (!newCode || !name) {
+        alert('El código y el nombre del autolavado son obligatorios.');
+        return;
+      }
+
+      fetch('/api/licenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          masterKey: activeMasterKey,
+          action: 'editTenant',
+          code: origCode,
+          newCode,
+          name,
+          city,
+          ownerPhone,
+          plan,
+          status,
+          note
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.ok) {
+          alert('¡Datos del autolavado actualizados con éxito!');
+          closeModal('modalEditTenant');
+          loadMasterData();
+        } else {
+          alert(res.error || 'Error al actualizar autolavado');
+        }
+      });
+    }
+
+    function deleteTenantFromModal() {
+      const origCode = document.getElementById('editOriginalCode').value;
+      if (!confirm(`¿Estás segura de eliminar el autolavado "${origCode}"? Esta acción removerá su licencia.`)) {
+        return;
+      }
+
+      fetch('/api/licenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          masterKey: activeMasterKey,
+          action: 'deleteTenant',
+          code: origCode
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.ok) {
+          alert(`Autolavado ${origCode} eliminado.`);
+          closeModal('modalEditTenant');
+          loadMasterData();
+        } else {
+          alert(res.error || 'Error al eliminar autolavado');
         }
       });
     }
