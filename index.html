@@ -20,7 +20,7 @@
   <!-- Limpieza de Caché y Sincronización PWA v5.0.0 -->
   <script>
     (function() {
-      var ACTIVE_PWA_CACHE = 'washq-v5.0.0-prod';
+      var ACTIVE_PWA_CACHE = 'washq-v5.0.1-prod';
       var lastLoadedVersion = localStorage.getItem('washq_app_cache_version');
       if (lastLoadedVersion !== ACTIVE_PWA_CACHE) {
         localStorage.setItem('washq_app_cache_version', ACTIVE_PWA_CACHE);
@@ -2862,7 +2862,7 @@
             </div>
             <div>
               <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Caché PWA Activa</span>
-              <strong style="color: var(--accent-primary); font-family: var(--font-mono); font-size: 0.88rem;" id="lblActiveCacheVersion">washq-v5.0.0-prod</strong>
+              <strong style="color: var(--accent-primary); font-family: var(--font-mono); font-size: 0.88rem;" id="lblActiveCacheVersion">washq-v5.0.1-prod</strong>
             </div>
             <div>
               <span style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Estado del Motor</span>
@@ -5482,7 +5482,7 @@
       appState.paymentMethods.forEach(pm => {
         const opt = document.createElement('option');
         opt.value = pm.id;
-        opt.textContent = `${pm.icon} ${pm.name}`;
+        opt.textContent = pm.name;
         if (pm.id === order.paymentMethod) opt.selected = true;
         pmSelect.appendChild(opt);
       });
@@ -5704,7 +5704,7 @@
       appState.paymentMethods.forEach(pm => {
         const opt = document.createElement('option');
         opt.value = pm.id;
-        opt.textContent = `${pm.icon} ${pm.name}`;
+        opt.textContent = pm.name;
         pmSelect.appendChild(opt);
       });
 
@@ -6939,7 +6939,7 @@
 
     function registerPwaServiceWorker() {
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=5.0.0')
+        navigator.serviceWorker.register('./sw.js?v=5.0.1')
           .then((reg) => {
             console.log('[WashQ PWA] Service Worker registrado en alcance:', reg.scope);
             reg.update();

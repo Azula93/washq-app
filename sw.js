@@ -4,7 +4,7 @@
  * Optimizado para PWA en Android (Samsung Galaxy S26 Ultra) y Chrome.
  */
 
-const CACHE_NAME = 'washq-v5.0.0-prod';
+const CACHE_NAME = 'washq-v5.0.1-prod';
 const CORE_ASSETS = [
   '/',
   '/index.html',
