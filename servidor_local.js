@@ -38,8 +38,64 @@ function getLocalIP() {
   return 'localhost';
 }
 
+function wrapResponse(res) {
+  res.status = function (code) {
+    this.statusCode = code;
+    return this;
+  };
+  res.json = function (data) {
+    this.writeHead(this.statusCode || 200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*'
+    });
+    this.end(JSON.stringify(data));
+  };
+}
+
 const server = http.createServer((req, res) => {
   let reqPath = req.url.split('?')[0];
+
+  // Enrutamiento API para Licencias (Idéntico a Vercel)
+  if (reqPath.startsWith('/api/licenses')) {
+    const licensesHandler = require('./api/licenses');
+    const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    req.query = Object.fromEntries(parsedUrl.searchParams.entries());
+    wrapResponse(res);
+
+    if (req.method === 'POST') {
+      let bodyData = '';
+      req.on('data', chunk => { bodyData += chunk; });
+      req.on('end', () => {
+        try { req.body = JSON.parse(bodyData); } catch (e) { req.body = bodyData; }
+        licensesHandler(req, res);
+      });
+      return;
+    } else {
+      licensesHandler(req, res);
+      return;
+    }
+  }
+
+  if (reqPath.startsWith('/api/activate')) {
+    const activateHandler = require('./api/activate');
+    const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    req.query = Object.fromEntries(parsedUrl.searchParams.entries());
+    wrapResponse(res);
+
+    if (req.method === 'POST') {
+      let bodyData = '';
+      req.on('data', chunk => { bodyData += chunk; });
+      req.on('end', () => {
+        try { req.body = JSON.parse(bodyData); } catch (e) { req.body = bodyData; }
+        activateHandler(req, res);
+      });
+      return;
+    } else {
+      activateHandler(req, res);
+      return;
+    }
+  }
+
   if (reqPath === '/' || reqPath === '') {
     reqPath = '/index.html';
   }

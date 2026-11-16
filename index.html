@@ -2913,14 +2913,14 @@
 
             <button class="modal-btn-primary" onclick="saveBusinessConfig()">Guardar Información</button>
 
-            <!-- Sección Multi-Sede (Exclusivo Administrador) -->
+            <!-- Sección Gestión de Sedes (Multi-Sede según Plan) -->
             <div id="adminSedesSection" style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
               <div class="card-top-bar" style="margin-bottom: 12px;">
                 <div>
-                  <h4 style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 800; color: var(--text-title); margin-bottom: 2px;">Gestión de Sedes (Multi-Sede)</h4>
-                  <p style="font-size: 0.78rem; color: var(--text-muted);">Solo el administrador puede registrar y supervisar sedes</p>
+                  <h4 style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 800; color: var(--text-title); margin-bottom: 2px;">Gestión de Sedes</h4>
+                  <p id="sedesSectionSubtitle" style="font-size: 0.78rem; color: var(--text-muted);">Solo el administrador puede registrar y supervisar sedes</p>
                 </div>
-                <button type="button" class="btn-card-action btn-card-primary" onclick="openCreateTenantModal()" style="font-size: 0.8rem; padding: 6px 12px;">+ Nueva Sede</button>
+                <button type="button" id="btnNuevaSede" class="btn-card-action btn-card-primary" onclick="openCreateTenantModal()" style="font-size: 0.8rem; padding: 6px 12px; display: none;">+ Nueva Sede</button>
               </div>
               <div id="adminSedesList" style="display: flex; flex-direction: column; gap: 8px;">
                 <!-- Lista dinámica de sedes -->
@@ -2937,6 +2937,24 @@
                 <button class="btn-card-action" style="font-size: 0.76rem;" onclick="promptNewCategory()">+ Añadir Tipo</button>
               </div>
               <div id="configCategoriesList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;"></div>
+            </div>
+
+            <!-- Licencia Oficial del Sistema (Gestionada por Kodiquett) -->
+            <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
+              <div class="card-top-bar" style="margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                <div>
+                  <h4 style="font-size: 0.95rem; font-weight: 700;">Licencia Oficial del Sistema</h4>
+                  <p class="card-subtitle" id="licensePlanDescription">Plan Élite Vitalicio (Multi-Sede y Operarios Ilimitados)</p>
+                </div>
+                <button type="button" class="btn-card-action" style="font-size: 0.76rem;" onclick="checkSystemLicenseWithServer(true)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  Verificar Estado con Kodiquett
+                </button>
+              </div>
+              <div id="licenseBadgeContainer" style="display: flex; gap: 8px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                <span id="licensePlanBadge" style="font-size: 0.75rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.2);">Plan Élite Activo</span>
+                <span id="licenseClientBadge" style="font-size: 0.75rem; color: var(--text-muted);">Sede autorizada: CALI-01</span>
+              </div>
             </div>
 
             <!-- Copia de Seguridad -->
@@ -3481,38 +3499,140 @@
         adminPin: '1234',
         cajeroPin: '0000',
         washType: 'mixto'
-      },
-      {
-        id: 'medellin-detail',
-        code: 'MED-02',
-        name: 'Master Detail Medellín',
-        city: 'Medellín',
-        address: 'Carrera 43A # 18 Sur, Medellín',
-        phone: '300 456 7890',
-        ownerPhone: '310 987 6543',
-        active: true,
-        adminPin: '1234',
-        cajeroPin: '0000',
-        washType: 'mixto'
-      },
-      {
-        id: 'bogota-ecowash',
-        code: 'BOG-03',
-        name: 'EcoWash Bogotá',
-        city: 'Bogotá',
-        address: 'Calle 127 # 15-45, Bogotá',
-        phone: '312 345 6789',
-        ownerPhone: '320 123 4567',
-        active: true,
-        adminPin: '1234',
-        cajeroPin: '0000',
-        washType: 'mixto'
       }
     ];
 
     let tenantsRegistry = [];
     let activeTenant = null;
     let selectedAuthRole = 'admin';
+
+    // ==========================================================================
+    // SISTEMA CENTRAL DE LICENCIAS KODIQUETT (EXPRESS / PRO / ÉLITE)
+    // ==========================================================================
+    const PLAN_TIERS = {
+      express: {
+        id: 'express',
+        name: 'WashQ Express',
+        badge: 'Plan Express',
+        allowMultiSede: false,
+        maxTenants: 1,
+        maxWashers: 5,
+        allowThermalPrinter: false,
+        description: 'Plan Express (1 Sede, Hasta 5 Operarios, Caja Esencial)'
+      },
+      pro: {
+        id: 'pro',
+        name: 'WashQ Pro',
+        badge: 'Plan Pro',
+        allowMultiSede: false,
+        maxTenants: 1,
+        maxWashers: 999,
+        allowThermalPrinter: false,
+        description: 'Plan Pro (1 Sede, Operarios Ilimitados, Cuadre WhatsApp)'
+      },
+      elite: {
+        id: 'elite',
+        name: 'WashQ Élite',
+        badge: 'Plan Élite (Multi-Sede)',
+        allowMultiSede: true,
+        maxTenants: 999,
+        maxWashers: 999,
+        allowThermalPrinter: true,
+        description: 'Plan Élite Vitalicio (Multi-Sede, Operarios Ilimitados, Impresora POS)'
+      }
+    };
+
+    function getActivePlan() {
+      try {
+        const lic = localStorage.getItem('washq_license_info');
+        if (lic) {
+          const parsed = JSON.parse(lic);
+          if (parsed && parsed.plan && PLAN_TIERS[parsed.plan]) {
+            return PLAN_TIERS[parsed.plan];
+          }
+        }
+      } catch (e) {}
+      // Por defecto para clientes fundadores: Plan Élite completo
+      return PLAN_TIERS['elite'];
+    }
+
+    function isMultiSedeEnabled() {
+      return getActivePlan().allowMultiSede === true;
+    }
+
+    // Consulta silenciosa al servidor central de Vercel/Local para verificar el plan de esta sede
+    async function checkSystemLicenseWithServer(userTriggered = false) {
+      const code = activeTenant ? activeTenant.code : (tenantsRegistry[0] ? tenantsRegistry[0].code : 'CALI-01');
+      if (userTriggered) {
+        showToast('Consultando estado con servidor Kodiquett...', 'info');
+      }
+
+      try {
+        const resp = await fetch(`/api/licenses?tenant=${encodeURIComponent(code)}`);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.ok) {
+            const planId = data.plan || 'elite';
+            const currentPlan = getActivePlan();
+
+            localStorage.setItem('washq_license_info', JSON.stringify({
+              code: data.code || code,
+              name: data.name || (activeTenant ? activeTenant.name : 'Autolavado'),
+              plan: planId,
+              verifiedAt: data.verifiedAt || new Date().toISOString()
+            }));
+
+            renderAdminSedesList();
+            renderLicenseInfo();
+
+            if (userTriggered) {
+              showToast(`Licencia sincronizada: ${PLAN_TIERS[planId].name} Activo.`, 'success');
+            } else if (currentPlan.id !== planId) {
+              showToast(`Plan actualizado por Kodiquett a: ${PLAN_TIERS[planId].name}`, 'info');
+            }
+            return;
+          }
+        }
+      } catch (err) {
+        // Modo offline: se preserva la licencia local sin interrumpir el funcionamiento
+        if (userTriggered) {
+          showToast(`Operando en modo local fuera de línea: ${getActivePlan().badge}`, 'info');
+        }
+      }
+    }
+
+    function renderLicenseInfo() {
+      const plan = getActivePlan();
+      const planDesc = document.getElementById('licensePlanDescription');
+      const planBadge = document.getElementById('licensePlanBadge');
+      const clientBadge = document.getElementById('licenseClientBadge');
+
+      if (planBadge) {
+        planBadge.textContent = plan.badge;
+        if (plan.id === 'elite') {
+          planBadge.style.background = '#ECFDF5';
+          planBadge.style.color = '#059669';
+          planBadge.style.borderColor = 'rgba(5,150,105,0.2)';
+        } else if (plan.id === 'pro') {
+          planBadge.style.background = '#EFF6FF';
+          planBadge.style.color = '#2563EB';
+          planBadge.style.borderColor = 'rgba(37,99,235,0.2)';
+        } else {
+          planBadge.style.background = '#F3F4F6';
+          planBadge.style.color = '#4B5563';
+          planBadge.style.borderColor = 'rgba(75,85,99,0.2)';
+        }
+      }
+
+      if (planDesc) {
+        planDesc.textContent = plan.description;
+      }
+
+      if (clientBadge) {
+        const code = activeTenant ? activeTenant.code : (tenantsRegistry[0] ? tenantsRegistry[0].code : 'CALI-01');
+        clientBadge.textContent = `Sede verificada: ${code}`;
+      }
+    }
 
     function getTenantStorageKey(tId) {
       return 'washq_tenant_' + (tId || 'cali-express') + '_db';
@@ -3523,6 +3643,12 @@
         const saved = localStorage.getItem('washq_tenants_registry');
         if (saved) {
           tenantsRegistry = JSON.parse(saved);
+          // Purga automática y silenciosa de sedes demo (Medellín y Bogotá)
+          const cleaned = tenantsRegistry.filter(t => t.id !== 'medellin-detail' && t.id !== 'bogota-ecowash' && t.code !== 'MED-02' && t.code !== 'BOG-03');
+          if (cleaned.length !== tenantsRegistry.length) {
+            tenantsRegistry = cleaned.length > 0 ? cleaned : [...DEFAULT_TENANTS];
+            localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
+          }
         } else {
           tenantsRegistry = [...DEFAULT_TENANTS];
           localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
@@ -3530,6 +3656,9 @@
       } catch (e) {
         tenantsRegistry = [...DEFAULT_TENANTS];
       }
+
+      // Sincronización silenciosa de plan en segundo plano si hay red
+      checkSystemLicenseWithServer(false);
     }
 
     function checkAuthRouteOrSession() {
@@ -4000,6 +4129,20 @@
       if (!container) return;
       container.innerHTML = '';
 
+      // El botón "+ Nueva Sede" SOLO existe y se muestra si el plan es Élite (Multi-Sede)
+      const btnNuevaSede = document.getElementById('btnNuevaSede');
+      const multiAllowed = isMultiSedeEnabled();
+      if (btnNuevaSede) {
+        btnNuevaSede.style.display = multiAllowed ? 'inline-block' : 'none';
+      }
+
+      const subTitle = document.getElementById('sedesSectionSubtitle');
+      if (subTitle) {
+        subTitle.textContent = multiAllowed
+          ? 'Administra tus sucursales y registra nuevas sedes'
+          : 'Sede principal configurada (Plan 1 Sede activo)';
+      }
+
       tenantsRegistry.forEach(t => {
         const isCurrent = activeTenant && activeTenant.id === t.id;
         const item = document.createElement('div');
@@ -4018,12 +4161,54 @@
             </div>
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 3px;">${t.address || t.city || 'Colombia'}</p>
           </div>
-          <div>
-            ${!isCurrent ? `<button type="button" class="btn-card-action" style="font-size: 0.75rem; padding: 4px 10px;" onclick="switchTenantDirect('${t.id}')">Cambiar a esta sede</button>` : '<span style="font-size: 0.75rem; color: var(--text-muted);">En uso</span>'}
+          <div style="display: flex; gap: 6px; align-items: center;">
+            ${!isCurrent ? `
+              <button type="button" class="btn-card-action" style="font-size: 0.75rem; padding: 4px 10px;" onclick="switchTenantDirect('${t.id}')">Cambiar a esta sede</button>
+              <button type="button" class="btn-card-action" style="font-size: 0.75rem; padding: 5px 8px; color: #DC2626; border-color: rgba(220,38,38,0.3); background: #FEF2F2;" onclick="deleteTenant('${t.id}')" title="Eliminar sede">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+            ` : '<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">En uso</span>'}
           </div>
         `;
         container.appendChild(item);
       });
+    }
+
+    async function deleteTenant(tenantId) {
+      if (appState.currentRole !== 'admin') {
+        showToast('Solo el administrador puede eliminar sedes.', 'error');
+        return;
+      }
+      const target = tenantsRegistry.find(t => t.id === tenantId);
+      if (!target) return;
+      if (activeTenant && activeTenant.id === tenantId) {
+        showToast('No puedes eliminar la sede que está actualmente en uso.', 'warning');
+        return;
+      }
+      if (tenantsRegistry.length <= 1) {
+        showToast('Debe existir al menos una sede principal registrada.', 'warning');
+        return;
+      }
+
+      const confirmed = await showConfirmDialog({
+        title: '¿Eliminar sede ' + target.name + '?',
+        message: 'Se eliminará la sede ' + target.name + ' (' + target.code + ') de este equipo.',
+        confirmText: 'Sí, Eliminar Sede',
+        cancelText: 'Cancelar',
+        type: 'danger'
+      });
+
+      if (!confirmed) return;
+
+      tenantsRegistry = tenantsRegistry.filter(t => t.id !== tenantId);
+      localStorage.setItem('washq_tenants_registry', JSON.stringify(tenantsRegistry));
+      try {
+        localStorage.removeItem(getTenantStorageKey(tenantId));
+      } catch (e) {}
+
+      showToast('Sede eliminada correctamente.', 'success');
+      renderAdminSedesList();
+      renderLicenseInfo();
     }
 
     function switchTenantDirect(targetTenantId) {
@@ -4201,6 +4386,10 @@
     function openCreateTenantModal() {
       if (appState.currentRole !== 'admin') {
         showToast('Acceso restringido: solo el administrador puede registrar nuevas sedes.', 'error');
+        return;
+      }
+      if (!isMultiSedeEnabled()) {
+        showToast('Tu plan actual incluye 1 sola sede física. Para habilitar Multi-Sede adquiere la ampliación a Plan Élite con Kodiquett.', 'warning');
         return;
       }
       document.getElementById('newTenantName').value = '';
@@ -6511,6 +6700,7 @@
       }
 
       renderAdminSedesList();
+      renderLicenseInfo();
     }
 
     function saveBusinessConfig() {

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Master Console — Kodiquett Licencias WashQ</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #161822;
+      --bg-card: #202330;
+      --bg-card-hover: #262a3b;
+      --bg-input: #12141c;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: #EA580C;
+      --text-main: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --accent: #EA580C;
+      --accent-glow: rgba(234, 88, 12, 0.25);
+      --emerald: #10B981;
+      --blue: #3B82F6;
+      --purple: #8B5CF6;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    .master-header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--accent), #C2410C);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(234, 88, 12, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(234, 88, 12, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* BOTONES */
+    .btn {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #C2410C;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* CONTENEDOR */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-val {
+      font-size: 1.8rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--text-main);
+    }
+
+    /* SECCIÓN DE CLIENTES */
+    .clients-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .table-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      min-width: 260px;
+    }
+    .search-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    /* TABLA */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+    }
+
+    td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.86rem;
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: var(--bg-card-hover);
+    }
+
+    .badge-code {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      display: inline-block;
+    }
+
+    .plan-select {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      cursor: pointer;
+    }
+    .plan-select:focus {
+      border-color: var(--border-focus);
+    }
+
+    .badge-plan {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      display: inline-block;
+    }
+    .badge-elite { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-pro { background: rgba(59, 130, 246, 0.15); color: var(--blue); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-express { background: rgba(156, 163, 175, 0.15); color: var(--text-muted); border: 1px solid rgba(156, 163, 175, 0.3); }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-sheet {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 480px;
+      padding: 26px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .modal-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--border-focus);
+    }
+
+    .history-tag {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MODAL DE LOGIN MAESTRO -->
+  <div class="modal-overlay active" id="modalAuthMaster">
+    <div class="modal-sheet" style="max-width: 400px; text-align: center;">
+      <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: rgba(234,88,12,0.15); color: var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      </div>
+      <h3 class="modal-title">Acceso Propietaria Kodiquett</h3>
+      <p class="modal-desc">Ingresa tu clave maestra para administrar licencias y sedes.</p>
+      <div class="form-group">
+        <input type="password" id="inputMasterKey" class="form-input" placeholder="Clave Maestra" style="text-align: center; font-family: var(--font-mono); letter-spacing: 0.2em;" onkeydown="if(event.key==='Enter') verifyMasterLogin()">
+      </div>
+      <p id="authErrorMsg" style="color: #EF4444; font-size: 0.78rem; margin-bottom: 12px; display: none;">Clave maestra incorrecta</p>
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 10px;" onclick="verifyMasterLogin()">Entrar a Master Console</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="master-header">
+    <div class="brand-group">
+      <div class="brand-logo">K</div>
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h1 class="brand-title">Kodiquett Master Console</h1>
+          <span class="brand-tag">WashQ Licencias</span>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-muted);">Administración central de autolavados y cambios de plan</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="/" target="_blank" class="btn btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        Abrir Terminal Cliente
+      </a>
+      <button class="btn btn-secondary" onclick="logoutMaster()">Salir</button>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="container">
+    <!-- METRICAS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total Autolavados</span>
+        <span class="stat-val" id="statTotal">--</span>
+      </div>
+      <div class="stat-card" style="border-left: 3px solid var(--emerald);">
+        <span class="stat-label">Plan Élite (Multi-Sede)</span>
+        <span class="stat-val" id="statElite" style="color: var(--emerald);">--</span>
+      </div>
+      <div class="stat-card" style="border-left: 3px solid var(--blue);">
+        <span class="stat-label">Plan Pro</span>
+        <span class="stat-val" id="statPro" style="color: var(--blue);">--</span>
+      </div>
+      <div class="stat-card" style="border-left: 3px solid var(--text-muted);">
+        <span class="stat-label">Plan Express</span>
+        <span class="stat-val" id="statExpress" style="color: var(--text-muted);">--</span>
+      </div>
+    </div>
+
+    <!-- TABLA DE AUTOLAVADOS -->
+    <div class="clients-card">
+      <div class="table-top">
+        <div>
+          <h2 style="font-size: 1.15rem; font-weight: 800;">Registro Oficial de Clientes</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Gestiona los planes activos y consulta el historial de actualizaciones</p>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <input type="text" id="searchInput" class="search-input" placeholder="Buscar por código, autolavado o ciudad..." oninput="renderTable()">
+          <button class="btn btn-primary" onclick="openNewTenantModal()">+ Registrar Autolavado</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Código Sede</th>
+              <th>Autolavado</th>
+              <th>Ciudad</th>
+              <th>Contacto Dueño</th>
+              <th>Plan Activo</th>
+              <th>Acción de Cambio</th>
+              <th>Historial de Plan</th>
+            </tr>
+          </thead>
+          <tbody id="tenantsTableBody">
+            <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Cargando registro...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL NUEVO AUTOLAVADO -->
+  <div class="modal-overlay" id="modalNewTenant">
+    <div class="modal-sheet">
+      <h3 class="modal-title">+ Registrar Nuevo Autolavado</h3>
+      <p class="modal-desc">Asigna el código de sede y el plan contratado. Se activará de inmediato en el sistema.</p>
+
+      <div class="form-group">
+        <label class="form-label">Código Único de Sede (ej: CALI-02)</label>
+        <input type="text" id="newTenantCode" class="form-input" placeholder="CALI-02" style="font-family: var(--font-mono); text-transform: uppercase;">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nombre del Negocio</label>
+        <input type="text" id="newTenantName" class="form-input" placeholder="Lavafácil El Diamante">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ciudad</label>
+        <input type="text" id="newTenantCity" class="form-input" placeholder="Cali">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Celular del Dueño</label>
+        <input type="tel" id="newTenantPhone" class="form-input" placeholder="315 555 1234">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Plan Asignado</label>
+        <select id="newTenantPlan" class="form-select">
+          <option value="elite">Plan Élite ($590.000 COP / Multi-Sede / Con Impresora)</option>
+          <option value="pro">Plan Pro ($350.000 COP / 1 Sede / Operarios Ilimitados)</option>
+          <option value="express">Plan Express ($210.000 COP / 1 Sede / Hasta 5 Operarios)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nota o Detalle de Pago</label>
+        <input type="text" id="newTenantNote" class="form-input" placeholder="Ej: Pago de contado - Cupo lanzamiento 2">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-secondary" style="flex: 1; justify-content: center;" onclick="closeModal('modalNewTenant')">Cancelar</button>
+        <button class="btn btn-primary" style="flex: 1; justify-content: center;" onclick="submitNewTenant()">Guardar y Activar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let activeMasterKey = sessionStorage.getItem('washq_master_key') || '';
+    let tenantsData = {};
+
+    function verifyMasterLogin() {
+      const key = document.getElementById('inputMasterKey').value.trim();
+      if (!key) return;
+
+      fetch(`/api/licenses?masterKey=${encodeURIComponent(key)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.ok) {
+            activeMasterKey = key;
+            sessionStorage.setItem('washq_master_key', key);
+            document.getElementById('modalAuthMaster').classList.remove('active');
+            loadMasterData();
+          } else {
+            document.getElementById('authErrorMsg').style.display = 'block';
+          }
+        })
+        .catch(() => {
+          document.getElementById('authErrorMsg').style.display = 'block';
+        });
+    }
+
+    function logoutMaster() {
+      sessionStorage.removeItem('washq_master_key');
+      location.reload();
+    }
+
+    function loadMasterData() {
+      if (!activeMasterKey) return;
+      fetch(`/api/licenses?masterKey=${encodeURIComponent(activeMasterKey)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.ok) {
+            tenantsData = data.tenants || {};
+            document.getElementById('statTotal').textContent = data.stats.total || 0;
+            document.getElementById('statElite').textContent = data.stats.elite || 0;
+            document.getElementById('statPro').textContent = data.stats.pro || 0;
+            document.getElementById('statExpress').textContent = data.stats.express || 0;
+            renderTable();
+          }
+        });
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('tenantsTableBody');
+      const search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      const list = Object.values(tenantsData);
+
+      const filtered = list.filter(t => {
+        if (!search) return true;
+        return (t.code && t.code.toLowerCase().includes(search)) ||
+               (t.name && t.name.toLowerCase().includes(search)) ||
+               (t.city && t.city.toLowerCase().includes(search));
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">No se encontraron autolavados registrados.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(t => {
+        const historyText = (t.history && t.history.length > 0)
+          ? t.history.map(h => `• ${new Date(h.date).toLocaleDateString('es-CO')}: ${h.action === 'created' ? 'Registro inicial' : `Cambio a ${h.to.toUpperCase()}`} (${h.note || ''})`).join('<br>')
+          : 'Sin cambios registrados';
+
+        return `
+          <tr>
+            <td><span class="badge-code">${t.code}</span></td>
+            <td><strong>${t.name}</strong></td>
+            <td>${t.city || 'Cali'}</td>
+            <td>${t.ownerPhone || 'Sin registrar'}</td>
+            <td>
+              <span class="badge-plan badge-${t.plan}">${t.plan.toUpperCase()}</span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <select id="selPlan_${t.code}" class="plan-select">
+                  <option value="express" ${t.plan === 'express' ? 'selected' : ''}>Express (1 Sede / 5 Operarios)</option>
+                  <option value="pro" ${t.plan === 'pro' ? 'selected' : ''}>Pro (1 Sede / Ilimitado)</option>
+                  <option value="elite" ${t.plan === 'elite' ? 'selected' : ''}>Élite (Multi-Sede / Todo Incluido)</option>
+                </select>
+                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.76rem;" onclick="savePlanChange('${t.code}')">Actualizar</button>
+              </div>
+            </td>
+            <td style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4;">${historyText}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function savePlanChange(code) {
+      const select = document.getElementById(`selPlan_${code}`);
+      if (!select) return;
+      const newPlan = select.value;
+      const note = prompt(`Ingresa una nota para el cambio de plan del autolavado ${code} (ej: Pagó upgrade a Élite $380k):`, 'Upgrade de plan');
+      if (note === null) return;
+
+      fetch('/api/licenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          masterKey: activeMasterKey,
+          action: 'updatePlan',
+          code,
+          newPlan,
+          note
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.ok) {
+          alert(`¡Plan de ${code} actualizado a ${newPlan.toUpperCase()} exitosamente!`);
+          loadMasterData();
+        } else {
+          alert(res.error || 'Error al actualizar plan');
+        }
+      });
+    }
+
+    function openNewTenantModal() {
+      document.getElementById('newTenantCode').value = '';
+      document.getElementById('newTenantName').value = '';
+      document.getElementById('newTenantCity').value = 'Cali';
+      document.getElementById('newTenantPhone').value = '';
+      document.getElementById('newTenantNote').value = '';
+      document.getElementById('modalNewTenant').classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function submitNewTenant() {
+      const code = document.getElementById('newTenantCode').value.trim().toUpperCase();
+      const name = document.getElementById('newTenantName').value.trim();
+      const city = document.getElementById('newTenantCity').value.trim();
+      const ownerPhone = document.getElementById('newTenantPhone').value.trim();
+      const plan = document.getElementById('newTenantPlan').value;
+      const note = document.getElementById('newTenantNote').value.trim();
+
+      if (!code || !name) {
+        alert('Código de sede y nombre de autolavado son obligatorios.');
+        return;
+      }
+
+      fetch('/api/licenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          masterKey: activeMasterKey,
+          action: 'createTenant',
+          code,
+          name,
+          city,
+          ownerPhone,
+          plan,
+          note
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.ok) {
+          alert(`¡Autolavado "${name}" (${code}) registrado con éxito en Plan ${plan.toUpperCase()}!`);
+          closeModal('modalNewTenant');
+          loadMasterData();
+        } else {
+          alert(res.error || 'Error al registrar autolavado');
+        }
+      });
+    }
+
+    // Auto-login si ya tenía sesión activa
+    if (activeMasterKey) {
+      document.getElementById('modalAuthMaster').classList.remove('active');
+      loadMasterData();
+    }
+  </script>
+</body>
+</html>

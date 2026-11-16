@@ -1,0 +1,21 @@
+{
+  "tenants": {
+    "CALI-01": {
+      "code": "CALI-01",
+      "name": "Autolavado Cali Express",
+      "city": "Cali",
+      "ownerPhone": "315 555 1234",
+      "plan": "elite",
+      "status": "active",
+      "createdAt": "2026-11-15T00:00:00.000Z",
+      "history": [
+        {
+          "date": "2026-11-15T00:00:00.000Z",
+          "action": "created",
+          "plan": "elite",
+          "note": "Cupo de Lanzamiento Fundador (Sistema Completo Desbloqueado)"
+        }
+      ]
+    }
+  }
+}

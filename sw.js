@@ -4,7 +4,7 @@
  * Optimizado para PWA en Android (Samsung Galaxy S26 Ultra) y Chrome.
  */
 
-const CACHE_NAME = 'washq-v4.5.0-plans';
+const CACHE_NAME = 'washq-v4.6.0-master';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -50,8 +50,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
-  // Solo peticiones GET
-  if (req.method !== 'GET') return;
+  // Solo peticiones GET y NUNCA interceptar rutas API
+  if (req.method !== 'GET' || req.url.includes('/api/')) return;
 
   // Navegación (HTML principal)
   if (req.mode === 'navigate' || req.destination === 'document') {
