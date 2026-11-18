@@ -33,7 +33,6 @@ if (isLocalhost) {
   const CORE_ASSETS = [
     '/',
     '/index.html',
-    '/dashboard.html',
     '/manifest.json',
     '/css/main.css',
     '/js/config.js',
