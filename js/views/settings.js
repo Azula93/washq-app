@@ -194,33 +194,11 @@
         lockSel.value = String(timeout);
       }
 
-      const openHourSel = document.getElementById('configOpenHour');
-      const closeHourSel = document.getElementById('configCloseHour');
-      if (openHourSel) {
-        openHourSel.value = String(typeof appState.config.openHour === 'number' ? appState.config.openHour : 8);
-      }
-      if (closeHourSel) {
-        closeHourSel.value = String(typeof appState.config.closeHour === 'number' ? appState.config.closeHour : 17);
-      }
-
       renderAdminSedesList();
       renderLicenseInfo();
     }
 
     function saveBusinessConfig() {
-      const openHourSel = document.getElementById('configOpenHour');
-      const closeHourSel = document.getElementById('configCloseHour');
-      if (openHourSel && closeHourSel) {
-        const openH = Number(openHourSel.value);
-        const closeH = Number(closeHourSel.value);
-        if (closeH <= openH) {
-          showToast('La hora de cierre debe ser posterior a la hora de apertura.', 'warning');
-          return;
-        }
-        appState.config.openHour = openH;
-        appState.config.closeHour = closeH;
-      }
-
       appState.config.businessName = document.getElementById('configBizName').value.trim();
       const washTypeSel = document.getElementById('configWashType');
       if (washTypeSel) {

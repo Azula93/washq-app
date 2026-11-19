@@ -318,42 +318,27 @@
         });
       }
 
-      // ================= RENDIMIENTO DE ZONAS DE LAVADO (DINÁMICO POR HORARIO) =================
-      renderBayPerformanceCard(targetOrders, activeCount, period);
+      // ================= RENDIMIENTO DE ZONAS DE LAVADO (ÚLTIMOS 7 DÍAS) =================
+      renderBayPerformanceCard(activeCount);
     }
 
-    function formatHour12(hourFloat) {
-      const totalMins = Math.round(hourFloat * 60);
-      let h = Math.floor(totalMins / 60) % 24;
-      const m = totalMins % 60;
-      const suffix = h >= 12 ? 'PM' : 'AM';
-      h = h % 12;
-      if (h === 0) h = 12;
-      return `${h}:${String(m).padStart(2, '0')} ${suffix}`;
-    }
-
-    function formatHourShort(hourFloat) {
-      const totalMins = Math.round(hourFloat * 60);
-      let h = Math.floor(totalMins / 60) % 24;
-      const m = totalMins % 60;
-      const suffix = h >= 12 ? 'p' : 'a';
-      h = h % 12;
-      if (h === 0) h = 12;
-      return m === 0 ? `${h}${suffix}` : `${h}:${String(m).padStart(2, '0')}`;
-    }
-
-    function renderBayPerformanceCard(periodOrders, activeCount, period) {
+    function renderBayPerformanceCard(activeCount) {
       const avgNoteEl = document.getElementById('overviewAvgTimeNote');
       const subtitleEl = document.getElementById('overviewBaySubtitle');
       const chartEl = document.getElementById('overviewBayMatrixChart');
       const labelsEl = document.getElementById('overviewBayMatrixLabels');
 
-      const openH = Number(appState.config && typeof appState.config.openHour === 'number' ? appState.config.openHour : 8);
-      const rawCloseH = Number(appState.config && typeof appState.config.closeHour === 'number' ? appState.config.closeHour : 17);
-      const closeH = rawCloseH > openH ? rawCloseH : openH + 9;
+      if (subtitleEl) subtitleEl.textContent = 'Vehículos atendidos en los últimos 7 días';
 
-      // Tiempo promedio real con órdenes entregadas
-      const deliveredOrders = (periodOrders || []).filter(o => o.status === 'entregado');
+      const allOrders = appState.orders || [];
+      const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      const now = new Date();
+      const weekStartTs = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).getTime();
+
+      const weekOrders = allOrders.filter(o => o && o.createdAt && o.createdAt >= weekStartTs);
+
+      // Tiempo promedio real con órdenes entregadas en los últimos 7 días
+      const deliveredOrders = weekOrders.filter(o => o.status === 'entregado');
       if (avgNoteEl) {
         if (deliveredOrders.length > 0) {
           let totalMin = 0;
@@ -375,110 +360,29 @@
           }
         } else {
           avgNoteEl.textContent = activeCount > 0
-            ? 'Sin entregas completadas todavía'
-            : 'Sin actividad registrada en este período';
+            ? 'Sin entregas completadas esta semana'
+            : 'Sin actividad registrada esta semana';
         }
       }
 
-      // Construir columnas según el período seleccionado
-      let buckets = [];
-      let footerLegend = '';
-
-      if (period === 'semana') {
-        if (subtitleEl) subtitleEl.textContent = 'Vehículos ingresados por día (últimos 7 días)';
-        footerLegend = 'Barras por día';
-        const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-        const now = new Date();
-        for (let offset = 6; offset >= 0; offset--) {
-          const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset);
-          const startTs = d.getTime();
-          const endTs = startTs + (24 * 3600 * 1000) - 1;
-          const count = (periodOrders || []).filter(o => o.createdAt >= startTs && o.createdAt <= endTs).length;
-          const dateLabel = `${d.getDate()}/${d.getMonth() + 1}`;
-          buckets.push({
-            label: offset === 0 ? 'Hoy' : dayNames[d.getDay()],
-            fullLabel: `${dayNames[d.getDay()]} ${dateLabel}`,
-            count,
-            isExtra: false
-          });
-        }
-      } else if (period === 'mes') {
-        if (subtitleEl) subtitleEl.textContent = 'Vehículos ingresados por semana (últimos 30 días)';
-        footerLegend = 'Barras por semana';
-        const nowTs = Date.now();
-        const weekMs = 7 * 24 * 3600 * 1000;
-        for (let w = 3; w >= 0; w--) {
-          const endTs = nowTs - (w * weekMs);
-          const startTs = endTs - weekMs;
-          const count = (periodOrders || []).filter(o => o.createdAt > startTs && o.createdAt <= endTs).length;
-          const idx = 4 - w;
-          buckets.push({
-            label: idx === 4 ? 'Esta sem.' : `Sem ${idx}`,
-            fullLabel: idx === 4 ? 'Últimos 7 días' : `Semana ${idx}`,
-            count,
-            isExtra: false
-          });
-        }
-      } else {
-        // Modo HOY: franjas horarias reales según apertura y cierre configurados
-        if (subtitleEl) subtitleEl.textContent = `Vehículos por hora hoy (${formatHour12(openH)} a ${formatHour12(closeH)})`;
-        footerLegend = 'Barras por franja horaria';
-
-        const numCols = 6;
-        const totalSpan = closeH - openH;
-        const slotSpan = totalSpan / numCols;
-
-        let beforeCount = 0;
-        let afterCount = 0;
-        const slotCounts = new Array(numCols).fill(0);
-
-        (periodOrders || []).forEach(o => {
-          if (!o || !o.createdAt) return;
-          const d = new Date(o.createdAt);
-          const orderHour = d.getHours() + d.getMinutes() / 60;
-          if (orderHour < openH) {
-            beforeCount++;
-          } else if (orderHour >= closeH) {
-            afterCount++;
-          } else {
-            let idx = Math.floor((orderHour - openH) / slotSpan);
-            if (idx >= numCols) idx = numCols - 1;
-            slotCounts[idx]++;
-          }
+      // Construir las 7 barras diarias (últimos 7 días terminando en Hoy)
+      const buckets = [];
+      for (let offset = 6; offset >= 0; offset--) {
+        const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset);
+        const startTs = d.getTime();
+        const endTs = startTs + (24 * 3600 * 1000) - 1;
+        const count = weekOrders.filter(o => o.createdAt >= startTs && o.createdAt <= endTs).length;
+        const dateLabel = `${d.getDate()}/${d.getMonth() + 1}`;
+        buckets.push({
+          label: offset === 0 ? 'Hoy' : dayNames[d.getDay()],
+          fullLabel: `${dayNames[d.getDay()]} ${dateLabel}`,
+          count
         });
-
-        if (beforeCount > 0) {
-          buckets.push({
-            label: `<${formatHourShort(openH)}`,
-            fullLabel: `Antes de ${formatHour12(openH)} (fuera de horario)`,
-            count: beforeCount,
-            isExtra: true
-          });
-        }
-
-        for (let i = 0; i < numCols; i++) {
-          const sStart = openH + i * slotSpan;
-          const sEnd = openH + (i + 1) * slotSpan;
-          buckets.push({
-            label: formatHourShort(sStart),
-            fullLabel: `${formatHour12(sStart)} - ${formatHour12(sEnd)}`,
-            count: slotCounts[i],
-            isExtra: false
-          });
-        }
-
-        if (afterCount > 0) {
-          buckets.push({
-            label: `+${formatHourShort(closeH)}`,
-            fullLabel: `Después de ${formatHour12(closeH)} (fuera de horario)`,
-            count: afterCount,
-            isExtra: true
-          });
-        }
       }
 
       const maxCount = Math.max(0, ...buckets.map(b => b.count));
       const peakIdx = maxCount > 0 ? buckets.findIndex(b => b.count === maxCount) : -1;
+      const totalWeekVehicles = buckets.reduce((sum, b) => sum + b.count, 0);
 
       if (chartEl) {
         chartEl.innerHTML = '';
@@ -514,7 +418,7 @@
           col.appendChild(stackEl);
 
           const labelEl = document.createElement('div');
-          labelEl.className = 'matrix-col-label' + (isPeakCol ? ' peak' : '') + (bucket.isExtra ? ' extra' : '');
+          labelEl.className = 'matrix-col-label' + (isPeakCol ? ' peak' : '');
           labelEl.textContent = bucket.label;
           col.appendChild(labelEl);
 
@@ -524,11 +428,11 @@
 
       if (labelsEl) {
         const peakSummary = peakIdx !== -1
-          ? `<span style="color: var(--accent-primary); font-weight: 700;">Pico: ${buckets[peakIdx].fullLabel} (${maxCount})</span>`
-          : `<span>Sin ingresos registrados</span>`;
+          ? `<span style="color: var(--accent-primary); font-weight: 700;">Día pico: ${buckets[peakIdx].fullLabel} (${maxCount})</span>`
+          : `<span>Sin ingresos esta semana</span>`;
 
         labelsEl.innerHTML = `
-          <span>${footerLegend}</span>
+          <span>Total 7 días: ${totalWeekVehicles} ${totalWeekVehicles === 1 ? 'vehículo' : 'vehículos'}</span>
           ${peakSummary}
         `;
       }

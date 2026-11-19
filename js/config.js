@@ -68,9 +68,7 @@ const DEFAULT_TENANTS = [
       ownerPhone: '315 555 1234',
       footerText: '¡Gracias por su visita! Cuidamos su vehículo.',
       lockTimeoutMinutes: 5,
-      washType: 'mixto',
-      openHour: 8,
-      closeHour: 17
+      washType: 'mixto'
     };
 
     const DEFAULT_SERVICES = [

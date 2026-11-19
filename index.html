@@ -348,7 +348,7 @@
             <div class="card-top-bar">
               <div>
                 <h2 class="card-title">Rendimiento de Zonas de Lavado</h2>
-                <p class="card-subtitle" id="overviewBaySubtitle">Flujo por horario de atención</p>
+                <p class="card-subtitle" id="overviewBaySubtitle">Vehículos atendidos en los últimos 7 días</p>
               </div>
               <button class="card-action-icon" onclick="switchView('patio')" title="Ir a Zona de Lavado">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
@@ -612,36 +612,6 @@
                 <option value="solo_motos">Exclusivo Motos (Solo Motocicletas)</option>
               </select>
               <small style="color: var(--text-muted); font-size: 0.72rem; display: block; margin-top: 4px;">En sedes exclusivas de motos el ingreso oculta selectores de carros y fija automáticamente tarifas de moto.</small>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <div class="form-group">
-                <label class="form-label">Hora de apertura</label>
-                <select id="configOpenHour" class="form-select">
-                  <option value="5">5:00 AM</option>
-                  <option value="6">6:00 AM</option>
-                  <option value="7">7:00 AM</option>
-                  <option value="8" selected>8:00 AM</option>
-                  <option value="9">9:00 AM</option>
-                  <option value="10">10:00 AM</option>
-                  <option value="11">11:00 AM</option>
-                  <option value="12">12:00 PM</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Hora de cierre</label>
-                <select id="configCloseHour" class="form-select">
-                  <option value="14">2:00 PM</option>
-                  <option value="15">3:00 PM</option>
-                  <option value="16">4:00 PM</option>
-                  <option value="17" selected>5:00 PM</option>
-                  <option value="18">6:00 PM</option>
-                  <option value="19">7:00 PM</option>
-                  <option value="20">8:00 PM</option>
-                  <option value="21">9:00 PM</option>
-                  <option value="22">10:00 PM</option>
-                  <option value="23">11:00 PM</option>
-                </select>
-              </div>
             </div>
             <div class="form-group">
               <label class="form-label">Dirección / Sede</label>
