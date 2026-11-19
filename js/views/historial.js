@@ -38,6 +38,14 @@
       renderHistory(txt);
     }
 
+    function resolvePaymentMethodName(rawPm) {
+      if (!rawPm) return 'Pendiente';
+      const found = (appState.paymentMethods || []).find(pm =>
+        pm.id === rawPm || pm.name === rawPm || pm.id.replace('pm_', '') === String(rawPm).toLowerCase()
+      );
+      return found ? found.name : String(rawPm);
+    }
+
     function exportHistoryExcel() {
       if (!appState.orders || appState.orders.length === 0) {
         alert('No hay órdenes registradas para exportar.');
@@ -64,7 +72,7 @@
             'Precio (COP)': precio,
             'Comisión (COP)': comision,
             'Ganancia Neta (COP)': ganancia,
-            'Método Pago': o.paymentMethod || 'Pendiente',
+            'Método Pago': resolvePaymentMethodName(o.paymentMethod),
             'Estado': (o.status || '').toUpperCase(),
             'Teléfono': o.phone || '',
             'Observaciones': o.notes || ''
@@ -85,7 +93,7 @@
           { wch: 15 }, // Precio COP
           { wch: 15 }, // Comisión COP
           { wch: 18 }, // Ganancia Neta COP
-          { wch: 16 }, // Método Pago
+          { wch: 22 }, // Método Pago
           { wch: 12 }, // Estado
           { wch: 14 }, // Teléfono
           { wch: 28 }  // Observaciones
@@ -103,11 +111,49 @@
         // Activar filtros automáticos en encabezados para buscar y filtrar en Excel
         ws['!autofilter'] = { ref: ws['!ref'] };
 
+        // Hoja 2: Resumen Semanal (Domingo a Sábado actual)
+        const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const now = new Date();
+        const sundayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+        const weeklyRows = [];
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(sundayDate.getFullYear(), sundayDate.getMonth(), sundayDate.getDate() + i);
+          const startTs = d.getTime();
+          const endTs = startTs + (24 * 3600 * 1000) - 1;
+          const dayOrders = appState.orders.filter(o => o.createdAt >= startTs && o.createdAt <= endTs);
+          const ing = dayOrders.reduce((s, o) => s + (Number(o.price) || 0), 0);
+          const com = dayOrders.reduce((s, o) => s + (Number(o.commission) || 0), 0);
+          weeklyRows.push({
+            'Día': dayNames[i],
+            'Fecha': d.toLocaleDateString('es-CO', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+            'Vehículos': dayOrders.length,
+            'Ingresos (COP)': ing,
+            'Comisiones (COP)': com,
+            'Ganancia Neta (COP)': ing - com
+          });
+        }
+
+        const wsWeek = XLSX.utils.json_to_sheet(weeklyRows);
+        wsWeek['!cols'] = [
+          { wch: 13 }, { wch: 12 }, { wch: 12 }, { wch: 16 }, { wch: 16 }, { wch: 18 }
+        ];
+        const wRange = XLSX.utils.decode_range(wsWeek['!ref']);
+        for (let R = 1; R <= wRange.e.r; ++R) {
+          [3, 4, 5].forEach(C => {
+            const cell = wsWeek[XLSX.utils.encode_cell({ r: R, c: C })];
+            if (cell && typeof cell.v === 'number') cell.z = '"$"#,##0';
+          });
+        }
+
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Historial_Servicios');
+        XLSX.utils.book_append_sheet(wb, wsWeek, 'Resumen_Semanal');
 
         const fechaHoy = new Date().toISOString().slice(0, 10);
-        XLSX.writeFile(wb, `WashQ_Historial_${fechaHoy}.xlsx`);
+        XLSX.writeFile(wb, `WashQ_Informe_Historial_${fechaHoy}.xlsx`);
+        if (typeof showToast === 'function') {
+          showToast('Informe Excel descargado con éxito.', 'success');
+        }
         return;
       }
 

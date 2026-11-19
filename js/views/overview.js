@@ -328,16 +328,23 @@
       const chartEl = document.getElementById('overviewBayMatrixChart');
       const labelsEl = document.getElementById('overviewBayMatrixLabels');
 
-      if (subtitleEl) subtitleEl.textContent = 'Vehículos atendidos en los últimos 7 días';
-
       const allOrders = appState.orders || [];
       const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
       const now = new Date();
-      const weekStartTs = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).getTime();
+      const todayDayIdx = now.getDay(); // 0 = Dom .. 6 = Sáb
+      const sundayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - todayDayIdx);
+      const saturdayDate = new Date(sundayDate.getFullYear(), sundayDate.getMonth(), sundayDate.getDate() + 6);
+      const weekStartTs = sundayDate.getTime();
+      const weekEndTs = saturdayDate.getTime() + (24 * 3600 * 1000) - 1;
 
-      const weekOrders = allOrders.filter(o => o && o.createdAt && o.createdAt >= weekStartTs);
+      if (subtitleEl) {
+        const rangeStr = `${sundayDate.getDate()}/${sundayDate.getMonth() + 1} al ${saturdayDate.getDate()}/${saturdayDate.getMonth() + 1}`;
+        subtitleEl.textContent = `Semana actual (${rangeStr})`;
+      }
 
-      // Tiempo promedio real con órdenes entregadas en los últimos 7 días
+      const weekOrders = allOrders.filter(o => o && o.createdAt && o.createdAt >= weekStartTs && o.createdAt <= weekEndTs);
+
+      // Tiempo promedio real con órdenes entregadas en la semana actual
       const deliveredOrders = weekOrders.filter(o => o.status === 'entregado');
       if (avgNoteEl) {
         if (deliveredOrders.length > 0) {
@@ -365,17 +372,19 @@
         }
       }
 
-      // Construir las 7 barras diarias (últimos 7 días terminando en Hoy)
+      // Construir las 7 barras de Domingo a Sábado con fecha corta
       const buckets = [];
-      for (let offset = 6; offset >= 0; offset--) {
-        const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset);
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(sundayDate.getFullYear(), sundayDate.getMonth(), sundayDate.getDate() + i);
         const startTs = d.getTime();
         const endTs = startTs + (24 * 3600 * 1000) - 1;
         const count = weekOrders.filter(o => o.createdAt >= startTs && o.createdAt <= endTs).length;
-        const dateLabel = `${d.getDate()}/${d.getMonth() + 1}`;
+        const shortDate = `${d.getDate()}/${d.getMonth() + 1}`;
         buckets.push({
-          label: offset === 0 ? 'Hoy' : dayNames[d.getDay()],
-          fullLabel: `${dayNames[d.getDay()]} ${dateLabel}`,
+          dayName: dayNames[i],
+          shortDate,
+          fullLabel: `${dayNames[i]} ${shortDate}`,
+          isToday: i === todayDayIdx,
           count
         });
       }
@@ -418,8 +427,8 @@
           col.appendChild(stackEl);
 
           const labelEl = document.createElement('div');
-          labelEl.className = 'matrix-col-label' + (isPeakCol ? ' peak' : '');
-          labelEl.textContent = bucket.label;
+          labelEl.className = 'matrix-col-label' + (isPeakCol ? ' peak' : '') + (bucket.isToday ? ' today' : '');
+          labelEl.innerHTML = `<span>${bucket.dayName}</span><span class="matrix-col-date">${bucket.shortDate}</span>`;
           col.appendChild(labelEl);
 
           chartEl.appendChild(col);
@@ -432,7 +441,7 @@
           : `<span>Sin ingresos esta semana</span>`;
 
         labelsEl.innerHTML = `
-          <span>Total 7 días: ${totalWeekVehicles} ${totalWeekVehicles === 1 ? 'vehículo' : 'vehículos'}</span>
+          <span>Semana: ${totalWeekVehicles} ${totalWeekVehicles === 1 ? 'vehículo' : 'vehículos'}</span>
           ${peakSummary}
         `;
       }

@@ -946,14 +946,32 @@
     }
 
     .matrix-col-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
       text-align: center;
       font-family: var(--font-mono);
       font-size: 0.64rem;
+      line-height: 1.15;
       color: var(--color-mist);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       margin-top: 2px;
+    }
+
+    .matrix-col-date {
+      font-size: 0.58rem;
+      opacity: 0.72;
+    }
+
+    .matrix-col-label.today {
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    .matrix-col-label.today .matrix-col-date {
+      opacity: 1;
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
     .matrix-col-label.peak {
@@ -961,8 +979,8 @@
       font-weight: 700;
     }
 
-    .matrix-col-label.extra {
-      color: #FBBF24;
+    .matrix-col-label.peak .matrix-col-date {
+      opacity: 0.95;
     }
 
     .matrix-block {
