@@ -332,6 +332,16 @@
       return `${h}:${String(m).padStart(2, '0')} ${suffix}`;
     }
 
+    function formatHourShort(hourFloat) {
+      const totalMins = Math.round(hourFloat * 60);
+      let h = Math.floor(totalMins / 60) % 24;
+      const m = totalMins % 60;
+      const suffix = h >= 12 ? 'p' : 'a';
+      h = h % 12;
+      if (h === 0) h = 12;
+      return m === 0 ? `${h}${suffix}` : `${h}:${String(m).padStart(2, '0')}`;
+    }
+
     function renderBayPerformanceCard(periodOrders, activeCount, period) {
       const avgNoteEl = document.getElementById('overviewAvgTimeNote');
       const subtitleEl = document.getElementById('overviewBaySubtitle');
@@ -341,11 +351,6 @@
       const openH = Number(appState.config && typeof appState.config.openHour === 'number' ? appState.config.openHour : 8);
       const rawCloseH = Number(appState.config && typeof appState.config.closeHour === 'number' ? appState.config.closeHour : 17);
       const closeH = rawCloseH > openH ? rawCloseH : openH + 9;
-
-      if (subtitleEl) {
-        const periodLabel = period === 'semana' ? 'últimos 7 días' : period === 'mes' ? 'últimos 30 días' : 'hoy';
-        subtitleEl.textContent = `Horario ${formatHour12(openH)} a ${formatHour12(closeH)} (${periodLabel})`;
-      }
 
       // Tiempo promedio real con órdenes entregadas
       const deliveredOrders = (periodOrders || []).filter(o => o.status === 'entregado');
@@ -364,7 +369,7 @@
           });
           if (validCount > 0) {
             const avgMin = Math.round(totalMin / validCount);
-            avgNoteEl.textContent = `Tiempo promedio de lavado: ${avgMin} min (${deliveredOrders.length} ${deliveredOrders.length === 1 ? 'entregado' : 'entregados'})`;
+            avgNoteEl.textContent = `Tiempo promedio: ${avgMin} min (${deliveredOrders.length} ${deliveredOrders.length === 1 ? 'entregado' : 'entregados'})`;
           } else {
             avgNoteEl.textContent = `${deliveredOrders.length} ${deliveredOrders.length === 1 ? 'vehículo entregado' : 'vehículos entregados'}`;
           }
@@ -375,40 +380,125 @@
         }
       }
 
-      // Dividir la jornada configurada en 6 franjas horarias iguales
-      const numCols = 6;
-      const totalSpan = closeH - openH;
-      const slotSpan = totalSpan / numCols;
-      const slotCounts = new Array(numCols).fill(0);
+      // Construir columnas según el período seleccionado
+      let buckets = [];
+      let footerLegend = '';
 
-      (periodOrders || []).forEach(o => {
-        if (!o || !o.createdAt) return;
-        const d = new Date(o.createdAt);
-        const orderHour = d.getHours() + d.getMinutes() / 60;
-        let idx = Math.floor((orderHour - openH) / slotSpan);
-        if (idx < 0) idx = 0;
-        if (idx >= numCols) idx = numCols - 1;
-        slotCounts[idx]++;
-      });
+      if (period === 'semana') {
+        if (subtitleEl) subtitleEl.textContent = 'Vehículos ingresados por día (últimos 7 días)';
+        footerLegend = 'Barras por día';
+        const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+        const now = new Date();
+        for (let offset = 6; offset >= 0; offset--) {
+          const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset);
+          const startTs = d.getTime();
+          const endTs = startTs + (24 * 3600 * 1000) - 1;
+          const count = (periodOrders || []).filter(o => o.createdAt >= startTs && o.createdAt <= endTs).length;
+          const dateLabel = `${d.getDate()}/${d.getMonth() + 1}`;
+          buckets.push({
+            label: offset === 0 ? 'Hoy' : dayNames[d.getDay()],
+            fullLabel: `${dayNames[d.getDay()]} ${dateLabel}`,
+            count,
+            isExtra: false
+          });
+        }
+      } else if (period === 'mes') {
+        if (subtitleEl) subtitleEl.textContent = 'Vehículos ingresados por semana (últimos 30 días)';
+        footerLegend = 'Barras por semana';
+        const nowTs = Date.now();
+        const weekMs = 7 * 24 * 3600 * 1000;
+        for (let w = 3; w >= 0; w--) {
+          const endTs = nowTs - (w * weekMs);
+          const startTs = endTs - weekMs;
+          const count = (periodOrders || []).filter(o => o.createdAt > startTs && o.createdAt <= endTs).length;
+          const idx = 4 - w;
+          buckets.push({
+            label: idx === 4 ? 'Esta sem.' : `Sem ${idx}`,
+            fullLabel: idx === 4 ? 'Últimos 7 días' : `Semana ${idx}`,
+            count,
+            isExtra: false
+          });
+        }
+      } else {
+        // Modo HOY: franjas horarias reales según apertura y cierre configurados
+        if (subtitleEl) subtitleEl.textContent = `Vehículos por hora hoy (${formatHour12(openH)} a ${formatHour12(closeH)})`;
+        footerLegend = 'Barras por franja horaria';
 
-      const maxCount = Math.max(...slotCounts);
-      const peakIdx = maxCount > 0 ? slotCounts.indexOf(maxCount) : -1;
+        const numCols = 6;
+        const totalSpan = closeH - openH;
+        const slotSpan = totalSpan / numCols;
+
+        let beforeCount = 0;
+        let afterCount = 0;
+        const slotCounts = new Array(numCols).fill(0);
+
+        (periodOrders || []).forEach(o => {
+          if (!o || !o.createdAt) return;
+          const d = new Date(o.createdAt);
+          const orderHour = d.getHours() + d.getMinutes() / 60;
+          if (orderHour < openH) {
+            beforeCount++;
+          } else if (orderHour >= closeH) {
+            afterCount++;
+          } else {
+            let idx = Math.floor((orderHour - openH) / slotSpan);
+            if (idx >= numCols) idx = numCols - 1;
+            slotCounts[idx]++;
+          }
+        });
+
+        if (beforeCount > 0) {
+          buckets.push({
+            label: `<${formatHourShort(openH)}`,
+            fullLabel: `Antes de ${formatHour12(openH)} (fuera de horario)`,
+            count: beforeCount,
+            isExtra: true
+          });
+        }
+
+        for (let i = 0; i < numCols; i++) {
+          const sStart = openH + i * slotSpan;
+          const sEnd = openH + (i + 1) * slotSpan;
+          buckets.push({
+            label: formatHourShort(sStart),
+            fullLabel: `${formatHour12(sStart)} - ${formatHour12(sEnd)}`,
+            count: slotCounts[i],
+            isExtra: false
+          });
+        }
+
+        if (afterCount > 0) {
+          buckets.push({
+            label: `+${formatHourShort(closeH)}`,
+            fullLabel: `Después de ${formatHour12(closeH)} (fuera de horario)`,
+            count: afterCount,
+            isExtra: true
+          });
+        }
+      }
+
+      const maxCount = Math.max(0, ...buckets.map(b => b.count));
+      const peakIdx = maxCount > 0 ? buckets.findIndex(b => b.count === maxCount) : -1;
 
       if (chartEl) {
         chartEl.innerHTML = '';
-        for (let i = 0; i < numCols; i++) {
-          const count = slotCounts[i];
-          const filledBlocks = maxCount > 0 && count > 0
-            ? Math.max(1, Math.round((count / maxCount) * 5))
+        buckets.forEach((bucket, i) => {
+          const filledBlocks = maxCount > 0 && bucket.count > 0
+            ? Math.max(1, Math.round((bucket.count / maxCount) * 5))
             : 0;
           const isPeakCol = i === peakIdx && maxCount > 0;
-          const slotStartStr = formatHour12(openH + i * slotSpan);
-          const slotEndStr = formatHour12(openH + (i + 1) * slotSpan);
 
           const col = document.createElement('div');
           col.className = 'matrix-column';
-          col.title = `${slotStartStr} - ${slotEndStr}: ${count} ${count === 1 ? 'vehículo' : 'vehículos'}`;
+          col.title = `${bucket.fullLabel}: ${bucket.count} ${bucket.count === 1 ? 'vehículo' : 'vehículos'}`;
 
+          const countEl = document.createElement('div');
+          countEl.className = 'matrix-col-count' + (isPeakCol ? ' peak' : '');
+          countEl.textContent = bucket.count > 0 ? String(bucket.count) : '';
+          col.appendChild(countEl);
+
+          const stackEl = document.createElement('div');
+          stackEl.className = 'matrix-blocks-stack';
           for (let b = 0; b < 5; b++) {
             const block = document.createElement('div');
             block.className = 'matrix-block';
@@ -419,21 +509,27 @@
                 block.classList.add('active');
               }
             }
-            col.appendChild(block);
+            stackEl.appendChild(block);
           }
+          col.appendChild(stackEl);
+
+          const labelEl = document.createElement('div');
+          labelEl.className = 'matrix-col-label' + (isPeakCol ? ' peak' : '') + (bucket.isExtra ? ' extra' : '');
+          labelEl.textContent = bucket.label;
+          col.appendChild(labelEl);
+
           chartEl.appendChild(col);
-        }
+        });
       }
 
       if (labelsEl) {
-        const midLabel = peakIdx !== -1
-          ? `<span style="color: var(--accent-primary); font-weight: 700;">${formatHour12(openH + peakIdx * slotSpan)} (Pico: ${maxCount})</span>`
-          : `<span>${formatHour12(openH + totalSpan / 2)}</span>`;
+        const peakSummary = peakIdx !== -1
+          ? `<span style="color: var(--accent-primary); font-weight: 700;">Pico: ${buckets[peakIdx].fullLabel} (${maxCount})</span>`
+          : `<span>Sin ingresos registrados</span>`;
 
         labelsEl.innerHTML = `
-          <span>${formatHour12(openH)}</span>
-          ${midLabel}
-          <span>${formatHour12(closeH)}</span>
+          <span>${footerLegend}</span>
+          ${peakSummary}
         `;
       }
     }
