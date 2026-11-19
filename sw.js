@@ -29,7 +29,7 @@ if (isLocalhost) {
   });
 } else {
   // Configuración de Producción PWA Offline
-  const CACHE_NAME = 'washq-v5.2.0-kodiquett';
+  const CACHE_NAME = 'washq-v5.3.0-kodiquett';
   const CORE_ASSETS = [
     '/',
     '/index.html',

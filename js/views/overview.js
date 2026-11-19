@@ -91,9 +91,9 @@
       // Actualizar texto descriptivo superior
       const eyebrowEl = document.getElementById('overviewEyebrow');
       if (eyebrowEl) {
-        if (period === 'hoy') eyebrowEl.innerHTML = 'Ingresos totales hoy &bull; Moneda COP';
-        else if (period === 'semana') eyebrowEl.innerHTML = 'Ingresos totales últimos 7 días &bull; Moneda COP';
-        else eyebrowEl.innerHTML = 'Ingresos totales últimos 30 días &bull; Moneda COP';
+        if (period === 'hoy') eyebrowEl.innerHTML = 'Ingresos totales hoy';
+        else if (period === 'semana') eyebrowEl.innerHTML = 'Ingresos totales últimos 7 días';
+        else eyebrowEl.innerHTML = 'Ingresos totales últimos 30 días';
       }
 
       // Actualizar valores numéricos
@@ -196,7 +196,7 @@
         if (totalCommissionsToday === 0) {
           treemap.innerHTML = `
             <div style="padding: 24px 12px; text-align: center; color: var(--text-muted); font-size: 0.82rem; background: var(--bg-surface-subtle); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle); width: 100%;">
-              Sin comisiones generadas hoy todavía.<br>
+              Sin comisiones generadas hoy.<br>
               <button onclick="switchView('comisiones')" style="margin-top: 6px; background: none; border: none; color: var(--accent-primary); font-weight: 700; cursor: pointer; text-decoration: underline;">Ver módulo de Comisiones &rarr;</button>
             </div>
           `;
@@ -235,13 +235,13 @@
 
       if (period === 'semana') {
         periodStartTs = nowTs - (7 * 24 * 3600 * 1000);
-        periodSubtitleText = 'Cobros registrados esta semana en caja y bancos';
+        periodSubtitleText = 'Cobros registrados esta semana';
       } else if (period === 'mes') {
         periodStartTs = nowTs - (30 * 24 * 3600 * 1000);
-        periodSubtitleText = 'Cobros registrados este mes en caja y bancos';
+        periodSubtitleText = 'Cobros registrados este mes';
       } else {
         periodStartTs = todayStartTs;
-        periodSubtitleText = 'Cobros registrados hoy en caja y bancos';
+        periodSubtitleText = 'Cobros registrados hoy';
       }
 
       if (paymentsSubtitleEl) paymentsSubtitleEl.textContent = periodSubtitleText;
@@ -278,7 +278,7 @@
       if (meterBar) {
         meterBar.innerHTML = '';
         if (grandTotalPayments === 0) {
-          meterBar.innerHTML = `<div style="width: 100%; height: 100%; background: var(--border-subtle); opacity: 0.6; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; color: var(--text-muted); font-weight: 600;" title="Sin cobros registrados en este período">Sin cobros registrados en este período</div>`;
+          meterBar.innerHTML = `<div style="width: 100%; height: 100%; background: var(--border-subtle); opacity: 0.6; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; color: var(--text-muted); font-weight: 600;" title="Sin cobros registrados">Sin cobros registrados</div>`;
         } else {
           pmStats.forEach(stat => {
             if (stat.total > 0) {
@@ -316,6 +316,125 @@
           `;
           pmList.appendChild(row);
         });
+      }
+
+      // ================= RENDIMIENTO DE ZONAS DE LAVADO (DINÁMICO POR HORARIO) =================
+      renderBayPerformanceCard(targetOrders, activeCount, period);
+    }
+
+    function formatHour12(hourFloat) {
+      const totalMins = Math.round(hourFloat * 60);
+      let h = Math.floor(totalMins / 60) % 24;
+      const m = totalMins % 60;
+      const suffix = h >= 12 ? 'PM' : 'AM';
+      h = h % 12;
+      if (h === 0) h = 12;
+      return `${h}:${String(m).padStart(2, '0')} ${suffix}`;
+    }
+
+    function renderBayPerformanceCard(periodOrders, activeCount, period) {
+      const avgNoteEl = document.getElementById('overviewAvgTimeNote');
+      const subtitleEl = document.getElementById('overviewBaySubtitle');
+      const chartEl = document.getElementById('overviewBayMatrixChart');
+      const labelsEl = document.getElementById('overviewBayMatrixLabels');
+
+      const openH = Number(appState.config && typeof appState.config.openHour === 'number' ? appState.config.openHour : 8);
+      const rawCloseH = Number(appState.config && typeof appState.config.closeHour === 'number' ? appState.config.closeHour : 17);
+      const closeH = rawCloseH > openH ? rawCloseH : openH + 9;
+
+      if (subtitleEl) {
+        const periodLabel = period === 'semana' ? 'últimos 7 días' : period === 'mes' ? 'últimos 30 días' : 'hoy';
+        subtitleEl.textContent = `Horario ${formatHour12(openH)} a ${formatHour12(closeH)} (${periodLabel})`;
+      }
+
+      // Tiempo promedio real con órdenes entregadas
+      const deliveredOrders = (periodOrders || []).filter(o => o.status === 'entregado');
+      if (avgNoteEl) {
+        if (deliveredOrders.length > 0) {
+          let totalMin = 0;
+          let validCount = 0;
+          deliveredOrders.forEach(o => {
+            if (o.completedAt && o.createdAt && o.completedAt > o.createdAt) {
+              totalMin += Math.max(1, (o.completedAt - o.createdAt) / 60000);
+              validCount++;
+            } else if (o.estimatedDuration) {
+              totalMin += Number(o.estimatedDuration);
+              validCount++;
+            }
+          });
+          if (validCount > 0) {
+            const avgMin = Math.round(totalMin / validCount);
+            avgNoteEl.textContent = `Tiempo promedio de lavado: ${avgMin} min (${deliveredOrders.length} ${deliveredOrders.length === 1 ? 'entregado' : 'entregados'})`;
+          } else {
+            avgNoteEl.textContent = `${deliveredOrders.length} ${deliveredOrders.length === 1 ? 'vehículo entregado' : 'vehículos entregados'}`;
+          }
+        } else {
+          avgNoteEl.textContent = activeCount > 0
+            ? 'Sin entregas completadas todavía'
+            : 'Sin actividad registrada en este período';
+        }
+      }
+
+      // Dividir la jornada configurada en 6 franjas horarias iguales
+      const numCols = 6;
+      const totalSpan = closeH - openH;
+      const slotSpan = totalSpan / numCols;
+      const slotCounts = new Array(numCols).fill(0);
+
+      (periodOrders || []).forEach(o => {
+        if (!o || !o.createdAt) return;
+        const d = new Date(o.createdAt);
+        const orderHour = d.getHours() + d.getMinutes() / 60;
+        let idx = Math.floor((orderHour - openH) / slotSpan);
+        if (idx < 0) idx = 0;
+        if (idx >= numCols) idx = numCols - 1;
+        slotCounts[idx]++;
+      });
+
+      const maxCount = Math.max(...slotCounts);
+      const peakIdx = maxCount > 0 ? slotCounts.indexOf(maxCount) : -1;
+
+      if (chartEl) {
+        chartEl.innerHTML = '';
+        for (let i = 0; i < numCols; i++) {
+          const count = slotCounts[i];
+          const filledBlocks = maxCount > 0 && count > 0
+            ? Math.max(1, Math.round((count / maxCount) * 5))
+            : 0;
+          const isPeakCol = i === peakIdx && maxCount > 0;
+          const slotStartStr = formatHour12(openH + i * slotSpan);
+          const slotEndStr = formatHour12(openH + (i + 1) * slotSpan);
+
+          const col = document.createElement('div');
+          col.className = 'matrix-column';
+          col.title = `${slotStartStr} - ${slotEndStr}: ${count} ${count === 1 ? 'vehículo' : 'vehículos'}`;
+
+          for (let b = 0; b < 5; b++) {
+            const block = document.createElement('div');
+            block.className = 'matrix-block';
+            if (b < filledBlocks) {
+              if (isPeakCol && b === filledBlocks - 1) {
+                block.classList.add('peak');
+              } else {
+                block.classList.add('active');
+              }
+            }
+            col.appendChild(block);
+          }
+          chartEl.appendChild(col);
+        }
+      }
+
+      if (labelsEl) {
+        const midLabel = peakIdx !== -1
+          ? `<span style="color: var(--accent-primary); font-weight: 700;">${formatHour12(openH + peakIdx * slotSpan)} (Pico: ${maxCount})</span>`
+          : `<span>${formatHour12(openH + totalSpan / 2)}</span>`;
+
+        labelsEl.innerHTML = `
+          <span>${formatHour12(openH)}</span>
+          ${midLabel}
+          <span>${formatHour12(closeH)}</span>
+        `;
       }
     }
 
