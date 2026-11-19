@@ -99,10 +99,10 @@
       const headings = {
         'overview': 'Resumen General',
         'patio': 'Zona de Lavado',
-        'caja': 'Cuadre de Caja',
-        'comisiones': isOperario ? 'Mis Ganancias del Día' : 'Liquidación de Operarios',
+        'caja': 'Ingresos y Gastos',
+        'comisiones': isOperario ? 'Mis Ganancias del Día' : 'Comisiones de Operarios',
         'historial': 'Historial de Vehículos',
-        'config': 'Configuración y Parámetros'
+        'config': 'Configuración'
       };
       const headingEl = document.getElementById('viewMainHeading');
       if (headingEl) headingEl.textContent = headings[viewId] || 'WashQ';
@@ -179,7 +179,7 @@
       }
 
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=5.3.4')
+        navigator.serviceWorker.register('./sw.js?v=5.3.5')
           .then((reg) => {
             console.log('[WashQ PWA] Service Worker registrado en alcance:', reg.scope);
             reg.update();
