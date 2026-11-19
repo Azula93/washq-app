@@ -3,6 +3,10 @@
  * Define los planes de licencia, tenants iniciales, catálogo y estructura base de appState.
  */
 
+const WASHQ_APP_VERSION = 'v5.3.6';
+const WASHQ_BUILD_DATE = '18-Nov-2026';
+const WASHQ_CACHE_ID = 'washq-v5.3.6-kodiquett';
+
 const DEFAULT_TENANTS = [
       {
         id: 'cali-express',

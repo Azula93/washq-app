@@ -179,16 +179,17 @@
       }
 
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=5.3.5')
+        navigator.serviceWorker.register('./sw.js?v=5.3.6')
           .then((reg) => {
             console.log('[WashQ PWA] Service Worker registrado en alcance:', reg.scope);
             reg.update();
+            updatePwaSyncStatus();
             reg.addEventListener('updatefound', () => {
               const newWorker = reg.installing;
               if (newWorker) {
                 newWorker.addEventListener('statechange', () => {
                   if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    console.log('🚀 [WashQ] Nueva versión instalada. Recargando para activar v5.0.0...');
+                    console.log('[WashQ] Nueva versión instalada. Recargando...');
                     window.location.reload();
                   }
                 });
@@ -197,6 +198,7 @@
           })
           .catch((err) => {
             console.log('Aviso: Service Worker no activo (común en modo file:// local):', err);
+            updatePwaSyncStatus();
           });
 
         let refreshing = false;
@@ -209,8 +211,62 @@
       }
     }
 
+    function updatePwaSyncStatus() {
+      const version = typeof WASHQ_APP_VERSION !== 'undefined' ? WASHQ_APP_VERSION : 'v5.3.6';
+      const buildDate = typeof WASHQ_BUILD_DATE !== 'undefined' ? WASHQ_BUILD_DATE : '';
+      const cacheId = typeof WASHQ_CACHE_ID !== 'undefined' ? WASHQ_CACHE_ID : 'washq-v5.3.6-kodiquett';
+
+      const badgeVer = document.getElementById('badgeAppVersion');
+      const lblCurVer = document.getElementById('lblCurrentAppVersion');
+      const lblCache = document.getElementById('lblActiveCacheVersion');
+      const footerVer = document.getElementById('footerAppVersion');
+
+      if (badgeVer) badgeVer.textContent = version;
+      if (lblCurVer) lblCurVer.textContent = buildDate ? `${version} (${buildDate})` : version;
+      if (lblCache) lblCache.textContent = cacheId;
+      if (footerVer) footerVer.textContent = version;
+
+      const pill = document.getElementById('pwaSyncStatusPill');
+      const dot = document.getElementById('pwaSyncStatusDot');
+      const text = document.getElementById('pwaSyncStatusText');
+      if (!pill || !dot || !text) return;
+
+      const isLocalHost = Boolean(
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname === '[::1]' ||
+        window.location.protocol === 'file:'
+      );
+
+      if (!navigator.onLine) {
+        text.textContent = 'Sin conexión (Modo local)';
+        pill.style.color = '#B45309';
+        pill.style.background = '#FEF3C7';
+        pill.style.borderColor = '#F59E0B';
+        dot.style.background = '#D97706';
+        return;
+      }
+
+      if (isLocalHost) {
+        text.textContent = 'En línea (Local)';
+        pill.style.color = 'var(--status-success)';
+        pill.style.background = 'var(--status-success-bg)';
+        pill.style.borderColor = 'var(--status-success)';
+        dot.style.background = 'var(--status-success)';
+        return;
+      }
+
+      const hasSwController = 'serviceWorker' in navigator && Boolean(navigator.serviceWorker.controller);
+      text.textContent = hasSwController ? 'App Sincronizada' : 'En línea';
+      pill.style.color = 'var(--status-success)';
+      pill.style.background = 'var(--status-success-bg)';
+      pill.style.borderColor = 'var(--status-success)';
+      dot.style.background = 'var(--status-success)';
+    }
+
     function forcePwaCacheRefresh() {
-      if (!confirm('¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión oficial v5.0.0.')) return;
+      const version = typeof WASHQ_APP_VERSION !== 'undefined' ? WASHQ_APP_VERSION : 'v5.3.6';
+      if (!confirm(`¿Deseas forzar la actualización de WashQ y limpiar la caché offline? Esto descargará la última versión oficial ${version}.`)) return;
       if ('caches' in window) {
         caches.keys().then(function(names) {
           return Promise.all(names.map(name => caches.delete(name)));
@@ -238,6 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAuthRouteOrSession();
   initPwaInstallPrompt();
   registerPwaServiceWorker();
+  updatePwaSyncStatus();
+
+  window.addEventListener('online', updatePwaSyncStatus);
+  window.addEventListener('offline', updatePwaSyncStatus);
 
   // Actualizador de cronómetros en patio cada 15 segundos
   setInterval(() => {
