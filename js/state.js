@@ -442,12 +442,8 @@
 
       loadFromStorage(tenant.id);
 
-      const tenantNameEl = document.getElementById('headerTenantName');
-      const tenantCodeEl = document.getElementById('headerTenantCode');
       const liveDateEl = document.getElementById('currentLiveDate');
-      if (tenantNameEl) tenantNameEl.textContent = tenant.name;
-      if (tenantCodeEl) tenantCodeEl.textContent = tenant.code;
-      if (liveDateEl) liveDateEl.innerHTML = tenant.city + ', Colombia &bull; Sede ' + tenant.code;
+      if (liveDateEl) liveDateEl.innerHTML = tenant.name + ' &middot; ' + tenant.code;
 
       const authScreen = document.getElementById('authScreen');
       const appShell = document.getElementById('appShell');

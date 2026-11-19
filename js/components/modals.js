@@ -122,35 +122,16 @@
       // Actualizar cabecera
       const iconEl = document.getElementById('headerRoleIcon');
       const nameEl = document.getElementById('headerRoleName');
-      const badge = document.getElementById('adminControlBadge');
 
       if (roleId === 'admin') {
-        if (iconEl) iconEl.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>';
-        if (nameEl) nameEl.textContent = 'Super Admin';
-        if (badge) {
-          badge.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Administrador';
-          badge.style.background = 'var(--accent-subtle)';
-          badge.style.color = 'var(--accent-primary)';
-          badge.style.borderColor = 'var(--accent-border)';
-        }
+        if (iconEl) iconEl.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>';
+        if (nameEl) nameEl.textContent = 'Administrador';
       } else if (roleId === 'cajero') {
-        if (iconEl) iconEl.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>';
+        if (iconEl) iconEl.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>';
         if (nameEl) nameEl.textContent = 'Cajero';
-        if (badge) {
-          badge.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg> Cajero';
-          badge.style.background = 'var(--accent-subtle)';
-          badge.style.color = 'var(--accent-primary)';
-          badge.style.borderColor = 'var(--accent-border)';
-        }
       } else {
-        if (iconEl) iconEl.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+        if (iconEl) iconEl.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
         if (nameEl) nameEl.textContent = appState.currentWasherName || 'Operario';
-        if (badge) {
-          badge.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> ' + (appState.currentWasherName || 'Operario');
-          badge.style.background = '#F1F5F9';
-          badge.style.color = '#475569';
-          badge.style.borderColor = '#CBD5E1';
-        }
       }
 
       applyRoleInterfaceRestrictions(roleId);
