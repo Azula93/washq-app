@@ -3,6 +3,16 @@
  * Tablero Kanban en tiempo real, control de bahías, avance de estados y alertas de demora.
  */
 
+    function isDeliveredToday(order) {
+      const refTs = order.completedAt || order.createdAt;
+      if (!refTs) return false;
+      const d = new Date(refTs);
+      const now = new Date();
+      return d.getFullYear() === now.getFullYear() &&
+             d.getMonth() === now.getMonth() &&
+             d.getDate() === now.getDate();
+    }
+
     function renderKanban() {
       const cols = {
         'espera': document.getElementById('cards-espera'),
@@ -17,16 +27,25 @@
       const isOperario = appState.currentRole === 'operario' || appState.currentRole === 'lavador';
       const myWasherId = appState.currentWasherId;
 
+      // En Zona de Lavado: mostrar siempre los activos (espera, lavando, listo),
+      // y en "Entregados Hoy" filtrar estrictamente los entregados en la fecha actual.
+      const visiblePatioOrders = (appState.orders || []).filter(order => {
+        if (order.status === 'entregado') {
+          return isDeliveredToday(order);
+        }
+        return true;
+      });
+
       // Actualizar contadores del filtro de bahías para operarios
       if (isOperario) {
-        const myOrders = appState.orders.filter(o => o.washerId === myWasherId);
+        const myOrders = visiblePatioOrders.filter(o => o.washerId === myWasherId);
         const btnMine = document.getElementById('btnFilterMyCars');
         const btnAll = document.getElementById('btnFilterAllCars');
-        if (btnMine) btnMine.textContent = `⭐ Mis Asignados (${myOrders.length})`;
-        if (btnAll) btnAll.textContent = `Toda la Zona (${appState.orders.length})`;
+        if (btnMine) btnMine.textContent = `Mis Asignados (${myOrders.length})`;
+        if (btnAll) btnAll.textContent = `Toda la Zona (${visiblePatioOrders.length})`;
       }
 
-      appState.orders.forEach(order => {
+      visiblePatioOrders.forEach(order => {
         counts[order.status] = (counts[order.status] || 0) + 1;
 
         // Si el operario tiene activo el filtro 'mine', solo muestra sus vehículos asignados

@@ -179,7 +179,7 @@
       }
 
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=5.3.3')
+        navigator.serviceWorker.register('./sw.js?v=5.3.4')
           .then((reg) => {
             console.log('[WashQ PWA] Service Worker registrado en alcance:', reg.scope);
             reg.update();
